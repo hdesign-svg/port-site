@@ -23,9 +23,14 @@ export function ProjectSection({ project }: ProjectSectionProps) {
               {paragraph}
             </p>
           ))}
-          <ul className="text-sm leading-[22px] text-fg-muted">
-            {project.outcomes.map((outcome) => (
-              <li key={outcome}>• {outcome}</li>
+          <ul className="list-disc text-sm text-fg-muted">
+            {project.outcomes.map((outcome, index) => (
+              <li
+                key={outcome}
+                className={`ms-[21px] ${index === 0 ? "mb-0" : ""}`}
+              >
+                <span className="leading-[22px]">{outcome}</span>
+              </li>
             ))}
           </ul>
         </div>
