@@ -21,14 +21,6 @@ export function NavLinks() {
       >
         LinkedIn ↗
       </a>
-      <a
-        href={site.resume}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={linkClassName}
-      >
-        Resume ↗
-      </a>
     </nav>
   );
 }
