@@ -1,6 +1,5 @@
 import { Hero } from "@/components/Hero";
 import { ProjectSection } from "@/components/ProjectSection";
-import { Footer } from "@/components/Footer";
 import { projects } from "@/data/projects";
 
 export default function Home() {
@@ -12,7 +11,6 @@ export default function Home() {
           <ProjectSection key={project.id} project={project} />
         ))}
       </div>
-      <Footer />
     </div>
   );
 }

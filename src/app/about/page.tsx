@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { site } from "@/data/site";
 import { NavLinks } from "@/components/NavLinks";
-import { Footer } from "@/components/Footer";
 
 export const metadata = {
   title: `About — ${site.name}`,
@@ -68,8 +67,6 @@ export default function AboutPage() {
           </p>
         </div>
       </article>
-
-      <Footer />
     </div>
   );
 }

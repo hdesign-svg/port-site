@@ -1,7 +1,8 @@
 "use client";
 
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Project } from "@/data/projects";
 
 type ProjectCarouselProps = {
@@ -17,23 +18,20 @@ function ArrowButton({
   onClick: () => void;
   disabled?: boolean;
 }) {
+  const Icon = direction === "left" ? ArrowLeft : ArrowRight;
+
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
       aria-label={direction === "left" ? "Previous image" : "Next image"}
-      className="flex items-center rounded-md border border-border bg-bg px-3 py-2 transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+      className="flex h-8 shrink-0 items-center justify-center rounded-md border border-border bg-bg px-3 py-2 disabled:cursor-not-allowed"
     >
-      <Image
-        src={
-          direction === "left"
-            ? "/images/arrow-left.svg"
-            : "/images/arrow-right.svg"
-        }
-        alt=""
-        width={16}
-        height={16}
+      <Icon
+        size={16}
+        weight="regular"
+        className={disabled ? "text-[#d4d4d8]" : "text-fg"}
         aria-hidden
       />
     </button>
@@ -42,6 +40,23 @@ function ArrowButton({
 
 export function ProjectCarousel({ images }: ProjectCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    updateScrollState();
+    window.addEventListener("resize", updateScrollState);
+    return () => window.removeEventListener("resize", updateScrollState);
+  }, [updateScrollState, images.length]);
 
   const scroll = useCallback((direction: "left" | "right") => {
     const container = scrollRef.current;
@@ -61,6 +76,7 @@ export function ProjectCarousel({ images }: ProjectCarouselProps) {
     <div className="flex flex-col gap-6">
       <div
         ref={scrollRef}
+        onScroll={updateScrollState}
         className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {images.map((image, index) => (
@@ -82,8 +98,16 @@ export function ProjectCarousel({ images }: ProjectCarouselProps) {
         ))}
       </div>
       <div className="flex gap-2">
-        <ArrowButton direction="left" onClick={() => scroll("left")} />
-        <ArrowButton direction="right" onClick={() => scroll("right")} />
+        <ArrowButton
+          direction="left"
+          onClick={() => scroll("left")}
+          disabled={!canScrollLeft}
+        />
+        <ArrowButton
+          direction="right"
+          onClick={() => scroll("right")}
+          disabled={!canScrollRight}
+        />
       </div>
     </div>
   );
