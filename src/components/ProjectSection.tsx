@@ -7,29 +7,26 @@ type ProjectSectionProps = {
 
 export function ProjectSection({ project }: ProjectSectionProps) {
   return (
-    <section className="flex flex-col gap-12 border-b border-border pb-12">
+    <section className="flex flex-col gap-10">
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-6">
-        <div className="lg:w-1/2">
-          <h2 className="text-[19px] font-medium leading-[30px] text-fg">
+        <div className="w-full shrink-0 lg:w-[260px]">
+          <h2 className="text-sm font-medium leading-5 text-fg">
             {project.title}
           </h2>
-          <p className="text-sm leading-[22px] text-fg-muted">
+          <p className="mt-0.5 text-xs leading-5 text-fg-muted">
             {project.company} • {project.year}
           </p>
         </div>
-        <div className="flex flex-col gap-6 lg:w-1/2">
-          {project.description.map((paragraph) => (
-            <p key={paragraph} className="text-[15px] leading-6 text-fg">
-              {paragraph}
-            </p>
-          ))}
-          <ul className="list-disc text-sm text-fg-muted">
-            {project.outcomes.map((outcome, index) => (
-              <li
-                key={outcome}
-                className={`ms-[21px] ${index === 0 ? "mb-0" : ""}`}
-              >
-                <span className="leading-[22px]">{outcome}</span>
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <div className="flex flex-col gap-3 text-sm leading-5 text-fg">
+            {project.description.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+          <ul className="list-disc text-[13px] text-fg-muted">
+            {project.outcomes.map((outcome) => (
+              <li key={outcome} className="ms-[19.5px]">
+                <span className="leading-5">{outcome}</span>
               </li>
             ))}
           </ul>

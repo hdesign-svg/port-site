@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="mx-auto w-full max-w-[960px] flex-1 px-6 pt-24 lg:px-0">
       <Hero />
-      <div className="flex flex-col gap-12 pt-12">
+      <div className="flex flex-col gap-24 pt-24">
         {projects.map((project) => (
           <ProjectSection key={project.id} project={project} />
         ))}

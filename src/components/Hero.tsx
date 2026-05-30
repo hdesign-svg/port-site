@@ -4,7 +4,7 @@ import { NavLinks } from "@/components/NavLinks";
 
 export function Hero() {
   return (
-    <header className="flex flex-col gap-8 border-b border-border pb-12 sm:flex-row sm:items-start sm:justify-between">
+    <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
       <div className="flex max-w-[405px] flex-col gap-6">
         <div className="flex flex-col gap-4">
           <Image
@@ -15,12 +15,12 @@ export function Hero() {
             className="size-10 rounded-full object-cover"
             priority
           />
-          <div>
-            <p className="text-[15px] leading-6 text-fg">{site.name}</p>
-            <p className="text-sm leading-[22px] text-fg-muted">{site.title}</p>
+          <div className="flex flex-col leading-5">
+            <p className="text-sm text-fg">{site.name}</p>
+            <p className="text-[13px] text-fg-muted">{site.title}</p>
           </div>
         </div>
-        <p className="text-[19px] font-medium leading-[30px] text-fg">
+        <p className="text-[15px] font-medium leading-[22px] text-fg">
           {site.tagline}
         </p>
       </div>

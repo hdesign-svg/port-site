@@ -5,17 +5,27 @@
   --color-fg: #18181b;
   --color-fg-muted: #71717a;
   --color-border: rgba(228, 228, 231, 0.5);
-  --color-surface: #f4f4f5;
+  --color-icon-disabled: #d4d4d8;
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
+  --spacing-xl: 40px;
   --spacing-2xl: 48px;
+  --spacing-3xl: 96px;
 
   --radius-md: 8px;
-  --radius-lg: 16px;
+  --radius-lg: 12px;
   --radius-full: 999px;
+
+  --text-tagline-size: 15px;
+  --text-tagline-leading: 22px;
+  --text-body-size: 14px;
+  --text-body-leading: 20px;
+  --text-meta-size: 13px;
+  --text-meta-leading: 20px;
+  --text-meta-sm-size: 12px;
 }
 
 @theme inline {
@@ -23,7 +33,7 @@
   --color-fg: var(--color-fg);
   --color-fg-muted: var(--color-fg-muted);
   --color-border: var(--color-border);
-  --color-surface: var(--color-surface);
+  --color-icon-disabled: var(--color-icon-disabled);
   --font-sans: var(--font-geist-sans);
 }
 

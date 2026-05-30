@@ -2,13 +2,13 @@ import Link from "next/link";
 import { site } from "@/data/site";
 
 const linkClassName =
-  "text-sm leading-[22px] text-fg-muted transition-colors hover:text-fg";
+  "text-[13px] leading-5 text-fg-muted transition-colors hover:text-fg";
 
 export function NavLinks() {
   return (
     <nav
       aria-label="Site navigation"
-      className="flex flex-col items-start gap-1 text-sm leading-[22px] text-fg-muted"
+      className="flex flex-col items-start gap-1 text-[13px] leading-5 text-fg-muted"
     >
       <Link href="/about" className={linkClassName}>
         About

@@ -11,11 +11,11 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto w-full max-w-[960px] flex-1 px-6 pt-24 lg:px-0">
-      <header className="flex flex-col gap-8 border-b border-border pb-12 sm:flex-row sm:items-start sm:justify-between">
+      <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-4">
           <Link
             href="/"
-            className="text-sm leading-[22px] text-fg-muted transition-colors hover:text-fg"
+            className="text-[13px] leading-5 text-fg-muted transition-colors hover:text-fg"
           >
             ← Work
           </Link>
@@ -27,23 +27,21 @@ export default function AboutPage() {
               height={40}
               className="size-10 rounded-full object-cover"
             />
-            <div>
-              <h1 className="text-[15px] leading-6 text-fg">{site.name}</h1>
-              <p className="text-sm leading-[22px] text-fg-muted">
-                {site.title}
-              </p>
+            <div className="flex flex-col leading-5">
+              <h1 className="text-sm text-fg">{site.name}</h1>
+              <p className="text-[13px] text-fg-muted">{site.title}</p>
             </div>
           </div>
         </div>
         <NavLinks />
       </header>
 
-      <article className="flex flex-col gap-6 border-b border-border py-12">
-        <p className="max-w-[640px] text-[19px] font-medium leading-[30px] text-fg">
+      <article className="flex max-w-[676px] flex-col gap-4 py-24">
+        <p className="text-[15px] font-medium leading-[22px] text-fg">
           I design product systems that hold up under real-world complexity —
           from strategy and research through delivery.
         </p>
-        <div className="flex max-w-[640px] flex-col gap-6 text-[15px] leading-6 text-fg">
+        <div className="flex flex-col gap-3 text-sm leading-5 text-fg">
           <p>
             Over eight years, I&apos;ve worked across B2B SaaS, retail, and
             mobile — often as the designer bridging product strategy, design
