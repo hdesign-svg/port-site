@@ -1,16 +1,43 @@
-import { Hero } from "@/components/Hero";
-import { ProjectSection } from "@/components/ProjectSection";
+import { BackToTop } from "@/components/lab/BackToTop";
+import { LabHero } from "@/components/lab/LabHero";
+import { LabProject } from "@/components/lab/LabProject";
+import { PageBackdrop, type BackdropVariant } from "@/components/lab/PageBackdrop";
 import { projects } from "@/data/projects";
 
-export default function Home() {
+type HomeProps = {
+  searchParams: Promise<{ bg?: string }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const { bg } = await searchParams;
+  const variant: BackdropVariant =
+    bg === "margin-grid" ||
+    bg === "hero-wash" ||
+    bg === "noise" ||
+    bg === "dots"
+      ? bg
+      : "none";
+
   return (
-    <div className="mx-auto w-full max-w-[960px] flex-1 px-6 pt-24 lg:px-0">
-      <Hero />
-      <div className="flex flex-col gap-24 pt-24">
-        {projects.map((project) => (
-          <ProjectSection key={project.id} project={project} />
-        ))}
-      </div>
-    </div>
+    <>
+      <PageBackdrop variant={variant}>
+        <main>
+          <div className="border-x border-border">
+            {variant === "hero-wash" ? (
+              <div className="hero-wash-band">
+                <LabHero />
+              </div>
+            ) : (
+              <LabHero />
+            )}
+
+            {projects.map((project, index) => (
+              <LabProject key={project.id} project={project} index={index} />
+            ))}
+          </div>
+        </main>
+      </PageBackdrop>
+      <BackToTop />
+    </>
   );
 }

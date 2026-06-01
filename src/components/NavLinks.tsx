@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/data/site";
 
 const linkClassName =
-  "text-[13px] leading-5 text-fg-muted transition-colors hover:text-fg";
+  "nav-link text-[13px] leading-5 text-fg-muted hover:text-fg";
 
 export function NavLinks() {
   return (

@@ -37,4 +37,24 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    id: "preview-02",
+    title: "Project Two",
+    company: "Company",
+    year: "2023",
+    description: [
+      "Placeholder for layout preview — second project block to show section rhythm.",
+    ],
+    outcomes: ["Outcome metric one", "Outcome metric two"],
+    images: [
+      {
+        src: "/images/concierge-screenshot.png",
+        alt: "Placeholder mockup",
+      },
+      {
+        src: "/images/concierge-screenshot.png",
+        alt: "Placeholder mockup",
+      },
+    ],
+  },
 ];

@@ -15,7 +15,7 @@ export default function AboutPage() {
         <div className="flex flex-col gap-4">
           <Link
             href="/"
-            className="text-[13px] leading-5 text-fg-muted transition-colors hover:text-fg"
+            className="nav-link text-[13px] leading-5 text-fg-muted hover:text-fg"
           >
             ← Work
           </Link>
@@ -57,7 +57,7 @@ export default function AboutPage() {
             projects. Reach out at{" "}
             <a
               href={`mailto:${site.email}`}
-              className="text-fg-muted transition-colors hover:text-fg"
+              className="nav-link text-fg-muted hover:text-fg"
             >
               {site.email}
             </a>
