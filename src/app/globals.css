@@ -1,21 +1,9 @@
 @import "tailwindcss";
+@import "../styles/tokens/color.css";
 
 :root,
 [data-theme="light"] {
-  color-scheme: light;
-
-  /* Light palette + Manu typography scale */
-  --color-bg: #ffffff;
-  --color-fg: #52525b;
-  --color-fg-muted: #71717a;
-  --color-fg-strong: #18181b;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-surface: #f4f4f5;
-  --color-bg-subtle: #fafafa;
-  --color-brand: #0891b2;
-  --grid-line: rgba(0, 0, 0, 0.06);
-  --grid-dot: rgba(0, 0, 0, 0.12);
-
+  /* Typography — Manu scale */
   --font-size: 12px;
   --font-height: 20px;
   --font-weight: 450;
@@ -31,12 +19,19 @@
   --icon-btn-size-sm: 2rem; /* 32px · 16px icon */
   --icon-btn-size-md: 2.5rem; /* 40px · 20px icon */
   --icon-btn-size-lg: 3rem; /* 48px · 24px icon */
-  --icon-btn-radius: var(--radius-surface);
+  --icon-btn-radius: var(--radius-control);
   --icon-btn-hover-bg: var(--color-surface);
 
   /* Radius scale — control inset (6px) → surfaces (8px) */
   --radius-control: 6px;
   --radius-surface: 8px;
+
+  /* Mockup frames — phone vs desktop optical balance */
+  --mockup-phone-max-width: 210px;
+  --mockup-phone-aspect: 210 / 477;
+  --mockup-desktop-aspect: 1024 / 704;
+  --mockup-frame-pad-inline: 1.5rlh;
+  --mockup-frame-pad-block: 1.5rlh;
 
   /* transitions.dev motion tokens */
   --icon-swap-dur: 200ms;
@@ -53,21 +48,6 @@
   --back-to-top-fade-dur: 200ms;
   --back-to-top-fade-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --nav-link-color-dur: 150ms;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --color-bg: #111111;
-  --color-fg: #cccccc;
-  --color-fg-muted: #666666;
-  --color-fg-strong: #ffffff;
-  --color-border: #222222;
-  --color-surface: #161616;
-  --color-bg-subtle: #1a1a1a;
-  --color-brand: aqua;
-  --grid-line: rgba(255, 255, 255, 0.06);
-  --grid-dot: rgba(255, 255, 255, 0.12);
 }
 
 .shell-frame {
@@ -107,10 +87,23 @@
 /* Mockup frames — surface radius; inner screen uses control radius */
 .mockup-frame {
   border-radius: var(--radius-surface);
+  padding-inline: var(--mockup-frame-pad-inline);
+  padding-block: var(--mockup-frame-pad-block);
 }
 
 .mockup-frame__screen {
   border-radius: var(--radius-control);
+  width: 100%;
+  margin-inline: auto;
+}
+
+.mockup-frame__screen--phone {
+  max-width: var(--mockup-phone-max-width);
+  aspect-ratio: var(--mockup-phone-aspect);
+}
+
+.mockup-frame__screen--desktop {
+  aspect-ratio: var(--mockup-desktop-aspect);
 }
 
 /* Hero theme toggle — vertically centered to a single text line box */
@@ -179,45 +172,17 @@
 .icon-btn--raised {
   border-color: var(--color-border);
   background-color: var(--color-bg);
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.03),
-    0 2px 6px rgba(0, 0, 0, 0.035),
-    0 6px 18px rgba(0, 0, 0, 0.025);
-}
-
-[data-theme="dark"] .icon-btn--raised {
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.18),
-    0 3px 8px rgba(0, 0, 0, 0.14),
-    0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-raised);
 }
 
 .icon-btn--raised:hover {
   background-color: var(--icon-btn-hover-bg);
-  box-shadow:
-    0 2px 2px rgba(0, 0, 0, 0.04),
-    0 4px 10px rgba(0, 0, 0, 0.045),
-    0 10px 24px rgba(0, 0, 0, 0.035);
-}
-
-[data-theme="dark"] .icon-btn--raised:hover {
-  box-shadow:
-    0 2px 3px rgba(0, 0, 0, 0.22),
-    0 5px 12px rgba(0, 0, 0, 0.16),
-    0 12px 26px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-raised-hover);
 }
 
 .icon-btn--raised:active {
   transform: scale(var(--icon-btn-press-scale));
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.04),
-    0 1px 3px rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="dark"] .icon-btn--raised:active {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.14);
+  box-shadow: var(--shadow-raised-active);
 }
 
 /* transitions.dev — icon swap (sun ↔ moon, etc.) */
@@ -441,6 +406,7 @@
   --color-border: var(--color-border);
   --color-surface: var(--color-surface);
   --color-bg-subtle: var(--color-bg-subtle);
+  --color-accent: var(--color-accent);
   --color-brand: var(--color-brand);
   --font-sans: var(--font-geist-mono);
   --font-mono: var(--font-geist-mono);

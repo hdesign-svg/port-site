@@ -1,3 +1,12 @@
+export type MockupDevice = "phone" | "desktop";
+
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  /** Defaults to phone. Desktop uses landscape aspect at full rail width. */
+  device?: MockupDevice;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -5,7 +14,7 @@ export type Project = {
   year: string;
   description: string[];
   outcomes: string[];
-  images: { src: string; alt: string }[];
+  images: ProjectImage[];
 };
 
 export const projects: Project[] = [
@@ -26,14 +35,12 @@ export const projects: Project[] = [
       {
         src: "/images/concierge-screenshot.png",
         alt: "Concierge AI hydration summary screen",
+        device: "phone",
       },
       {
         src: "/images/concierge-screenshot.png",
         alt: "Concierge AI customer outreach screen",
-      },
-      {
-        src: "/images/concierge-screenshot.png",
-        alt: "Concierge AI product pairing screen",
+        device: "phone",
       },
     ],
   },
@@ -43,17 +50,19 @@ export const projects: Project[] = [
     company: "Company",
     year: "2023",
     description: [
-      "Placeholder for layout preview — second project block to show section rhythm.",
+      "Placeholder for layout preview — mix of desktop and mobile work.",
     ],
     outcomes: ["Outcome metric one", "Outcome metric two"],
     images: [
       {
-        src: "/images/concierge-screenshot.png",
-        alt: "Placeholder mockup",
+        src: "/images/plane-desktop.png",
+        alt: "Plane project management desktop home screen",
+        device: "desktop",
       },
       {
         src: "/images/concierge-screenshot.png",
-        alt: "Placeholder mockup",
+        alt: "Mobile product screen",
+        device: "phone",
       },
     ],
   },

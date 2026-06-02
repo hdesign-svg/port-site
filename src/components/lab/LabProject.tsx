@@ -1,6 +1,12 @@
 import Image from "next/image";
-import type { Project } from "@/data/projects";
+import type { Project, ProjectImage } from "@/data/projects";
 import { Label } from "@/components/lab/Label";
+
+function mockupScreenClass(image: ProjectImage) {
+  return image.device === "desktop"
+    ? "mockup-frame__screen mockup-frame__screen--desktop"
+    : "mockup-frame__screen mockup-frame__screen--phone";
+}
 
 type LabProjectProps = {
   project: Project;
@@ -38,18 +44,22 @@ export function LabProject({ project }: LabProjectProps) {
           {project.images.map((image, imageIndex) => (
             <div
               key={`${image.src}-${imageIndex}`}
-              className="mockup-frame bg-surface p-[1.5rlh]"
+              className="mockup-frame bg-surface"
             >
-              <div className="relative mx-auto w-full max-w-[280px]">
-                <div className="mockup-frame__screen relative aspect-[210/477] w-full overflow-hidden">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover object-top"
-                    sizes="280px"
-                  />
-                </div>
+              <div
+                className={`${mockupScreenClass(image)} relative overflow-hidden`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className="object-cover object-top"
+                  sizes={
+                    image.device === "desktop"
+                      ? "(min-width: 1024px) 760px, 100vw"
+                      : "210px"
+                  }
+                />
               </div>
             </div>
           ))}
