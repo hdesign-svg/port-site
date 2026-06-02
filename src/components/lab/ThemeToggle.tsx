@@ -3,11 +3,15 @@
 import { Moon, Sun } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { applyThemeWithTransition, type Theme } from "@/lib/theme";
+import {
+  applyThemeWithTransition,
+  DEFAULT_THEME,
+  type Theme,
+} from "@/lib/theme";
 import { iconButtonSize } from "@/lib/icon-button";
 
 function readThemeFromDom(): Theme {
-  if (typeof document === "undefined") return "light";
+  if (typeof document === "undefined") return DEFAULT_THEME;
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
@@ -15,7 +19,7 @@ export function ThemeToggle() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
     setTheme(readThemeFromDom());

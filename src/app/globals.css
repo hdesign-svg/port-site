@@ -22,6 +22,8 @@
 
   --shell-max: 1200px;
   --shell-gutter: 1.25rem;
+  --shell-width: min(var(--shell-max), 100vw - 2 * var(--shell-gutter));
+  --shell-left: max(var(--shell-gutter), calc((100vw - var(--shell-width)) / 2));
   --rail-left: 400px;
   --grid-pitch: 40px;
 
@@ -276,18 +278,25 @@
   }
 }
 
-/* Back-to-top — mirrors PageBackdrop shell + rail padding (border-x + 1.5rlh) */
+/* Back-to-top — bordered, flat fill, no shadow (ghost interaction) */
 .back-to-top {
   position: absolute;
   bottom: 1rlh;
-  /* border-x (1px) + rail cell padding — matches avatar inset */
   left: calc(1px + 1.5rlh);
+  border-color: var(--color-border);
+  background-color: var(--color-bg);
+  box-shadow: none;
   opacity: 0;
   transform: translateY(0.25rem);
   pointer-events: none;
   transition:
     opacity var(--back-to-top-fade-dur) var(--back-to-top-fade-ease),
     transform var(--back-to-top-fade-dur) var(--back-to-top-fade-ease);
+}
+
+.back-to-top:hover,
+.back-to-top:active {
+  box-shadow: none;
 }
 
 .back-to-top--visible {
@@ -352,8 +361,6 @@
 
 /* Shared: show only in viewport gutters outside the content shell */
 .backdrop-gutter-mask {
-  --shell-width: min(var(--shell-max), 100vw - 2 * var(--shell-gutter));
-  --shell-left: max(var(--shell-gutter), calc((100vw - var(--shell-width)) / 2));
   --shell-right: calc(var(--shell-left) + var(--shell-width));
 
   -webkit-mask-image: linear-gradient(

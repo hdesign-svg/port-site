@@ -19,7 +19,7 @@ export function LabProject({ project }: LabProjectProps) {
               {project.company} · {project.year}
             </p>
           </div>
-          <div className="mt-[1.5rlh] [&_p:not(:last-child)]:mb-[1rlh]">
+          <div className="mt-[0.75rlh] [&_p:not(:last-child)]:mb-[1rlh]">
             {project.description.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}

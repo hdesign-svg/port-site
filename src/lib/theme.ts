@@ -1,6 +1,7 @@
 export type Theme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "theme";
+export const DEFAULT_THEME: Theme = "dark";
 
 export function parseTheme(value: string | null | undefined): Theme | null {
   if (value === "light" || value === "dark") return value;
@@ -55,10 +56,10 @@ export const themeInitScript = `
         ? fromQuery
         : fromStorage === "dark" || fromStorage === "light"
           ? fromStorage
-          : "light";
+          : "${DEFAULT_THEME}";
     document.documentElement.dataset.theme = theme;
   } catch (e) {
-    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.theme = "${DEFAULT_THEME}";
   }
 })();
 `;

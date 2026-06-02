@@ -28,7 +28,7 @@ export function BackToTop() {
           aria-label="Back to top"
           aria-hidden={!visible}
           tabIndex={visible ? 0 : -1}
-          className={`back-to-top icon-btn icon-btn--md icon-btn--raised${visible ? " back-to-top--visible" : ""}`}
+          className={`back-to-top icon-btn icon-btn--md icon-btn--ghost${visible ? " back-to-top--visible" : ""}`}
         >
           <ArrowUp size={iconButtonSize.md} weight="regular" aria-hidden />
         </button>
