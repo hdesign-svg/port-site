@@ -21,6 +21,7 @@
   --font-weight: 450;
 
   --shell-max: 1200px;
+  --shell-gutter: 1.25rem;
   --rail-left: 400px;
   --grid-pitch: 40px;
 
@@ -28,8 +29,12 @@
   --icon-btn-size-sm: 2rem; /* 32px · 16px icon */
   --icon-btn-size-md: 2.5rem; /* 40px · 20px icon */
   --icon-btn-size-lg: 3rem; /* 48px · 24px icon */
-  --icon-btn-radius: 6px;
+  --icon-btn-radius: var(--radius-surface);
   --icon-btn-hover-bg: var(--color-surface);
+
+  /* Radius scale — control inset (6px) → surfaces (8px) */
+  --radius-control: 6px;
+  --radius-surface: 8px;
 
   /* transitions.dev motion tokens */
   --icon-swap-dur: 200ms;
@@ -63,6 +68,18 @@
   --grid-dot: rgba(255, 255, 255, 0.12);
 }
 
+.shell-frame {
+  background-color: var(--color-bg);
+  border-top: none;
+  border-bottom: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  /* bg ring outside side borders — clean edge against page bg */
+  box-shadow:
+    -1px 0 0 0 var(--color-bg),
+    1px 0 0 0 var(--color-bg);
+}
+
 /* esafev.com-style link hover: underline stays, solid highlight, no easing */
 .link-highlight {
   font-weight: 550;
@@ -83,6 +100,20 @@
 .link-highlight:focus-visible {
   outline: 2px solid var(--color-fg-strong);
   outline-offset: 2px;
+}
+
+/* Mockup frames — surface radius; inner screen uses control radius */
+.mockup-frame {
+  border-radius: var(--radius-surface);
+}
+
+.mockup-frame__screen {
+  border-radius: var(--radius-control);
+}
+
+/* Hero theme toggle — vertically centered to a single text line box */
+.hero-copy-toggle {
+  height: var(--font-height);
 }
 
 /* Shared icon buttons — ghost (tertiary) vs raised (secondary) */
@@ -245,12 +276,12 @@
   }
 }
 
-/* Fixed to left rail column, aligned with rail content edge */
+/* Back-to-top — mirrors PageBackdrop shell + rail padding (border-x + 1.5rlh) */
 .back-to-top {
-  position: fixed;
-  z-index: 50;
+  position: absolute;
   bottom: 1rlh;
-  left: calc(50% - min(var(--shell-max), 100vw - 2.5rem) / 2 + 1.5rlh);
+  /* border-x (1px) + rail cell padding — matches avatar inset */
+  left: calc(1px + 1.5rlh);
   opacity: 0;
   transform: translateY(0.25rem);
   pointer-events: none;
@@ -265,10 +296,8 @@
   pointer-events: auto;
 }
 
-@media (min-width: 1024px) {
-  .back-to-top {
-    left: calc(50% - min(var(--shell-max), 100vw - 5rem) / 2 + 1.5rlh);
-  }
+.back-to-top-anchor:has(.back-to-top--visible) {
+  pointer-events: auto;
 }
 
 .back-to-top:focus-visible {
@@ -323,26 +352,36 @@
 
 /* Shared: show only in viewport gutters outside the content shell */
 .backdrop-gutter-mask {
+  --shell-width: min(var(--shell-max), 100vw - 2 * var(--shell-gutter));
+  --shell-left: max(var(--shell-gutter), calc((100vw - var(--shell-width)) / 2));
+  --shell-right: calc(var(--shell-left) + var(--shell-width));
+
   -webkit-mask-image: linear-gradient(
     to right,
     #000 0,
-    #000 max(0px, calc((100vw - var(--shell-max)) / 2)),
-    transparent max(0px, calc((100vw - var(--shell-max)) / 2)),
-    transparent
-      calc(max(0px, calc((100vw - var(--shell-max)) / 2)) + var(--shell-max)),
-    #000 calc(max(0px, calc((100vw - var(--shell-max)) / 2)) + var(--shell-max)),
+    #000 var(--shell-left),
+    transparent var(--shell-left),
+    transparent var(--shell-right),
+    #000 var(--shell-right),
     #000 100%
   );
   mask-image: linear-gradient(
     to right,
     #000 0,
-    #000 max(0px, calc((100vw - var(--shell-max)) / 2)),
-    transparent max(0px, calc((100vw - var(--shell-max)) / 2)),
-    transparent
-      calc(max(0px, calc((100vw - var(--shell-max)) / 2)) + var(--shell-max)),
-    #000 calc(max(0px, calc((100vw - var(--shell-max)) / 2)) + var(--shell-max)),
+    #000 var(--shell-left),
+    transparent var(--shell-left),
+    transparent var(--shell-right),
+    #000 var(--shell-right),
     #000 100%
   );
+}
+
+@media (min-width: 1024px) {
+  :root,
+  [data-theme="light"],
+  [data-theme="dark"] {
+    --shell-gutter: 2.5rem;
+  }
 }
 
 /* Effect 4: dot grid (viewport gutters only) */

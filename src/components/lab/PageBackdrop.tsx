@@ -13,15 +13,14 @@ type PageBackdropProps = {
 };
 
 /**
- * Full-viewport backdrop treatments. Content shell stays solid white so
- * effects only read in the side margins (or hero, for hero-wash).
+ * Backdrop treatments for optional gutter effects behind the shell.
  */
 export function PageBackdrop({
   children,
   variant = "none",
 }: PageBackdropProps) {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-bg">
       {variant === "margin-grid" ? (
         <div
           className="margin-field-grid backdrop-gutter-mask pointer-events-none fixed inset-0 z-0"
@@ -41,7 +40,7 @@ export function PageBackdrop({
         />
       ) : null}
       <div className="px-5 lg:px-10">
-        <div className="relative z-10 mx-auto w-full max-w-[var(--shell-max)] bg-bg">
+        <div className="shell-frame relative z-10 mx-auto w-full max-w-[var(--shell-max)] bg-bg">
           {children}
         </div>
       </div>

@@ -11,6 +11,7 @@ type HomeProps = {
 export default async function Home({ searchParams }: HomeProps) {
   const { bg } = await searchParams;
   const variant: BackdropVariant =
+    bg === "none" ||
     bg === "margin-grid" ||
     bg === "hero-wash" ||
     bg === "noise" ||
@@ -22,7 +23,6 @@ export default async function Home({ searchParams }: HomeProps) {
     <>
       <PageBackdrop variant={variant}>
         <main>
-          <div className="border-x border-border">
             {variant === "hero-wash" ? (
               <div className="hero-wash-band">
                 <LabHero />
@@ -31,10 +31,9 @@ export default async function Home({ searchParams }: HomeProps) {
               <LabHero />
             )}
 
-            {projects.map((project, index) => (
-              <LabProject key={project.id} project={project} index={index} />
+            {projects.map((project) => (
+              <LabProject key={project.id} project={project} />
             ))}
-          </div>
         </main>
       </PageBackdrop>
       <BackToTop />
