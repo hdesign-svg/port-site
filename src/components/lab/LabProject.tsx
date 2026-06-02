@@ -15,8 +15,6 @@ type LabProjectProps = {
 export function LabProject({ project }: LabProjectProps) {
   return (
     <section className="grid grid-cols-1 border-b border-border last:border-b-0 lg:grid-cols-[var(--rail-left)_1fr]">
-      {/* Left cell — outer stretches full row height for divider; inner sticky */}
-      {/* Cell stretches to mockup row height; sticky child pins inside it */}
       <div className="border-b border-border pt-[1.5rlh] lg:border-r lg:border-b-0 lg:pt-10">
         <div className="px-[1.5rlh] pb-[1.5rlh] lg:sticky lg:top-10 lg:self-start lg:bg-bg">
           <div className="flex flex-col">
@@ -30,7 +28,7 @@ export function LabProject({ project }: LabProjectProps) {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-          <ul className="mt-[1rlh] list-inside list-disc">
+          <ul className="mt-[1rlh] list-outside list-disc pl-[1.25em]">
             {project.outcomes.map((outcome) => (
               <li key={outcome}>{outcome}</li>
             ))}
@@ -38,7 +36,6 @@ export function LabProject({ project }: LabProjectProps) {
         </div>
       </div>
 
-      {/* Right cell — mockups */}
       <div className="px-[1.5rlh] pb-[1.5rlh] pt-[1.5rlh] lg:pt-10">
         <div className="flex flex-col gap-[1.5rlh]">
           {project.images.map((image, imageIndex) => (
@@ -46,9 +43,7 @@ export function LabProject({ project }: LabProjectProps) {
               key={`${image.src}-${imageIndex}`}
               className="mockup-frame bg-surface"
             >
-              <div
-                className={`${mockupScreenClass(image)} relative overflow-hidden`}
-              >
+              <div className={mockupScreenClass(image)}>
                 <Image
                   src={image.src}
                   alt={image.alt}

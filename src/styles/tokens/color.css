@@ -1,29 +1,60 @@
 /**
- * Semantic color tokens (values from Radix Slate).
- *
- * The site only needs these roles — not the full 1–12 scale in CSS.
- * Radix refs in comments if you want to swap a step later.
+ * Semantic tokens — Radix Slate
+ * https://www.radix-ui.com/colors/docs/palette-composition/scales
  */
+
+:root {
+  /* Slate — light */
+  --slate-1: #fcfcfd;
+  --slate-2: #f9f9fb;
+  --slate-3: #f0f0f3;
+  --slate-4: #e8e8ec;
+  --slate-5: #e0e1e6;
+  --slate-6: #d9d9e0;
+  --slate-7: #cdced6;
+  --slate-8: #b9bbc6;
+  --slate-9: #8b8d98;
+  --slate-10: #80838d;
+  --slate-11: #60646c;
+  --slate-12: #1c2024;
+
+  /* Slate — dark */
+  --slate-dark-1: #111113;
+  --slate-dark-2: #18181b;
+  --slate-dark-3: #212225;
+  --slate-dark-4: #272a2d;
+  --slate-dark-5: #2e3135;
+  --slate-dark-6: #363a3f;
+  --slate-dark-7: #43484e;
+  --slate-dark-8: #5a6169;
+  --slate-dark-9: #696e77;
+  --slate-dark-10: #777b84;
+  --slate-dark-11: #b0b4ba;
+  --slate-dark-12: #edeef0;
+}
 
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
-  --color-bg: #fcfcfd; /* slate 1 */
-  --color-bg-subtle: #f9f9fb; /* slate 2 — hero band */
-  /* Cards: between slate 2 and 3 — raise % if too soft, lower if too strong */
-  --color-surface: color-mix(in srgb, #f0f0f3 46%, #f9f9fb);
-  --color-fg: #1c2024; /* slate 12 */
-  --color-fg-strong: #1c2024;
-  --color-fg-muted: #80838d; /* slate 10 — quieter than 11 */
-  --color-border: color-mix(in srgb, #1c2024 7%, transparent);
-  --color-accent: #80838d; /* slate 10 — reserved */
+  --color-bg: var(--slate-1);
+  --color-bg-subtle: var(--slate-2);
+  --color-surface: color-mix(in srgb, var(--slate-4) 50%, var(--slate-1));
+  --color-fg: var(--slate-12);
+  --color-fg-strong: var(--slate-12);
+  --color-fg-muted: color-mix(
+    in srgb,
+    var(--slate-10) 45%,
+    var(--slate-9)
+  );
+  --color-border: color-mix(in srgb, var(--slate-12) 8%, transparent);
+  --color-accent: var(--slate-10);
   --color-brand: var(--color-accent);
 
-  --grid-line: color-mix(in srgb, #1c2024 3%, transparent);
-  --grid-dot: color-mix(in srgb, #1c2024 6%, transparent);
+  --grid-line: color-mix(in srgb, var(--slate-12) 4%, transparent);
+  --grid-dot: color-mix(in srgb, var(--slate-12) 8%, transparent);
 
-  --color-shadow-key: #1c2024;
+  --color-shadow-key: var(--slate-12);
   --shadow-raised:
     0 1px 1px color-mix(in srgb, var(--color-shadow-key) 5%, transparent),
     0 2px 6px color-mix(in srgb, var(--color-shadow-key) 5%, transparent),
@@ -40,18 +71,26 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-bg: #111113; /* slate 1 */
-  --color-bg-subtle: #18181b; /* slate 2 */
-  --color-surface: #18181b;
-  --color-fg: #edeef0; /* slate 12 */
-  --color-fg-strong: #edeef0;
-  --color-fg-muted: #696e77; /* slate 9 — quieter than 11 */
-  --color-border: color-mix(in srgb, #edeef0 5%, transparent);
-  --color-accent: #777b84; /* slate 10 */
+  --color-bg: var(--slate-dark-1);
+  --color-bg-subtle: var(--slate-dark-2);
+  --color-surface: color-mix(
+    in srgb,
+    var(--slate-dark-4) 32%,
+    var(--slate-dark-1)
+  );
+  --color-fg: var(--slate-dark-12);
+  --color-fg-strong: var(--slate-dark-12);
+  --color-fg-muted: color-mix(
+    in srgb,
+    var(--slate-dark-8) 55%,
+    var(--slate-dark-7)
+  );
+  --color-border: color-mix(in srgb, var(--slate-dark-12) 6%, transparent);
+  --color-accent: var(--slate-dark-10);
   --color-brand: var(--color-accent);
 
-  --grid-line: color-mix(in srgb, #edeef0 2.5%, transparent);
-  --grid-dot: color-mix(in srgb, #edeef0 5%, transparent);
+  --grid-line: color-mix(in srgb, var(--slate-dark-12) 3%, transparent);
+  --grid-dot: color-mix(in srgb, var(--slate-dark-12) 6%, transparent);
 
   --color-shadow-key: #000000;
   --shadow-raised:

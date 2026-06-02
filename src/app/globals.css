@@ -19,7 +19,7 @@
   --icon-btn-size-sm: 2rem; /* 32px · 16px icon */
   --icon-btn-size-md: 2.5rem; /* 40px · 20px icon */
   --icon-btn-size-lg: 3rem; /* 48px · 24px icon */
-  --icon-btn-radius: var(--radius-control);
+  --icon-btn-radius: 9999px; /* full circle on square icon buttons */
   --icon-btn-hover-bg: var(--color-surface);
 
   /* Radius scale — control inset (6px) → surfaces (8px) */
@@ -84,26 +84,28 @@
   outline-offset: 2px;
 }
 
-/* Mockup frames — surface radius; inner screen uses control radius */
+/* Mockup frames — square cards; rounded screens inside */
 .mockup-frame {
-  border-radius: var(--radius-surface);
+  border-radius: 0;
   padding-inline: var(--mockup-frame-pad-inline);
   padding-block: var(--mockup-frame-pad-block);
 }
 
 .mockup-frame__screen {
-  border-radius: var(--radius-control);
+  position: relative;
   width: 100%;
   margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--radius-control);
 }
 
 .mockup-frame__screen--phone {
   max-width: var(--mockup-phone-max-width);
-  aspect-ratio: var(--mockup-phone-aspect);
+  aspect-ratio: 210 / 477;
 }
 
 .mockup-frame__screen--desktop {
-  aspect-ratio: var(--mockup-desktop-aspect);
+  aspect-ratio: 1024 / 704;
 }
 
 /* Hero theme toggle — vertically centered to a single text line box */
