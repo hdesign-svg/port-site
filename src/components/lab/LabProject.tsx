@@ -10,8 +10,9 @@ export function LabProject({ project }: LabProjectProps) {
   return (
     <section className="grid grid-cols-1 border-b border-border last:border-b-0 lg:grid-cols-[var(--rail-left)_1fr]">
       {/* Left cell — outer stretches full row height for divider; inner sticky */}
-      <div className="border-b border-border lg:border-r lg:border-b-0">
-        <div className="p-[1.5rlh] lg:sticky lg:top-[1.5rlh]">
+      {/* Cell stretches to mockup row height; sticky child pins inside it */}
+      <div className="border-b border-border pt-[1.5rlh] lg:border-r lg:border-b-0 lg:pt-10">
+        <div className="px-[1.5rlh] pb-[1.5rlh] lg:sticky lg:top-10 lg:self-start lg:bg-bg">
           <div className="flex flex-col">
             <Label>{project.title}</Label>
             <p className="text-fg-muted">
@@ -32,11 +33,7 @@ export function LabProject({ project }: LabProjectProps) {
       </div>
 
       {/* Right cell — mockups */}
-      <div className="p-[1.5rlh]">
-        <p className="mb-[1.5rlh] font-[550] text-fg-strong">
-          Product design · {project.year}
-        </p>
-
+      <div className="px-[1.5rlh] pb-[1.5rlh] pt-[1.5rlh] lg:pt-10">
         <div className="flex flex-col gap-[1.5rlh]">
           {project.images.map((image, imageIndex) => (
             <div
