@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Bank,
   Bell,
   DotsThree,
   ListChecks,
@@ -23,7 +24,11 @@ const AI_SPARKLE_COLOR = "#623CC9";
 const SEARCH_ICON = hcpIcon.sm;
 const SEARCH_PLACEHOLDER = "Search jobs, customers, invoices";
 
-const visibleUtilityIcons = [{ Icon: Bell, label: "Notifications" }] as const;
+const linkedAccountMenuItems = [
+  "Edit bank details",
+  "Refresh connection",
+  "Disconnect account",
+] as const;
 
 const moreMenuItems = [
   { Icon: Phone, label: "Phone" },
@@ -43,9 +48,14 @@ const iconButtonSx = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  lineHeight: 0,
   borderRadius: "40px",
   color: hcpColors.textSecondary,
   flexShrink: 0,
+  "& svg": {
+    display: "block",
+    flexShrink: 0,
+  },
   "&::before": {
     content: '""',
     position: "absolute",
@@ -55,11 +65,23 @@ const iconButtonSx = {
   "&:hover::before": {
     bgcolor: "action.hover",
   },
-};
+} as const;
+
+/** Sparkle glyph sits low/right in its viewBox — nudge to match Bank/Bell optically */
+const aiIconButtonSx = {
+  ...iconButtonSx,
+  "& svg": {
+    display: "block",
+    flexShrink: 0,
+    transform: "translate(0.5px, -2px)",
+  },
+} as const;
 
 export function HcpTopBar() {
   const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
+  const [bankAnchor, setBankAnchor] = useState<null | HTMLElement>(null);
   const moreOpen = Boolean(moreAnchor);
+  const bankOpen = Boolean(bankAnchor);
 
   return (
     <Box
@@ -128,21 +150,58 @@ export function HcpTopBar() {
           flexShrink: 0,
         }}
       >
-        <Box component="button" type="button" aria-label="AI" sx={iconButtonSx}>
+        <Box component="button" type="button" aria-label="AI" sx={aiIconButtonSx}>
           <Sparkle size={TOP_ICON} color={AI_SPARKLE_COLOR} weight="regular" />
         </Box>
 
-        {visibleUtilityIcons.map(({ Icon, label }) => (
-          <Box
-            key={label}
-            component="button"
-            type="button"
-            aria-label={label}
-            sx={iconButtonSx}
-          >
-            <Icon size={TOP_ICON} color={hcpColors.textSecondary} />
-          </Box>
-        ))}
+        <Box
+          component="button"
+          type="button"
+          aria-label="Linked accounts"
+          aria-haspopup="true"
+          aria-expanded={bankOpen ? "true" : undefined}
+          aria-controls={bankOpen ? "hcp-topbar-bank-menu" : undefined}
+          onClick={(event) => setBankAnchor(event.currentTarget)}
+          sx={iconButtonSx}
+        >
+          <Bank size={TOP_ICON} color={hcpColors.textSecondary} />
+        </Box>
+
+        <Box component="button" type="button" aria-label="Notifications" sx={iconButtonSx}>
+          <Bell size={TOP_ICON} color={hcpColors.textSecondary} />
+        </Box>
+
+        <Menu
+          id="hcp-topbar-bank-menu"
+          anchorEl={bankAnchor}
+          open={bankOpen}
+          onClose={() => setBankAnchor(null)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          slotProps={{
+            paper: {
+              sx: {
+                mt: 1,
+                minWidth: 200,
+                border: `1px solid ${hcpColors.border}`,
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+              },
+            },
+          }}
+        >
+          {linkedAccountMenuItems.map((label) => (
+            <MenuItem
+              key={label}
+              onClick={() => setBankAnchor(null)}
+              sx={{
+                py: 1.25,
+                color: label === "Disconnect account" ? hcpColors.spending : hcpColors.textPrimary,
+              }}
+            >
+              <Typography variant="body2">{label}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
 
         <Box
           component="button"

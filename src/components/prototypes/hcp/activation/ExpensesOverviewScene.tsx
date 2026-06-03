@@ -2,7 +2,9 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpContentHeaderSx, hcpContentPageSx, hcpFontWeight, hcpLayout } from "../hcpTheme";
+import { ExpensesSummaryBar } from "./ExpensesSummaryBar";
+import { RecentActivityTeaser } from "./RecentActivityTeaser";
+import { hcpColors, hcpContentHeaderSx, hcpContentPageSx, hcpFontWeight, hcpLayout, hcpSpacing } from "../hcpTheme";
 
 const tabs = [
   { label: "Overview", active: true },
@@ -21,11 +23,22 @@ export function ExpensesOverviewScene() {
           top: 0,
           zIndex: 1,
           bgcolor: hcpColors.background,
-          pt: `${hcpLayout.tabBlockMarginTop}px`,
-          pb: `${hcpLayout.tabBlockMarginBottom}px`,
+          pt: `${hcpLayout.contentHeaderSyncTop}px`,
+          pb: `${hcpSpacing.m}px`,
         }}
       >
         <Box sx={hcpContentHeaderSx}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{
+              color: hcpColors.textPrimary,
+              fontWeight: hcpFontWeight.regular,
+              mb: `${hcpSpacing.m}px`,
+            }}
+          >
+            Expenses
+          </Typography>
           <Box sx={{ position: "relative" }}>
             <Box
               role="tablist"
@@ -100,10 +113,14 @@ export function ExpensesOverviewScene() {
         component="section"
         sx={{
           ...hcpContentPageSx,
-          pb: `${hcpLayout.contentPageMargin}px`,
+          pb: `${hcpSpacing.m}px`,
+          display: "flex",
+          flexDirection: "column",
+          gap: `${hcpSpacing.l}px`,
         }}
       >
-        {/* Core content sections build here */}
+        <ExpensesSummaryBar />
+        <RecentActivityTeaser />
       </Box>
     </Box>
   );

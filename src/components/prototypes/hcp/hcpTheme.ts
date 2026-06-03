@@ -31,6 +31,16 @@ export const hcpColors = {
   tableHeaderBg: "rgba(33, 33, 33, 0.08)",
 } as const;
 
+/**
+ * Vertical rhythm — tight within a thought, loose between thoughts.
+ * S: inside a group · M: related blocks · L: zone breaks
+ */
+export const hcpSpacing = {
+  s: 16,
+  m: 32,
+  l: 40,
+} as const;
+
 export const hcpLayout = {
   globalNavWidth: 256,
   /** Shared chrome bar height (top nav, rail header, rail footer) */
@@ -51,9 +61,8 @@ export const hcpLayout = {
   tabLabelGap: 24,
   tabIndicatorWidth: 3,
   tabLabelToIndicator: 10,
-  /** Aligns content tabs with first rail nav row (navListPaddingY + navRowPy) */
-  tabBlockMarginTop: 19,
-  tabBlockMarginBottom: 24,
+  /** Page header top — optical sync with first rail nav row (navListPaddingY + navRowPy) */
+  contentHeaderSyncTop: 19,
   /** Top-bar search — fits placeholder, not full header width */
   searchFieldWidth: 320,
   /** Edge-to-edge distance between icon boxes — horizontal + vertical rhythm */
@@ -88,6 +97,11 @@ export const hcpContentPageSx = {
   maxWidth: hcpLayout.contentMaxWidth,
   mx: `${hcpLayout.contentPageMargin}px`,
   boxSizing: "border-box" as const,
+} as const;
+
+/** Gap between major content sections (metrics, banner, chart, etc.) */
+export const hcpContentSectionGapSx = {
+  mb: `${hcpSpacing.l}px`,
 } as const;
 
 /** Icon sizes — 20px chrome balances with 400-weight labels */
