@@ -1,17 +1,14 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { hcpColors, hcpContentHeaderSx, hcpContentPageSx, hcpFontWeight, hcpLayout } from "../hcpTheme";
 
 const tabs = [
   { label: "Overview", active: true },
   { label: "Transactions" },
-  { label: "Expense Cards" },
-  { label: "Funding" },
-  { label: "Bill Pay", badge: "New" },
-  { label: "Statements" },
+  { label: "Cards" },
+  { label: "Bill Pay" },
 ] as const;
 
 export function ExpensesOverviewScene() {
@@ -52,31 +49,19 @@ export function ExpensesOverviewScene() {
                       position: "relative",
                       display: "flex",
                       alignItems: "flex-start",
-                      gap: 1,
                       pb: `${hcpLayout.tabLabelToIndicator}px`,
                     }}
                   >
                     <Typography
-                      variant="tabLabel"
+                      variant="navLabel"
                       sx={{
-                        color: isActive ? hcpColors.textPrimary : hcpColors.textSecondary,
+                        color: isActive ? hcpColors.textPrimary : hcpColors.textMuted,
                         fontWeight: isActive ? hcpFontWeight.semibold : hcpFontWeight.regular,
                         whiteSpace: "nowrap",
                       }}
                     >
                       {tab.label}
                     </Typography>
-                    {"badge" in tab && tab.badge ? (
-                      <Chip
-                        label={tab.badge}
-                        size="small"
-                        sx={{
-                          bgcolor: hcpColors.primaryLight,
-                          color: hcpColors.textPrimary,
-                          "& .MuiChip-label": { px: 1, py: 0.25 },
-                        }}
-                      />
-                    ) : null}
                     {isActive ? (
                       <Box
                         aria-hidden

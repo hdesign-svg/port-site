@@ -25,7 +25,7 @@ import Image from "next/image";
 import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "./hcpTheme";
 
 const NAV_PRIMARY_ICON = hcpIcon.md;
-const NAV_CHEVRON_SIZE = 18;
+const NAV_CHEVRON_SIZE = 16;
 const NAV_TRAILING_SLOT = 20;
 const FOOTER_USER_DISPLAY_NAME = "Sarah";
 const FOOTER_USER_FULL_NAME = "Sarah Mitchell";
@@ -83,6 +83,7 @@ function NavRow({
 }) {
   const iconColor = selected ? hcpColors.primary : hcpColors.navIcon;
   const labelColor = selected ? hcpColors.textPrimary : hcpColors.textMuted;
+  const chevronColor = selected ? labelColor : iconColor;
 
   return (
     <Box sx={navItemSx}>
@@ -116,9 +117,9 @@ function NavRow({
       {chevron ? (
         <TrailingSlot>
           {chevron === "down" ? (
-            <CaretDown size={NAV_CHEVRON_SIZE} color={iconColor} weight="regular" />
+            <CaretDown size={NAV_CHEVRON_SIZE} color={chevronColor} weight="regular" />
           ) : (
-            <CaretUp size={NAV_CHEVRON_SIZE} color={iconColor} weight="regular" />
+            <CaretUp size={NAV_CHEVRON_SIZE} color={chevronColor} weight="regular" />
           )}
         </TrailingSlot>
       ) : null}

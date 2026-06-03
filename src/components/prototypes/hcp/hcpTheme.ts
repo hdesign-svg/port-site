@@ -13,10 +13,10 @@ export const hcpColors = {
   borderSubtle: "#f0f0f0",
   borderInput: "#bdbdbd",
   /** Rail icons — lighter than labels so type leads */
-  navIcon: "#bdbdbd",
+  navIcon: "#9e9e9e",
   /** Open/selected parent section icon + chevron */
   navIconSelected: "#0e6fbe",
-  expensesActive: "rgba(33, 33, 33, 0.08)",
+  expensesActive: "rgba(33, 33, 33, 0.12)",
   purple: "#7e57c2",
   avatar: "#bf8600",
   successLight: "#dcf9d7",
