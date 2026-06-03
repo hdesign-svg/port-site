@@ -47,6 +47,9 @@
   --theme-reveal-ease: cubic-bezier(0.33, 1, 0.68, 1);
   --back-to-top-fade-dur: 200ms;
   --back-to-top-fade-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --back-to-top-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-shadow-key) 5%, transparent),
+    0 4px 14px color-mix(in srgb, var(--color-shadow-key) 4%, transparent);
   --nav-link-color-dur: 150ms;
 }
 
@@ -245,25 +248,26 @@
   }
 }
 
-/* Back-to-top — bordered, flat fill, no shadow (ghost interaction) */
+/* Back-to-top — bordered, subtle lift shadow */
 .back-to-top {
   position: absolute;
   bottom: 1rlh;
   left: calc(1px + 1.5rlh);
   border-color: var(--color-border);
   background-color: var(--color-bg);
-  box-shadow: none;
+  box-shadow: var(--back-to-top-shadow);
   opacity: 0;
   transform: translateY(0.25rem);
   pointer-events: none;
   transition:
     opacity var(--back-to-top-fade-dur) var(--back-to-top-fade-ease),
-    transform var(--back-to-top-fade-dur) var(--back-to-top-fade-ease);
+    transform var(--back-to-top-fade-dur) var(--back-to-top-fade-ease),
+    box-shadow var(--icon-btn-interaction-dur) ease;
 }
 
 .back-to-top:hover,
 .back-to-top:active {
-  box-shadow: none;
+  box-shadow: var(--back-to-top-shadow);
 }
 
 .back-to-top--visible {

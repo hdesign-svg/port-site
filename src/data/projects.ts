@@ -42,29 +42,29 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "hcp-money-enrollment",
-    title: "HCP Money Enrollment",
+    id: "hcp-money-activation",
+    title: "HCP Money Activation",
     company: "Housecall Pro",
     year: "2025",
     description: [
-      "Redesigned enrollment after funnel analysis revealed users were dropping off before seeing the product.",
+      "Redesigned activation after funnel analysis revealed users were dropping off before seeing the product.",
       "Built for home service professionals evaluating fintech products before commitment.",
     ],
     outcomes: ["3% → 12% conversion", "Adopted across product squads"],
     images: [
       {
         src: "/images/plane-desktop.png",
-        alt: "Legacy HCP Money marketing landing page inside the product",
+        alt: "HCP Money activation screen with feature carousel",
         device: "desktop",
       },
       {
         src: "/images/plane-desktop.png",
-        alt: "Window-view enrollment dialogue with feature carousel over product empty state",
+        alt: "Expense module onboarding — business information step",
         device: "desktop",
       },
       {
         src: "/images/plane-desktop.png",
-        alt: "Unlocked module with quasi-empty state after enrollment",
+        alt: "HCP Money overview after activation",
         device: "desktop",
       },
     ],
