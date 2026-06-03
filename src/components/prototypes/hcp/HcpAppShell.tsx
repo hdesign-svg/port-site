@@ -14,7 +14,8 @@ export function HcpAppShell({ children }: HcpAppShellProps) {
     <Box
       sx={{
         display: "flex",
-        minHeight: "100vh",
+        height: "100%",
+        overflow: "hidden",
         bgcolor: hcpColors.background,
         color: hcpColors.textPrimary,
       }}

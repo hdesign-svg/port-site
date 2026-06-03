@@ -48,7 +48,11 @@ export function LabProject({ project }: LabProjectProps) {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover object-top"
+                  className={
+                    image.device === "desktop"
+                      ? "object-contain object-top"
+                      : "object-cover object-top"
+                  }
                   sizes={
                     image.device === "desktop"
                       ? "(min-width: 1024px) 760px, 100vw"

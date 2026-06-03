@@ -5,49 +5,123 @@ import {
   CaretDown,
   CaretUp,
   ChartBar,
+  ChatCircle,
   CreditCard,
-  Diamond,
   FileText,
   Gear,
   House,
-  List,
   Megaphone,
   Receipt,
   SquaresFour,
+  Tag,
   Users,
+  UsersThree,
   Wrench,
 } from "@phosphor-icons/react";
-import Avatar from "@mui/material/Avatar";
+import type { Icon } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpLayout } from "./hcpTheme";
+import Image from "next/image";
+import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "./hcpTheme";
 
-type NavItemProps = {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
+const NAV_PRIMARY_ICON = hcpIcon.md;
+const NAV_CHEVRON_SIZE = 18;
+const NAV_TRAILING_SLOT = 20;
+const FOOTER_USER_DISPLAY_NAME = "Sarah";
+const FOOTER_USER_FULL_NAME = "Sarah Mitchell";
+
+const navItemSx = {
+  display: "flex",
+  alignItems: "center",
+  gap: `${hcpLayout.navIconLabelGap}px`,
+  width: "100%",
+  py: `${hcpLayout.navRowPy}px`,
+  borderRadius: 1,
 };
 
-function NavItem({ icon, label, active }: NavItemProps) {
+const trailingSlotSx = {
+  width: NAV_TRAILING_SLOT,
+  height: NAV_TRAILING_SLOT,
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+} as const;
+
+function TrailingSlot({ children }: { children?: React.ReactNode }) {
+  return <Box sx={trailingSlotSx}>{children}</Box>;
+}
+
+function NavDivider() {
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 2,
-        px: 1,
-        py: 1,
-        borderRadius: 1,
-        color: active ? hcpColors.textDark : hcpColors.textSecondary,
-        bgcolor: active ? hcpColors.expensesActive : "transparent",
+        py: `${hcpLayout.navRowPy}px`,
       }}
     >
-      <Box sx={{ color: "inherit", display: "flex" }}>{icon}</Box>
-      <Typography sx={{ flex: 1, fontSize: 14, fontWeight: 600, lineHeight: 1.74 }}>
+      <Box
+        sx={{
+          width: "100%",
+          height: "1px",
+          bgcolor: hcpColors.border,
+        }}
+      />
+    </Box>
+  );
+}
+
+function NavRow({
+  icon: Icon,
+  label,
+  chevron,
+  selected = false,
+}: {
+  icon: Icon;
+  label: string;
+  chevron?: "down" | "up";
+  selected?: boolean;
+}) {
+  const iconColor = selected ? hcpColors.primary : hcpColors.navIcon;
+  const labelColor = selected ? hcpColors.textPrimary : hcpColors.textMuted;
+
+  return (
+    <Box sx={navItemSx}>
+      <Box
+        sx={{
+          width: NAV_PRIMARY_ICON,
+          height: NAV_PRIMARY_ICON,
+          flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Icon
+          size={NAV_PRIMARY_ICON}
+          color={iconColor}
+          weight={selected ? "fill" : "regular"}
+        />
+      </Box>
+      <Typography
+        variant="navLabel"
+        sx={{
+          flex: 1,
+          color: labelColor,
+          fontWeight: selected ? hcpFontWeight.semibold : hcpFontWeight.regular,
+          minWidth: 0,
+        }}
+      >
         {label}
       </Typography>
+      {chevron ? (
+        <TrailingSlot>
+          {chevron === "down" ? (
+            <CaretDown size={NAV_CHEVRON_SIZE} color={iconColor} weight="regular" />
+          ) : (
+            <CaretUp size={NAV_CHEVRON_SIZE} color={iconColor} weight="regular" />
+          )}
+        </TrailingSlot>
+      ) : null}
     </Box>
   );
 }
@@ -55,36 +129,110 @@ function NavItem({ icon, label, active }: NavItemProps) {
 function SubNavItem({
   label,
   active,
-  badge,
 }: {
   label: string;
   active?: boolean;
-  badge?: boolean;
 }) {
+  return (
+    <Box sx={{ width: "100%", position: "relative" }}>
+      {active ? (
+        <Box
+          aria-hidden
+          sx={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: 1,
+            bgcolor: hcpColors.expensesActive,
+            zIndex: 0,
+          }}
+        />
+      ) : null}
+      <Box
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          alignItems: "center",
+          py: 0.75,
+          pl: 5,
+        }}
+      >
+        <Typography
+          variant={active ? "captionSemibold" : "caption"}
+          sx={{
+            flex: 1,
+            color: active ? hcpColors.textPrimary : hcpColors.textMuted,
+            minWidth: 0,
+          }}
+        >
+          {label}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function FooterUserAccount() {
   return (
     <Box
       sx={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        px: 1,
-        py: 1,
-        borderRadius: 1,
-        bgcolor: active ? hcpColors.expensesActive : "transparent",
+        gap: 2,
+        width: "100%",
+        minWidth: 0,
       }}
     >
-      <Typography
+      <Box
         sx={{
-          fontSize: 12,
-          lineHeight: 1.33,
-          color: active ? hcpColors.textDark : hcpColors.textSecondary,
+          width: NAV_PRIMARY_ICON,
+          flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "visible",
         }}
       >
-        {label}
+        <Box
+          sx={{
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            overflow: "hidden",
+            position: "relative",
+            flexShrink: 0,
+          }}
+        >
+          <Image
+            src="/images/hcp/user-jill.png"
+            alt={FOOTER_USER_FULL_NAME}
+            fill
+            sizes="28px"
+            style={{ objectFit: "cover" }}
+          />
+        </Box>
+      </Box>
+
+      <Typography
+        variant="caption"
+        sx={{
+          color: hcpColors.textPrimary,
+          fontWeight: hcpFontWeight.regular,
+          maxWidth: 64,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}
+      >
+        {FOOTER_USER_DISPLAY_NAME}
       </Typography>
-      {badge ? (
-        <Diamond size={14} weight="fill" color={hcpColors.primary} />
-      ) : null}
+
+      <Box sx={{ flex: 1, minWidth: 0 }} />
+
+      <TrailingSlot>
+        <Gear size={NAV_PRIMARY_ICON} color={hcpColors.textSecondary} weight="regular" aria-label="Settings" />
+      </TrailingSlot>
     </Box>
   );
 }
@@ -96,141 +244,107 @@ export function HcpGlobalNav() {
       aria-label="Primary"
       sx={{
         width: hcpLayout.globalNavWidth,
+        height: "100%",
         flexShrink: 0,
         bgcolor: hcpColors.paper,
         borderRight: `1px solid ${hcpColors.border}`,
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        overflow: "hidden",
+        isolation: "isolate",
       }}
     >
-      <Box sx={{ p: 3, display: "flex", flexDirection: "column", gap: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: 15,
-              color: hcpColors.primary,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            housecall
-            <Box component="span" sx={{ color: hcpColors.textPrimary }}>
-              {" "}
-              pro
-            </Box>
-          </Typography>
-          <List size={20} color={hcpColors.textSecondary} />
-        </Box>
-
-        <Button
-          fullWidth
-          variant="contained"
+      {/* Header — logo row, height matched to top bar */}
+      <Box
+        sx={{
+          ...hcpChromeBarSx,
+          flexShrink: 0,
+          bgcolor: hcpColors.paper,
+          borderBottom: `1px solid ${hcpColors.border}`,
+          px: `${hcpLayout.railInset}px`,
+          zIndex: 3,
+        }}
+      >
+        <Box
+          component="img"
+          src="/images/hcp/hcp-logo.svg"
+          alt="Housecall Pro"
           sx={{
-            bgcolor: hcpColors.primary,
-            borderRadius: 999,
-            py: 1.1,
-            fontSize: 14,
-            fontWeight: 600,
-            boxShadow: "none",
-            "&:hover": { bgcolor: hcpColors.primaryDark, boxShadow: "none" },
+            display: "block",
+            height: 20,
+            width: 140.5,
           }}
-        >
-          Add new
-        </Button>
+        />
       </Box>
 
+      {/* Scrollable nav */}
       <Box
         sx={{
           flex: 1,
+          minHeight: 0,
           overflowY: "auto",
-          px: 3,
-          pb: 3,
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
+          overflowX: "hidden",
+          px: `${hcpLayout.railInset}px`,
+          py: `${hcpLayout.navListPaddingY}px`,
+          bgcolor: hcpColors.paper,
+          zIndex: 2,
         }}
       >
-        <NavItem icon={<House size={22} />} label="Home" />
-        <NavItem icon={<CalendarBlank size={22} />} label="Schedule" />
-        <NavItem icon={<ChartBar size={22} />} label="Pipeline" />
-
-        <Divider sx={{ my: 0.5, borderColor: hcpColors.border }} />
-
-        <NavItem icon={<Users size={22} />} label="Customers" />
-        <NavItem icon={<Megaphone size={22} />} label="Leads" />
-        <NavItem icon={<FileText size={22} />} label="Estimates" />
-        <NavItem icon={<Wrench size={22} />} label="Jobs" />
-        <NavItem icon={<Receipt size={22} />} label="Invoices" />
-
-        <Divider sx={{ my: 0.5, borderColor: hcpColors.border }} />
-
-        <Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 1, py: 1 }}>
-            <CreditCard size={22} color={hcpColors.textDark} />
-            <Typography sx={{ flex: 1, fontSize: 14, fontWeight: 600, color: hcpColors.textDark }}>
-              Money
-            </Typography>
-            <CaretUp size={18} color={hcpColors.textSecondary} />
-          </Box>
-          <Box sx={{ pl: 5, display: "flex", flexDirection: "column", gap: 0.5, mt: 0.5 }}>
-            <SubNavItem label="Payments" />
-            <SubNavItem label="Expenses" active badge />
-            <SubNavItem label="Business Financing" />
-            <SubNavItem label="Accounting" badge />
-          </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 1, py: 1 }}>
-          <Megaphone size={22} color={hcpColors.textSecondary} />
-          <Typography sx={{ flex: 1, fontSize: 14, fontWeight: 600, color: hcpColors.textSecondary }}>
-            Marketing
-          </Typography>
-          <CaretDown size={18} color={hcpColors.textSecondary} />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 1, py: 1 }}>
-          <ChartBar size={22} color={hcpColors.textSecondary} />
-          <Typography sx={{ flex: 1, fontSize: 14, fontWeight: 600, color: hcpColors.textSecondary }}>
-            Reporting
-          </Typography>
-          <CaretDown size={18} color={hcpColors.textSecondary} />
-        </Box>
-
-        <Divider sx={{ my: 0.5, borderColor: hcpColors.border }} />
-
-        <NavItem icon={<SquaresFour size={22} />} label="Apps" />
-        <NavItem icon={<Gear size={22} />} label="Settings" />
-      </Box>
-
-      <Box
-        sx={{
-          p: 3,
-          borderTop: `1px solid ${hcpColors.border}`,
-          display: "flex",
-          alignItems: "center",
-          gap: 1.5,
-        }}
-      >
-        <Avatar
+        <Box
           sx={{
-            width: 32,
-            height: 32,
-            bgcolor: hcpColors.avatar,
-            color: hcpColors.textPrimary,
-            fontSize: 13,
+            display: "flex",
+            flexDirection: "column",
+            gap: `${hcpLayout.navItemGap}px`,
           }}
         >
-          J
-        </Avatar>
-        <Box sx={{ minWidth: 0 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>
-            Jill
-          </Typography>
-          <Typography sx={{ fontSize: 12, color: hcpColors.textSecondary, lineHeight: 1.2 }}>
-            Admin
-          </Typography>
+          <NavRow icon={House} label="Home" />
+          <NavRow icon={CalendarBlank} label="Schedule" />
+          <NavRow icon={ChartBar} label="Pipeline" />
+
+          <NavDivider />
+
+          <NavRow icon={Users} label="Customers" />
+          <NavRow icon={Megaphone} label="Leads" />
+          <NavRow icon={FileText} label="Estimates" />
+          <NavRow icon={Wrench} label="Jobs" />
+          <NavRow icon={Receipt} label="Invoices" />
+
+          <NavDivider />
+
+          <NavRow icon={ChatCircle} label="Communications" chevron="down" />
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: `${hcpLayout.navItemGap}px` }}>
+            <NavRow icon={CreditCard} label="Money" selected chevron="up" />
+            <SubNavItem label="Payments" />
+            <SubNavItem label="Expenses" active />
+            <SubNavItem label="Business Financing" />
+            <SubNavItem label="Accounting" />
+          </Box>
+
+          <NavRow icon={Megaphone} label="Marketing" chevron="down" />
+          <NavRow icon={ChartBar} label="Reporting" chevron="down" />
+          <NavRow icon={UsersThree} label="Team" chevron="down" />
+
+          <NavDivider />
+
+          <NavRow icon={Tag} label="Price Book" />
+          <NavRow icon={SquaresFour} label="Apps" />
+          <NavRow icon={Receipt} label="Service Plans" />
         </Box>
+      </Box>
+
+      {/* Footer — user account, height matched to logo header */}
+      <Box
+        sx={{
+          ...hcpChromeBarSx,
+          flexShrink: 0,
+          bgcolor: hcpColors.paper,
+          borderTop: `1px solid ${hcpColors.border}`,
+          px: `${hcpLayout.railInset}px`,
+          zIndex: 1,
+        }}
+      >
+        <FooterUserAccount />
       </Box>
     </Box>
   );
