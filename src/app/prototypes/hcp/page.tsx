@@ -23,12 +23,7 @@ export default function HcpPrototypesIndexPage() {
         HCP prototypes
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Not linked from the portfolio — bookmark a flow URL for interviews. Production
-        deploys can require a password via{" "}
-        <Box component="span" sx={{ fontFamily: "monospace", fontSize: "0.85em" }}>
-          PROTOTYPE_ACCESS_PASSWORD
-        </Box>
-        .
+        Not linked from the portfolio — bookmark a flow URL for interviews.
       </Typography>
       <Stack spacing={2}>
         {flows.map((flow) => (
