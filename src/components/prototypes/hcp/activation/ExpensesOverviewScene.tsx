@@ -4,7 +4,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ExpensesSummaryBar } from "./ExpensesSummaryBar";
 import { OverallActivityCard } from "./OverallActivityCard";
-import { hcpColors, hcpContentHeaderSx, hcpFontWeight, hcpLayout, hcpSpacing } from "../hcpTheme";
+import {
+  hcpColors,
+  hcpContentBlockStackSx,
+  hcpContentHeaderSx,
+  hcpContentSpacing,
+  hcpFontWeight,
+  hcpLayout,
+  hcpPageHeaderZoneSx,
+} from "../hcpTheme";
 
 const tabs = [
   { label: "Overview", active: true },
@@ -15,7 +23,16 @@ const tabs = [
 
 export function ExpensesOverviewScene() {
   return (
-    <Box sx={{ flex: 1, minHeight: 0, overflow: "auto", bgcolor: hcpColors.background }}>
+    <Box
+      sx={{
+        flex: 1,
+        minHeight: 0,
+        overflow: "auto",
+        display: "flex",
+        flexDirection: "column",
+        bgcolor: hcpColors.background,
+      }}
+    >
       <Box
         component="header"
         sx={{
@@ -23,8 +40,7 @@ export function ExpensesOverviewScene() {
           top: 0,
           zIndex: 1,
           bgcolor: hcpColors.background,
-          pt: `${hcpLayout.contentHeaderSyncTop}px`,
-          pb: `${hcpLayout.tabToPanel}px`,
+          ...hcpPageHeaderZoneSx,
         }}
       >
         <Box sx={hcpContentHeaderSx}>
@@ -34,7 +50,7 @@ export function ExpensesOverviewScene() {
             sx={{
               color: hcpColors.textPrimary,
               fontWeight: hcpFontWeight.semibold,
-              mb: `${hcpLayout.pageHeaderStackGap}px`,
+              mb: `${hcpContentSpacing.pageHeaderStack}px`,
             }}
           >
             Expenses
@@ -113,17 +129,25 @@ export function ExpensesOverviewScene() {
       <Box
         component="section"
         sx={{
-          pb: `${hcpSpacing.m}px`,
-          display: "flex",
-          flexDirection: "column",
-          gap: `${hcpSpacing.l}px`,
+          flex: 1,
+          minHeight: 0,
+          ...hcpContentBlockStackSx,
+          pb: `${hcpContentSpacing.zoneInset}px`,
         }}
       >
-        <Box sx={hcpContentHeaderSx}>
+        <Box sx={{ ...hcpContentHeaderSx, flexShrink: 0 }}>
           <ExpensesSummaryBar />
         </Box>
 
-        <Box sx={hcpContentHeaderSx}>
+        <Box
+          sx={{
+            ...hcpContentHeaderSx,
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <OverallActivityCard />
         </Box>
       </Box>

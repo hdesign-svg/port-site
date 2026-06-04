@@ -26,6 +26,15 @@ export const hcpColors = {
   successLight: "#dcf9d7",
   successMain: "#00a344",
   spending: "#d81b60",
+  /** Chart — money in (green) / money out (blue); approachable, not alarm red */
+  chartDeposit: "#1a9d57",
+  chartSpending: "#2b6cb8",
+  chartDepositFill: "rgba(26, 157, 87, 0.12)",
+  chartSpendingFill: "rgba(43, 108, 184, 0.12)",
+  /** Chart chrome on paper — axis frame, dashed grid, tick labels */
+  chartAxis: "#424242",
+  chartGrid: "#c6c6c6",
+  chartTickLabel: "#424242",
   textDisabled: "#9e9e9e",
   textMuted: "#757575",
   surfaceMuted: "#eeeeee",
@@ -35,14 +44,43 @@ export const hcpColors = {
   tableHeaderBg: "rgba(33, 33, 33, 0.08)",
 } as const;
 
-/**
- * Vertical rhythm — tight within a thought, loose between thoughts.
- * S: inside a group · M: related blocks · L: zone breaks
- */
+/** Numeric spacing scale — prefer semantic tokens below in page layout */
 export const hcpSpacing = {
+  xs: 8,
   s: 16,
-  m: 32,
-  l: 40,
+  m: 24,
+  l: 32,
+  xl: 40,
+} as const;
+
+/**
+ * Core content vertical rhythm (best-in-class hierarchy).
+ *
+ * - inset (16): inside cards, between label and value
+ * - block (24): peers in the same tab zone (summary ↔ chart, page insets)
+ * - zone (32): new section type or major break (table, promo, second card row)
+ */
+export const hcpContentSpacing = {
+  zoneInset: hcpSpacing.m,
+  pageHeaderStack: hcpSpacing.m,
+  tabToContent: hcpSpacing.m,
+  blockGap: hcpSpacing.m,
+  zoneGap: hcpSpacing.l,
+  inset: hcpSpacing.s,
+  cardHeaderPy: 12,
+} as const;
+
+/** Sticky page header — title + tabs (zone A) */
+export const hcpPageHeaderZoneSx = {
+  pt: `${hcpContentSpacing.zoneInset}px`,
+  pb: `${hcpContentSpacing.tabToContent}px`,
+} as const;
+
+/** Peer blocks in one tab view — e.g. summary + activity card (zone B ↔ C) */
+export const hcpContentBlockStackSx = {
+  display: "flex",
+  flexDirection: "column",
+  gap: `${hcpContentSpacing.blockGap}px`,
 } as const;
 
 export const hcpLayout = {
@@ -67,12 +105,6 @@ export const hcpLayout = {
   tabLabelToIndicator: 10,
   /** Per-tab inactive underline — visible on #fafafa (Runway-style) */
   tabIndicatorInactive: "rgba(33, 33, 33, 0.14)",
-  /** Page content top inset — uniform zone padding (Mercury-style) */
-  contentHeaderSyncTop: 24,
-  /** Page title → tab row */
-  pageHeaderStackGap: 24,
-  /** Tab row → panel content (metrics, actions) */
-  tabToPanel: 24,
   /** Horizontal gap between summary metric groups */
   metricGroupGap: 40,
   /** Top-bar search — fits placeholder, not full header width */
@@ -90,6 +122,8 @@ export const hcpLayout = {
   navLabelInset: 56,
   /** Sub-nav label padding — same offset as parent label within the padded list */
   navSubLabelInset: 36,
+  /** In-card controls, inputs, chart bars — MUI default 8px */
+  controlRadius: 8,
 } as const;
 
 /** Equal horizontal margin — both sides of main content column */
@@ -112,9 +146,14 @@ export const hcpContentPageSx = {
   boxSizing: "border-box" as const,
 } as const;
 
-/** Gap between major content sections (metrics, banner, chart, etc.) */
+/** Margin before a new content zone (table, teaser, promo — not peer blocks in Overview) */
 export const hcpContentSectionGapSx = {
-  mb: `${hcpSpacing.l}px`,
+  mb: `${hcpContentSpacing.zoneGap}px`,
+} as const;
+
+/** Card interior — header band and chart body */
+export const hcpContentCardInsetSx = {
+  px: `${hcpContentSpacing.inset}px`,
 } as const;
 
 /** Icon sizes — 20px chrome balances with 400-weight labels */
