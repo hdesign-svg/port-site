@@ -33,7 +33,7 @@ export function RecentActivityTeaser() {
         }}
       >
         <Box>
-          <Typography variant="body1" fontWeight={hcpFontWeight.semibold}>
+          <Typography variant="body1" sx={{ fontWeight: hcpFontWeight.semibold }}>
             Recent activity
           </Typography>
           <Typography variant="caption" color="text.disabled" component="div" sx={{ mt: 0.25 }}>
@@ -82,13 +82,13 @@ export function RecentActivityTeaser() {
             <Typography variant="body2" color="text.secondary">
               {row.date}
             </Typography>
-            <Typography variant="body1" fontWeight={hcpFontWeight.semibold} sx={{ minWidth: 0 }}>
+            <Typography variant="body1" sx={{ minWidth: 0, fontWeight: hcpFontWeight.semibold }}>
               {row.merchant}
             </Typography>
             <Typography
               variant="body1"
-              fontWeight={hcpFontWeight.semibold}
               sx={{
+                fontWeight: hcpFontWeight.semibold,
                 color: row.kind === "deposit" ? hcpColors.successMain : hcpColors.textPrimary,
                 flexShrink: 0,
               }}

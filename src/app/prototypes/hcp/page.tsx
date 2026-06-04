@@ -23,8 +23,12 @@ export default function HcpPrototypesIndexPage() {
         HCP prototypes
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Local only — record at 1440×900. GIFs scale into portfolio cards (1024×704
-        ratio) with letterboxing, no crop. Not linked from the portfolio.
+        Not linked from the portfolio — bookmark a flow URL for interviews. Production
+        deploys can require a password via{" "}
+        <Box component="span" sx={{ fontFamily: "monospace", fontSize: "0.85em" }}>
+          PROTOTYPE_ACCESS_PASSWORD
+        </Box>
+        .
       </Typography>
       <Stack spacing={2}>
         {flows.map((flow) => (

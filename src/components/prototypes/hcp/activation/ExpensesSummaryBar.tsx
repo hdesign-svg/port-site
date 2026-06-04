@@ -19,7 +19,7 @@ function Metric({
       <Typography variant="caption" color="text.disabled" component="div">
         {label}
       </Typography>
-      <Typography variant="h6" color="text.primary" fontWeight={hcpFontWeight.semibold} component="div">
+      <Typography variant="h6" color="text.primary" component="div" sx={{ fontWeight: hcpFontWeight.semibold }}>
         {value}
       </Typography>
     </Box>
