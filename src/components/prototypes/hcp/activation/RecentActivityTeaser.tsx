@@ -33,16 +33,10 @@ export function RecentActivityTeaser() {
         }}
       >
         <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              color: hcpColors.textPrimary,
-              fontWeight: hcpFontWeight.semibold,
-            }}
-          >
+          <Typography variant="body1" fontWeight={hcpFontWeight.semibold}>
             Recent activity
           </Typography>
-          <Typography variant="body2" sx={{ color: hcpColors.textSecondary, mt: 0.25 }}>
+          <Typography variant="caption" color="text.disabled" component="div" sx={{ mt: 0.25 }}>
             12 transactions imported from linked accounts
           </Typography>
         </Box>
@@ -51,35 +45,51 @@ export function RecentActivityTeaser() {
         </Button>
       </Box>
 
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "88px 1fr auto",
+          gap: 2,
+          px: 3,
+          py: 1.25,
+          bgcolor: hcpColors.tableHeaderBg,
+          borderBottom: `1px solid ${hcpColors.borderSubtle}`,
+        }}
+      >
+        {["Date", "To/From", "Amount"].map((header) => (
+          <Typography key={header} variant="caption" color="text.disabled">
+            {header}
+          </Typography>
+        ))}
+      </Box>
+
       <Box component="ul" sx={{ m: 0, p: 0, listStyle: "none" }}>
         {recentTransactions.map((row, index) => (
           <Box
             component="li"
             key={`${row.merchant}-${row.date}`}
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              display: "grid",
+              gridTemplateColumns: "88px 1fr auto",
               gap: 2,
+              alignItems: "center",
               px: 3,
               py: 1.75,
               borderBottom:
                 index < recentTransactions.length - 1 ? `1px solid ${hcpColors.borderSubtle}` : undefined,
             }}
           >
-            <Box sx={{ minWidth: 0 }}>
-              <Typography variant="body1" sx={{ color: hcpColors.textPrimary }}>
-                {row.merchant}
-              </Typography>
-              <Typography variant="body2" sx={{ color: hcpColors.textSecondary, mt: 0.25 }}>
-                {row.date}
-              </Typography>
-            </Box>
+            <Typography variant="body2" color="text.secondary">
+              {row.date}
+            </Typography>
+            <Typography variant="body1" fontWeight={hcpFontWeight.semibold} sx={{ minWidth: 0 }}>
+              {row.merchant}
+            </Typography>
             <Typography
               variant="body1"
+              fontWeight={hcpFontWeight.semibold}
               sx={{
-                color: row.kind === "deposit" ? hcpColors.primary : hcpColors.spending,
-                fontWeight: hcpFontWeight.semibold,
+                color: row.kind === "deposit" ? hcpColors.successMain : hcpColors.textPrimary,
                 flexShrink: 0,
               }}
             >

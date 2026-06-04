@@ -7,8 +7,12 @@ export const hcpColors = {
   textPrimary: "#212121",
   textSecondary: "#616161",
   textDark: "#424242",
+  /** Utility icon buttons — top bar, settings, education (between label and button text) */
+  chromeIcon: "#424242",
   /** Shell chrome — rail edges, top bar, nav grouping dividers */
   border: "#ececec",
+  /** Interactive outlines — buttons, between hairline and input */
+  borderControl: "#e0e0e0",
   /** Hairlines on open/gray surfaces — tab dividers, in-content rules */
   borderSubtle: "#f0f0f0",
   borderInput: "#bdbdbd",
@@ -52,50 +56,59 @@ export const hcpLayout = {
   prototypeHeight: 900,
   /** Shared horizontal inset for logo, nav, footer, top bar */
   railInset: 20,
-  /** Main content horizontal inset — aligns top-bar search with page column */
-  contentInset: 20,
-  /** Core content column — Concierge/Clay-style open field with capped width */
+  /** Equal horizontal margin on both sides — main content column and top bar */
+  contentMargin: 32,
+  /** Core content column max width (optional cap inside margin field) */
   contentMaxWidth: 1120,
-  contentPageMargin: 32,
   /** Tab row rhythm */
   tabLabelGap: 24,
   tabIndicatorWidth: 3,
+  tabIndicatorInactiveWidth: 1,
   tabLabelToIndicator: 10,
-  /** Page header top — optical sync with first rail nav row (navListPaddingY + navRowPy) */
-  contentHeaderSyncTop: 19,
+  /** Per-tab inactive underline — visible on #fafafa (Runway-style) */
+  tabIndicatorInactive: "rgba(33, 33, 33, 0.14)",
+  /** Page content top inset — uniform zone padding (Mercury-style) */
+  contentHeaderSyncTop: 24,
+  /** Page title → tab row */
+  pageHeaderStackGap: 24,
+  /** Tab row → panel content (metrics, actions) */
+  tabToPanel: 24,
+  /** Horizontal gap between summary metric groups */
+  metricGroupGap: 40,
   /** Top-bar search — fits placeholder, not full header width */
   searchFieldWidth: 320,
   /** Edge-to-edge distance between icon boxes — horizontal + vertical rhythm */
   iconGlyphGap: 20,
   navItemGap: 4,
   /** Row padding that pairs with navItemGap to yield iconGlyphGap vertically */
-  navRowPy: 7,
+  navRowPy: 8,
   /** Rail nav list vertical inset — pairs with navRowPy for tab alignment */
   navListPaddingY: 12,
   /** Icon-to-label gap in rail rows (matches MUI gap: 2) */
   navIconLabelGap: 16,
   /** Where rail nav labels begin — railInset + icon + gap */
   navLabelInset: 56,
+  /** Sub-nav label padding — same offset as parent label within the padded list */
+  navSubLabelInset: 36,
 } as const;
 
-/** Horizontal inset shared by top-bar search alignment */
-export const hcpContentInsetSx = {
-  px: `${hcpLayout.contentInset}px`,
+/** Equal horizontal margin — both sides of main content column */
+export const hcpContentMarginSx = {
+  px: `${hcpLayout.contentMargin}px`,
 } as const;
 
-/** Top bar + tab bar horizontal bounds — search through utility icons */
+/** Top bar + page header + panel horizontal bounds */
 export const hcpContentHeaderSx = {
   width: "100%",
-  pl: `${hcpLayout.contentInset}px`,
-  pr: `${hcpLayout.railInset}px`,
+  ...hcpContentMarginSx,
   boxSizing: "border-box" as const,
 } as const;
 
-/** Core content page column — max width + margin field (not edge-to-edge) */
+/** Core content page column — max width inside equal margins */
 export const hcpContentPageSx = {
   width: "100%",
   maxWidth: hcpLayout.contentMaxWidth,
-  mx: `${hcpLayout.contentPageMargin}px`,
+  ...hcpContentMarginSx,
   boxSizing: "border-box" as const,
 } as const;
 

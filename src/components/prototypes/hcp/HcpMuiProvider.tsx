@@ -10,7 +10,11 @@ const hcpTheme = createTheme({
     mode: "light",
     primary: { main: hcpColors.primary, dark: hcpColors.primaryDark },
     background: { default: hcpColors.background, paper: hcpColors.paper },
-    text: { primary: hcpColors.textPrimary, secondary: hcpColors.textSecondary },
+    text: {
+      primary: hcpColors.textPrimary,
+      secondary: hcpColors.textSecondary,
+      disabled: hcpColors.textDisabled,
+    },
     divider: hcpColors.border,
   },
   shape: { borderRadius: 8 },
@@ -30,8 +34,14 @@ const hcpTheme = createTheme({
           textTransform: "none",
           fontWeight: 600,
           borderRadius: 100,
+        },
+        sizeSmall: {
           minHeight: 28,
           paddingInline: 14,
+        },
+        sizeMedium: {
+          minHeight: 36,
+          paddingInline: 20,
         },
       },
     },

@@ -50,7 +50,7 @@ const iconButtonSx = {
   justifyContent: "center",
   lineHeight: 0,
   borderRadius: "40px",
-  color: hcpColors.textSecondary,
+  color: hcpColors.chromeIcon,
   flexShrink: 0,
   "& svg": {
     display: "block",
@@ -92,8 +92,7 @@ export function HcpTopBar() {
         bgcolor: hcpColors.paper,
         borderBottom: `1px solid ${hcpColors.border}`,
         justifyContent: "space-between",
-        pl: `${hcpLayout.contentInset}px`,
-        pr: `${hcpLayout.railInset}px`,
+        px: `${hcpLayout.contentMargin}px`,
         gap: 2,
       }}
     >
@@ -164,11 +163,11 @@ export function HcpTopBar() {
           onClick={(event) => setBankAnchor(event.currentTarget)}
           sx={iconButtonSx}
         >
-          <Bank size={TOP_ICON} color={hcpColors.textSecondary} />
+          <Bank size={TOP_ICON} color={hcpColors.chromeIcon} />
         </Box>
 
         <Box component="button" type="button" aria-label="Notifications" sx={iconButtonSx}>
-          <Bell size={TOP_ICON} color={hcpColors.textSecondary} />
+          <Bell size={TOP_ICON} color={hcpColors.chromeIcon} />
         </Box>
 
         <Menu
@@ -198,7 +197,7 @@ export function HcpTopBar() {
                 color: label === "Disconnect account" ? hcpColors.spending : hcpColors.textPrimary,
               }}
             >
-              <Typography variant="body2">{label}</Typography>
+              <Typography variant="body1">{label}</Typography>
             </MenuItem>
           ))}
         </Menu>
@@ -213,7 +212,7 @@ export function HcpTopBar() {
           onClick={(event) => setMoreAnchor(event.currentTarget)}
           sx={iconButtonSx}
         >
-          <DotsThree size={TOP_ICON} weight="bold" color={hcpColors.textSecondary} />
+          <DotsThree size={TOP_ICON} weight="bold" color={hcpColors.chromeIcon} />
         </Box>
 
         <Menu
@@ -245,7 +244,7 @@ export function HcpTopBar() {
               }}
             >
               <Icon size={hcpIcon.sm} />
-              <Typography component="span" variant="subtitle2">
+              <Typography component="span" variant="body1">
                 {label}
               </Typography>
             </MenuItem>

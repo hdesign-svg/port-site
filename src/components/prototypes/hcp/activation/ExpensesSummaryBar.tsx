@@ -1,8 +1,9 @@
 "use client";
 
-import { GraduationCap, Info } from "@phosphor-icons/react";
+import { GraduationCap } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { hcpColors, hcpFontWeight, hcpIcon } from "../hcpTheme";
 
@@ -14,20 +15,11 @@ function Metric({
   value: string;
 }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-        <Typography variant="body2" sx={{ color: hcpColors.textSecondary }}>
-          {label}
-        </Typography>
-        <Info size={hcpIcon.xs} color={hcpColors.textDisabled} aria-hidden />
-      </Box>
-      <Typography
-        variant="h6"
-        sx={{
-          color: hcpColors.textPrimary,
-          fontWeight: hcpFontWeight.regular,
-        }}
-      >
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
+      <Typography variant="caption" color="text.disabled" component="div">
+        {label}
+      </Typography>
+      <Typography variant="h6" color="text.primary" fontWeight={hcpFontWeight.semibold} component="div">
         {value}
       </Typography>
     </Box>
@@ -45,37 +37,41 @@ export function ExpensesSummaryBar() {
         flexWrap: "wrap",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 5, flexWrap: "wrap" }}>
-        <Metric label="Available balance" value="$0" />
-        <Metric label="Pending deposits" value="$0" />
-      </Box>
+      <Metric label="Available" value="$8,742.18" />
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexShrink: 0 }}>
-        <Box
-          component="button"
-          type="button"
+        <IconButton
+          size="medium"
           aria-label="Learn how HCP Money works"
           sx={{
-            width: hcpIcon.md,
-            height: hcpIcon.md,
-            p: 0,
-            m: 0,
-            border: 0,
-            bgcolor: "transparent",
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: hcpColors.textSecondary,
+            width: 36,
+            height: 36,
+            color: hcpColors.chromeIcon,
+            border: `1px solid ${hcpColors.borderControl}`,
             borderRadius: "50%",
+            bgcolor: hcpColors.paper,
             "&:hover": {
-              bgcolor: hcpColors.surfaceMuted,
+              bgcolor: hcpColors.paper,
+              borderColor: hcpColors.borderInput,
             },
           }}
         >
           <GraduationCap size={hcpIcon.md} />
-        </Box>
-        <Button variant="contained" color="primary">
+        </IconButton>
+
+        <Button
+          variant="outlined"
+          size="medium"
+          sx={{
+            color: hcpColors.textPrimary,
+            borderColor: hcpColors.borderControl,
+            bgcolor: hcpColors.paper,
+            "&:hover": {
+              bgcolor: hcpColors.paper,
+              borderColor: hcpColors.borderInput,
+            },
+          }}
+        >
           Add funds
         </Button>
       </Box>

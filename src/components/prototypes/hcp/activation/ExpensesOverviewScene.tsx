@@ -3,8 +3,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ExpensesSummaryBar } from "./ExpensesSummaryBar";
-import { RecentActivityTeaser } from "./RecentActivityTeaser";
-import { hcpColors, hcpContentHeaderSx, hcpContentPageSx, hcpFontWeight, hcpLayout, hcpSpacing } from "../hcpTheme";
+import { OverallActivityCard } from "./OverallActivityCard";
+import { hcpColors, hcpContentHeaderSx, hcpFontWeight, hcpLayout, hcpSpacing } from "../hcpTheme";
 
 const tabs = [
   { label: "Overview", active: true },
@@ -24,7 +24,7 @@ export function ExpensesOverviewScene() {
           zIndex: 1,
           bgcolor: hcpColors.background,
           pt: `${hcpLayout.contentHeaderSyncTop}px`,
-          pb: `${hcpSpacing.m}px`,
+          pb: `${hcpLayout.tabToPanel}px`,
         }}
       >
         <Box sx={hcpContentHeaderSx}>
@@ -33,8 +33,8 @@ export function ExpensesOverviewScene() {
             variant="h4"
             sx={{
               color: hcpColors.textPrimary,
-              fontWeight: hcpFontWeight.regular,
-              mb: `${hcpSpacing.m}px`,
+              fontWeight: hcpFontWeight.semibold,
+              mb: `${hcpLayout.pageHeaderStackGap}px`,
             }}
           >
             Expenses
@@ -45,7 +45,7 @@ export function ExpensesOverviewScene() {
               aria-label="Expenses views"
               sx={{
                 display: "flex",
-                alignItems: "stretch",
+                alignItems: "flex-end",
                 flexWrap: "wrap",
                 gap: `${hcpLayout.tabLabelGap}px`,
               }}
@@ -60,16 +60,17 @@ export function ExpensesOverviewScene() {
                     aria-selected={isActive}
                     sx={{
                       position: "relative",
-                      display: "flex",
-                      alignItems: "flex-start",
+                      display: "inline-flex",
+                      flexDirection: "column",
                       pb: `${hcpLayout.tabLabelToIndicator}px`,
+                      flexShrink: 0,
                     }}
                   >
                     <Typography
-                      variant="navLabel"
+                      variant="tabLabel"
                       sx={{
                         color: isActive ? hcpColors.textPrimary : hcpColors.textMuted,
-                        fontWeight: isActive ? hcpFontWeight.semibold : hcpFontWeight.regular,
+                        fontWeight: hcpFontWeight.regular,
                         whiteSpace: "nowrap",
                       }}
                     >
@@ -112,15 +113,19 @@ export function ExpensesOverviewScene() {
       <Box
         component="section"
         sx={{
-          ...hcpContentPageSx,
           pb: `${hcpSpacing.m}px`,
           display: "flex",
           flexDirection: "column",
           gap: `${hcpSpacing.l}px`,
         }}
       >
-        <ExpensesSummaryBar />
-        <RecentActivityTeaser />
+        <Box sx={hcpContentHeaderSx}>
+          <ExpensesSummaryBar />
+        </Box>
+
+        <Box sx={hcpContentHeaderSx}>
+          <OverallActivityCard />
+        </Box>
       </Box>
     </Box>
   );

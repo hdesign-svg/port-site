@@ -33,16 +33,28 @@ function rem(px: number) {
 }
 
 /**
- * Weight rule: **400 by default**, **600 for selected/active** (tabs, nav) and buttons.
- * Hierarchy comes from size first, weight second.
+ * Weight rule: **400 by default**. **600 for display** (page title, metric values, primary data, buttons).
+ * Chrome (nav, tabs) stays 400 — active state via color, icon, underline, or background.
+ *
+ * Mercury-style mapping (structure → our variant):
+ * | Mercury role              | Variant        | Size | Weight   | Color token    |
+ * |---------------------------|----------------|------|----------|----------------|
+ * | Page title                | h4             | 28px | semibold | textPrimary    |
+ * | Tab / nav chrome          | tabLabel/navLabel | 14px | 400      | textMuted → textPrimary |
+ * | Summary metric value      | h6             | 18px | semibold | textPrimary    |
+ * | Body / table primary      | body1          | 14px | semibold | textPrimary    |
+ * | Body secondary / metadata | body2          | 13px | regular  | textSecondary  |
+ * | Metric / table / meta labels | caption     | 12px | regular  | textDisabled   |
+ * | Buttons                   | button         | 14px | semibold | —              |
  */
 export const hcpTypographyRoles = {
   pageTitle: "h4",
-  cardTitle: "h5",
-  sectionTitle: "h6",
+  cardTitle: "body1",
+  sectionTitle: "body1",
   metricValue: "h6",
-  label: "body1",
-  labelSecondary: "body1",
+  metricLabel: "caption",
+  label: "caption",
+  labelSecondary: "body2",
   body: "body1",
   bodySecondary: "body2",
   nav: "navLabel",
@@ -50,8 +62,9 @@ export const hcpTypographyRoles = {
   button: "button",
   caption: "caption",
   captionBold: "captionSemibold",
-  tableHeader: "body1",
+  tableHeader: "caption",
   tableCell: "body1",
+  tableCellSecondary: "body2",
 } as const;
 
 export function createHcpTypography(): NonNullable<ThemeOptions["typography"]> {
@@ -67,7 +80,7 @@ export function createHcpTypography(): NonNullable<ThemeOptions["typography"]> {
       lineHeight: 1.2,
     },
     h4: {
-      fontSize: rem(24),
+      fontSize: rem(28),
       fontWeight: 400,
       lineHeight: 1.25,
     },

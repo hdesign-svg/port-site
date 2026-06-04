@@ -108,7 +108,7 @@ function NavRow({
         sx={{
           flex: 1,
           color: labelColor,
-          fontWeight: selected ? hcpFontWeight.semibold : hcpFontWeight.regular,
+          fontWeight: hcpFontWeight.regular,
           minWidth: 0,
         }}
       >
@@ -155,14 +155,15 @@ function SubNavItem({
           display: "flex",
           alignItems: "center",
           py: 0.75,
-          pl: 5,
+          pl: `${hcpLayout.navSubLabelInset}px`,
         }}
       >
         <Typography
-          variant={active ? "captionSemibold" : "caption"}
+          variant="caption"
           sx={{
             flex: 1,
             color: active ? hcpColors.textPrimary : hcpColors.textMuted,
+            fontWeight: hcpFontWeight.regular,
             minWidth: 0,
           }}
         >
@@ -232,7 +233,7 @@ function FooterUserAccount() {
       <Box sx={{ flex: 1, minWidth: 0 }} />
 
       <TrailingSlot>
-        <Gear size={NAV_PRIMARY_ICON} color={hcpColors.textSecondary} weight="regular" aria-label="Settings" />
+        <Gear size={NAV_PRIMARY_ICON} color={hcpColors.chromeIcon} weight="regular" aria-label="Settings" />
       </TrailingSlot>
     </Box>
   );
