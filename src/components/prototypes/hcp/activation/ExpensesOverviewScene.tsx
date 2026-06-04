@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ExpensesSummaryBar } from "./ExpensesSummaryBar";
-import { OverallActivityCard } from "./OverallActivityCard";
+import { OverviewChartsSection } from "./OverviewChartsSection";
 import {
   hcpColors,
   hcpContentBlockStackSx,
@@ -139,17 +139,7 @@ export function ExpensesOverviewScene() {
           <ExpensesSummaryBar />
         </Box>
 
-        <Box
-          sx={{
-            ...hcpContentHeaderSx,
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <OverallActivityCard />
-        </Box>
+        <OverviewChartsSection />
       </Box>
     </Box>
   );

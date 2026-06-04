@@ -33,7 +33,7 @@ const hcpTheme = createTheme({
         root: {
           textTransform: "none",
           fontWeight: 600,
-          borderRadius: 100,
+          borderRadius: `${hcpLayout.controlRadius}px`,
         },
         sizeSmall: {
           minHeight: 28,

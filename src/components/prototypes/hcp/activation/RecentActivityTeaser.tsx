@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpFontWeight } from "../hcpTheme";
+import { hcpColors, hcpFontWeight, hcpRadius } from "../hcpTheme";
 
 const recentTransactions = [
   { merchant: "Home Depot", date: "May 28", amount: "-$142.50", kind: "spending" as const },
@@ -17,7 +17,7 @@ export function RecentActivityTeaser() {
       sx={{
         bgcolor: hcpColors.paper,
         border: `1px solid ${hcpColors.border}`,
-        borderRadius: 1,
+        borderRadius: hcpRadius.control,
         overflow: "hidden",
       }}
     >

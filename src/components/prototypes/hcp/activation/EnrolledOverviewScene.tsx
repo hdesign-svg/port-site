@@ -5,7 +5,7 @@ import Chip from "@mui/material/Chip";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import { hcpColors } from "../hcpTheme";
+import { hcpColors, hcpRadius } from "../hcpTheme";
 
 const tabs = [
   "Overview",
@@ -70,7 +70,7 @@ export function EnrolledOverviewScene() {
         <Box
           sx={{
             bgcolor: hcpColors.paper,
-            borderRadius: 1,
+            borderRadius: hcpRadius.control,
             border: `1px solid ${hcpColors.border}`,
             p: 3,
           }}
@@ -97,7 +97,7 @@ export function EnrolledOverviewScene() {
                   alignItems: "center",
                   gap: 2,
                   p: 2,
-                  borderRadius: 1,
+                  borderRadius: hcpRadius.control,
                   border: `1px solid ${hcpColors.border}`,
                   bgcolor: index === 3 ? hcpColors.background : hcpColors.paper,
                 }}

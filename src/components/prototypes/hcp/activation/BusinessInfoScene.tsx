@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { hcpColors } from "../hcpTheme";
+import { hcpColors, hcpRadius } from "../hcpTheme";
 
 type BusinessInfoSceneProps = {
   onContinue?: () => void;
@@ -70,7 +70,7 @@ export function BusinessInfoScene({ onContinue }: BusinessInfoSceneProps) {
             onClick={onContinue}
             sx={{
               bgcolor: hcpColors.primary,
-              borderRadius: 999,
+              borderRadius: hcpRadius.control,
               px: 3,
               boxShadow: "none",
               "&:hover": { bgcolor: hcpColors.primaryDark, boxShadow: "none" },

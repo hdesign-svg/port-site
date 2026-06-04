@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { hcpColors } from "../hcpTheme";
+import { hcpColors, hcpRadius } from "../hcpTheme";
 import { ActivationCarousel } from "./ActivationCarousel";
 import { LegalDisclaimer } from "./LegalDisclaimer";
 
@@ -74,7 +74,7 @@ export function ActivationGate({ onActivate }: ActivationGateProps) {
             sx={{
               alignSelf: "flex-start",
               bgcolor: hcpColors.primary,
-              borderRadius: 999,
+              borderRadius: hcpRadius.control,
               px: 2,
               py: 1.25,
               fontSize: 14,

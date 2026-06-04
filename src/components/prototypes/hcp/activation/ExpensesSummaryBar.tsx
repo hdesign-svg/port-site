@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpFontWeight, hcpIcon } from "../hcpTheme";
+import { hcpColors, hcpFontWeight, hcpIcon, hcpRadius } from "../hcpTheme";
 
 function Metric({
   label,
@@ -48,7 +48,7 @@ export function ExpensesSummaryBar() {
             height: 36,
             color: hcpColors.chromeIcon,
             border: `1px solid ${hcpColors.borderControl}`,
-            borderRadius: "50%",
+            borderRadius: hcpRadius.control,
             bgcolor: hcpColors.paper,
             "&:hover": {
               bgcolor: hcpColors.paper,

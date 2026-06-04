@@ -22,7 +22,7 @@ import type { Icon } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "./hcpTheme";
+import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpRadius } from "./hcpTheme";
 
 const NAV_PRIMARY_ICON = hcpIcon.md;
 const NAV_CHEVRON_SIZE = 16;
@@ -36,7 +36,7 @@ const navItemSx = {
   gap: `${hcpLayout.navIconLabelGap}px`,
   width: "100%",
   py: `${hcpLayout.navRowPy}px`,
-  borderRadius: 1,
+  borderRadius: hcpRadius.control,
 };
 
 const trailingSlotSx = {
@@ -142,7 +142,7 @@ function SubNavItem({
           sx={{
             position: "absolute",
             inset: 0,
-            borderRadius: 1,
+            borderRadius: hcpRadius.control,
             bgcolor: hcpColors.expensesActive,
             zIndex: 0,
           }}

@@ -49,7 +49,7 @@ const iconButtonSx = {
   alignItems: "center",
   justifyContent: "center",
   lineHeight: 0,
-  borderRadius: "40px",
+  borderRadius: `${hcpLayout.controlRadius}px`,
   color: hcpColors.chromeIcon,
   flexShrink: 0,
   "& svg": {
@@ -60,7 +60,7 @@ const iconButtonSx = {
     content: '""',
     position: "absolute",
     inset: -8,
-    borderRadius: "40px",
+    borderRadius: `${hcpLayout.controlRadius}px`,
   },
   "&:hover::before": {
     bgcolor: "action.hover",
@@ -115,7 +115,7 @@ export function HcpTopBar() {
           flexShrink: 0,
           "& .MuiOutlinedInput-root": {
             bgcolor: hcpColors.paper,
-            borderRadius: "10px",
+            borderRadius: `${hcpLayout.controlRadius}px`,
             transition: "border-color 0.15s ease",
             "& fieldset": {
               borderColor: hcpColors.searchBorder,

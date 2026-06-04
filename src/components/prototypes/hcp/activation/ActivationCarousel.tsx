@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { hcpColors } from "../hcpTheme";
+import { hcpColors, hcpLayout } from "../hcpTheme";
 import { carouselSlides } from "./carouselSlides";
 
 const AUTO_ADVANCE_MS = 5000;
@@ -26,7 +26,7 @@ export function ActivationCarousel() {
         position: "relative",
         width: "100%",
         height: "100%",
-        borderRadius: "24px",
+        borderRadius: `${hcpLayout.controlRadius}px`,
         overflow: "hidden",
         background: `linear-gradient(114deg, ${hcpColors.primary} 0%, ${hcpColors.primaryDark} 68.4%)`,
         display: "flex",
@@ -106,7 +106,7 @@ export function ActivationCarousel() {
                 height: 8,
                 border: 0,
                 p: 0,
-                borderRadius: 999,
+                borderRadius: `${hcpLayout.controlRadius}px`,
                 cursor: "pointer",
                 bgcolor: "rgba(187, 222, 251, 0.16)",
                 position: "relative",
@@ -119,7 +119,7 @@ export function ActivationCarousel() {
                     position: "absolute",
                     inset: 0,
                     width: 8,
-                    borderRadius: 999,
+                    borderRadius: `${hcpLayout.controlRadius}px`,
                     bgcolor: hcpColors.primaryLight,
                   }}
                 />

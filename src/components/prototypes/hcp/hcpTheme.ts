@@ -122,8 +122,13 @@ export const hcpLayout = {
   navLabelInset: 56,
   /** Sub-nav label padding — same offset as parent label within the padded list */
   navSubLabelInset: 36,
-  /** In-card controls, inputs, chart bars — MUI default 8px */
+  /** Default corner radius — cards, buttons, inputs, chart bars, nav rows */
   controlRadius: 8,
+} as const;
+
+/** Border radius tokens — use instead of magic numbers */
+export const hcpRadius = {
+  control: `${hcpLayout.controlRadius}px`,
 } as const;
 
 /** Equal horizontal margin — both sides of main content column */
