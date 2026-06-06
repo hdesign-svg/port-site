@@ -39,7 +39,7 @@ export function ExpensesSummaryBar() {
     >
       <Metric label="Available" value="$8,742.18" />
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexShrink: 0 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexShrink: 0 }}>
         <IconButton
           size="medium"
           aria-label="Learn how HCP Money works"
