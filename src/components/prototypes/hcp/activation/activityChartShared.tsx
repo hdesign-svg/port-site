@@ -2,7 +2,7 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   hcpColors,
   hcpContentCardInsetSx,
@@ -91,44 +91,19 @@ export function formatCurrency(amount: number) {
   }).format(amount);
 }
 
-export function useChartPlotHeight(minHeight: number) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(minHeight);
-
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-
-    const updateHeight = () => {
-      setHeight(Math.max(minHeight, Math.floor(node.clientHeight)));
-    };
-
-    updateHeight();
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [minHeight]);
-
-  return { containerRef, height };
-}
-
 export function ChartCardShell({
   title,
   children,
-  grow,
   headerAside,
 }: {
   title: string;
   children: ReactNode;
-  grow?: boolean;
   headerAside?: ReactNode;
 }) {
   return (
     <Box
       sx={{
         width: "100%",
-        flex: grow ? 1 : undefined,
-        minHeight: grow ? 0 : undefined,
         display: "flex",
         flexDirection: "column",
         bgcolor: hcpColors.paper,
@@ -157,8 +132,6 @@ export function ChartCardShell({
 
       <Box
         sx={{
-          flex: grow ? 1 : undefined,
-          minHeight: grow ? 0 : undefined,
           display: "flex",
           flexDirection: "column",
           ...hcpContentCardInsetSx,

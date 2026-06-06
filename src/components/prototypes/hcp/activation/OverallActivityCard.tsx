@@ -12,7 +12,6 @@ import {
   formatAxisValue,
   months,
   spending,
-  useChartPlotHeight,
   visuallyHiddenSx,
 } from "./activityChartShared";
 import { hcpColors, hcpLayout } from "../hcpTheme";
@@ -21,18 +20,13 @@ const activityChartSummary =
   "Grouped bar chart of monthly deposits and spending from April through September for a small home service business with about eight employees. Deposits range from roughly 53 to 75 thousand dollars per month; spending from roughly 48 to 57 thousand. July has the highest deposits and spending.";
 
 function OverallActivityChart({ timeRange }: { timeRange: ActivityTimeRange }) {
-  const { containerRef, height } = useChartPlotHeight(CHART_HEIGHT);
-
   return (
     <Box
-      ref={containerRef}
       component="figure"
       aria-labelledby="overall-activity-chart-title overall-activity-chart-desc"
       sx={{
         position: "relative",
         m: 0,
-        flex: 1,
-        minHeight: CHART_HEIGHT,
         display: "flex",
         flexDirection: "column",
       }}
@@ -44,7 +38,7 @@ function OverallActivityChart({ timeRange }: { timeRange: ActivityTimeRange }) {
         {activityChartSummary} Time range: {timeRange}.
       </Typography>
       <BarChart
-        height={height}
+        height={CHART_HEIGHT}
         skipAnimation
         margin={{ left: 8, right: 12, top: 32, bottom: 40 }}
         xAxis={[
@@ -99,7 +93,7 @@ function OverallActivityChart({ timeRange }: { timeRange: ActivityTimeRange }) {
             position: { vertical: "top", horizontal: "start" },
           },
         }}
-        sx={{ ...chartSx, flex: 1, minHeight: 0 }}
+        sx={chartSx}
       />
     </Box>
   );
@@ -107,7 +101,7 @@ function OverallActivityChart({ timeRange }: { timeRange: ActivityTimeRange }) {
 
 export function OverallActivityCard({ timeRange }: { timeRange: ActivityTimeRange }) {
   return (
-    <ChartCardShell title="Overall activity" grow>
+    <ChartCardShell title="Overall activity">
       <OverallActivityChart timeRange={timeRange} />
     </ChartCardShell>
   );

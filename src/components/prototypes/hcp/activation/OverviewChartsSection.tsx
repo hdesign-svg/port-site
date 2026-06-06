@@ -93,8 +93,6 @@ export function OverviewChartsSection() {
     <Box
       sx={{
         ...hcpContentHeaderSx,
-        flex: 1,
-        minHeight: 0,
         ...hcpContentBlockStackSx,
       }}
     >

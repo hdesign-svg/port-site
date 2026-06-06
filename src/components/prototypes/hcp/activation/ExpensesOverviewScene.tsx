@@ -129,8 +129,6 @@ export function ExpensesOverviewScene() {
       <Box
         component="section"
         sx={{
-          flex: 1,
-          minHeight: 0,
           ...hcpContentBlockStackSx,
           pb: `${hcpContentSpacing.zoneInset}px`,
         }}
