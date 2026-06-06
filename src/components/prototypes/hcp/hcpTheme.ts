@@ -31,6 +31,8 @@ export const hcpColors = {
   chartSpending: "#2b6cb8",
   chartDepositFill: "rgba(26, 157, 87, 0.12)",
   chartSpendingFill: "rgba(43, 108, 184, 0.12)",
+  /** Breakdown bar track — lighter tint of chartSpending */
+  chartSpendingTrack: "rgba(43, 108, 184, 0.06)",
   /** Chart chrome on paper — axis frame, dashed grid, tick labels */
   chartAxis: "#424242",
   chartGrid: "#c6c6c6",
@@ -67,7 +69,16 @@ export const hcpContentSpacing = {
   blockGap: hcpSpacing.m,
   zoneGap: hcpSpacing.l,
   inset: hcpSpacing.s,
-  cardHeaderPy: 12,
+  /** Header border → legend / chart content */
+  chartHeaderGap: hcpSpacing.m,
+  /** Legend → plot */
+  chartLegendGap: hcpSpacing.s,
+  /** Plot → card bottom */
+  chartBodyBottom: 4,
+  /** Space below plot (x-axis / last row) inside the body */
+  chartPlotBottom: 12,
+  /** @deprecated Use inset — chart card header matches body padding */
+  cardHeaderPy: 16,
 } as const;
 
 /** Sticky page header — title + tabs (zone A) */
@@ -156,10 +167,29 @@ export const hcpContentSectionGapSx = {
   mb: `${hcpContentSpacing.zoneGap}px`,
 } as const;
 
-/** Card interior — header band and chart body */
-export const hcpContentCardInsetSx = {
+/** Chart card header band */
+export const hcpChartCardHeaderSx = {
   px: `${hcpContentSpacing.inset}px`,
+  py: `${hcpContentSpacing.inset}px`,
 } as const;
+
+/** Chart card body — even inset on all sides */
+export const hcpChartCardBodySx = {
+  p: `${hcpContentSpacing.inset}px`,
+} as const;
+
+/** Activity card body — tighter below the x-axis */
+export const hcpActivityChartCardBodySx = {
+  px: `${hcpContentSpacing.inset}px`,
+  pt: `${hcpContentSpacing.inset}px`,
+  pb: `${hcpContentSpacing.chartBodyBottom}px`,
+} as const;
+
+/** @deprecated Use hcpActivityChartCardBodySx — breakdown matches activity card inset */
+export const hcpBreakdownChartCardBodySx = hcpActivityChartCardBodySx;
+
+/** @deprecated Use hcpChartCardHeaderSx / hcpChartCardBodySx */
+export const hcpChartCardInsetSx = hcpChartCardHeaderSx;
 
 /** Icon sizes — 20px chrome balances with 400-weight labels */
 export const hcpIcon = {

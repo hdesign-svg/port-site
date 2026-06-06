@@ -2,40 +2,49 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import type { ActivityTimeRange } from "./activityChartShared";
 import {
   ChartCardShell,
+  chartCardFigureSx,
+  chartPlotBottomMargin,
   formatCurrency,
-  spendingCategories,
   visuallyHiddenSx,
 } from "./activityChartShared";
-import { hcpColors, hcpFontWeight, hcpLayout } from "../hcpTheme";
+import {
+  getFilteredSpendingCategories,
+  getTimeRangeLabel,
+  type ActivityTimeRange,
+} from "./activityTimeRange";
+import { hcpActivityChartCardBodySx, hcpColors, hcpContentSpacing, hcpFontWeight, hcpLayout } from "../hcpTheme";
 
-const breakdownChartSummary =
-  "Horizontal bar chart of spending by category for the selected period. Payroll and labor is the largest category at about 168 thousand dollars over six months.";
+const breakdownBarHeight = 28;
+const breakdownBarRadius = hcpLayout.controlRadius / 2;
+
+const breakdownSummary =
+  "Horizontal bars showing spending by category for the selected period. Bar length is relative to the largest category.";
 
 function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange }) {
-  const maxAmount = Math.max(...spendingCategories.map((item) => item.amount));
+  const categories = getFilteredSpendingCategories(timeRange);
+  const rangeLabel = getTimeRangeLabel(timeRange);
+  const maxAmount = Math.max(...categories.map((category) => category.amount), 1);
 
   return (
     <Box
       component="figure"
       aria-labelledby="spending-breakdown-chart-title spending-breakdown-chart-desc"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        py: 1,
-        m: 0,
+        ...chartCardFigureSx,
+        gap: `${hcpContentSpacing.inset}px`,
+        pb: `${chartPlotBottomMargin}px`,
       }}
     >
       <Typography id="spending-breakdown-chart-title" component="figcaption" sx={visuallyHiddenSx}>
         Spending breakdown by category
       </Typography>
       <Typography id="spending-breakdown-chart-desc" component="p" sx={visuallyHiddenSx}>
-        {breakdownChartSummary} Time range: {timeRange}.
+        {breakdownSummary} Time range: {rangeLabel}.
       </Typography>
-      {spendingCategories.map((category) => (
+
+      {categories.map((category) => (
         <Box key={category.label}>
           <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 0.5 }}>
             <Typography variant="body2" color="text.secondary">
@@ -50,9 +59,9 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
           </Box>
           <Box
             sx={{
-              height: 6,
-              borderRadius: `${hcpLayout.controlRadius}px`,
-              bgcolor: hcpColors.surfaceMuted,
+              height: breakdownBarHeight,
+              borderRadius: `${breakdownBarRadius}px`,
+              bgcolor: hcpColors.chartSpendingTrack,
               overflow: "hidden",
             }}
           >
@@ -61,7 +70,7 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
                 height: "100%",
                 width: `${(category.amount / maxAmount) * 100}%`,
                 bgcolor: category.color,
-                borderRadius: `${hcpLayout.controlRadius}px`,
+                borderRadius: `${breakdownBarRadius}px`,
               }}
             />
           </Box>
@@ -73,7 +82,7 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
 
 export function SpendingBreakdownCard({ timeRange }: { timeRange: ActivityTimeRange }) {
   return (
-    <ChartCardShell title="Spending breakdown">
+    <ChartCardShell title="Spending breakdown" bodySx={hcpActivityChartCardBodySx}>
       <SpendingBreakdownChart timeRange={timeRange} />
     </ChartCardShell>
   );
