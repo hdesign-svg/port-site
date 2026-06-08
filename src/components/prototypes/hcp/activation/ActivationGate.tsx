@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpRadius } from "../hcpTheme";
+import { hcpColors, hcpPrimaryButtonSx, hcpRadius } from "../hcpTheme";
 import { ActivationCarousel } from "./ActivationCarousel";
 import { LegalDisclaimer } from "./LegalDisclaimer";
 
@@ -46,20 +46,20 @@ export function ActivationGate({ onActivate }: ActivationGateProps) {
         >
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Typography
+              variant="h4"
               sx={{
-                fontWeight: 600,
                 fontSize: { xs: 24, md: 28 },
                 lineHeight: 1.43,
-                color: hcpColors.textPrimary,
               }}
             >
               Take control of team spending
             </Typography>
             <Typography
+              variant="h5"
               sx={{
                 fontSize: { xs: 18, md: 22 },
                 lineHeight: 1.45,
-                color: hcpColors.textPrimary,
+                fontWeight: 400,
               }}
             >
               Get free cards with spending limits, real-time alerts, and
@@ -73,17 +73,8 @@ export function ActivationGate({ onActivate }: ActivationGateProps) {
             onClick={onActivate}
             sx={{
               alignSelf: "flex-start",
-              bgcolor: hcpColors.primary,
               borderRadius: hcpRadius.control,
-              px: 2,
-              py: 1.25,
-              fontSize: 14,
-              fontWeight: 600,
-              boxShadow: "none",
-              "&:hover": {
-                bgcolor: hcpColors.primaryDark,
-                boxShadow: "none",
-              },
+              ...hcpPrimaryButtonSx,
             }}
           >
             Access expense cards

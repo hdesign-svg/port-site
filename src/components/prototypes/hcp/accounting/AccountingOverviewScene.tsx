@@ -6,7 +6,6 @@ import {
   hcpColors,
   hcpContentHeaderSx,
   hcpContentSpacing,
-  hcpFontWeight,
   hcpLayout,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
@@ -39,7 +38,6 @@ export function AccountingOverviewScene() {
             variant="h4"
             sx={{
               color: hcpColors.textPrimary,
-              fontWeight: hcpFontWeight.semibold,
               mb: `${hcpContentSpacing.pageHeaderStack}px`,
             }}
           >
@@ -57,7 +55,7 @@ export function AccountingOverviewScene() {
             p: 3,
           }}
         >
-          <Typography sx={{ fontWeight: hcpFontWeight.semibold, fontSize: 18, mb: 1 }}>
+          <Typography variant="h6" sx={{ mb: 1 }}>
             Transaction review
           </Typography>
           <Typography variant="body2" color="text.secondary">

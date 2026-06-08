@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpFontWeight, hcpRadius } from "../hcpTheme";
+import { hcpChromeActionButtonSx, hcpColors, hcpFontWeight, hcpRadius } from "../hcpTheme";
 
 const recentTransactions = [
   { merchant: "Home Depot", date: "May 28", amount: "-$142.50", kind: "spending" as const },
@@ -40,7 +40,7 @@ export function RecentActivityTeaser() {
             12 transactions imported from linked accounts
           </Typography>
         </Box>
-        <Button variant="text" color="primary" sx={{ flexShrink: 0, mt: -0.5 }}>
+        <Button variant="text" sx={{ ...hcpChromeActionButtonSx, flexShrink: 0, mt: -0.5 }}>
           View all
         </Button>
       </Box>
@@ -82,14 +82,14 @@ export function RecentActivityTeaser() {
             <Typography variant="body2" color="text.secondary">
               {row.date}
             </Typography>
-            <Typography variant="body1" sx={{ minWidth: 0, fontWeight: hcpFontWeight.semibold }}>
+            <Typography variant="body1" sx={{ minWidth: 0 }}>
               {row.merchant}
             </Typography>
             <Typography
               variant="body1"
               sx={{
-                fontWeight: hcpFontWeight.semibold,
-                color: row.kind === "deposit" ? hcpColors.successMain : hcpColors.textPrimary,
+                color: hcpColors.textPrimary,
+                fontVariantNumeric: "tabular-nums",
                 flexShrink: 0,
               }}
             >

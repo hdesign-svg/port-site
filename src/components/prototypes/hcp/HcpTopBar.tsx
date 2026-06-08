@@ -6,22 +6,19 @@ import {
   Bell,
   DotsThree,
   ListChecks,
-  MagnifyingGlass,
   Phone,
   Question,
   Sparkle,
 } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import InputAdornment from "@mui/material/InputAdornment";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { HcpSearchField } from "./HcpSearchField";
 import { hcpChromeBarSx, hcpColors, hcpIcon, hcpLayout } from "./hcpTheme";
 
 const TOP_ICON = hcpIcon.md;
 const AI_SPARKLE_COLOR = "#623CC9";
-const SEARCH_ICON = hcpIcon.sm;
 const SEARCH_PLACEHOLDER = "Search jobs, customers, invoices";
 
 const linkedAccountMenuItems = [
@@ -96,50 +93,7 @@ export function HcpTopBar() {
         gap: 2,
       }}
     >
-      <TextField
-        size="small"
-        variant="outlined"
-        placeholder={SEARCH_PLACEHOLDER}
-        slotProps={{
-          input: {
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start" sx={{ mr: 0.25, ml: -0.25 }}>
-                <MagnifyingGlass size={SEARCH_ICON} color={hcpColors.searchPlaceholder} />
-              </InputAdornment>
-            ),
-          },
-        }}
-        sx={{
-          width: hcpLayout.searchFieldWidth,
-          flexShrink: 0,
-          "& .MuiOutlinedInput-root": {
-            bgcolor: hcpColors.paper,
-            borderRadius: `${hcpLayout.controlRadius}px`,
-            transition: "border-color 0.15s ease",
-            "& fieldset": {
-              borderColor: hcpColors.searchBorder,
-            },
-            "&:hover fieldset": {
-              borderColor: hcpColors.border,
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: hcpColors.border,
-              borderWidth: 1,
-            },
-          },
-          "& .MuiInputBase-input": {
-            color: hcpColors.textPrimary,
-            fontWeight: 400,
-            cursor: "pointer",
-            py: 0.875,
-            "&::placeholder": {
-              color: hcpColors.searchPlaceholder,
-              opacity: 1,
-            },
-          },
-        }}
-      />
+      <HcpSearchField placeholder={SEARCH_PLACEHOLDER} readOnly />
 
       <Box
         sx={{

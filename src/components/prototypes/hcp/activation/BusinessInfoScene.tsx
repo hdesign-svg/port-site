@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { hcpColors, hcpRadius } from "../hcpTheme";
+import { hcpColors, hcpPrimaryButtonSx, hcpRadius } from "../hcpTheme";
 
 type BusinessInfoSceneProps = {
   onContinue?: () => void;
@@ -23,8 +23,8 @@ export function BusinessInfoScene({ onContinue }: BusinessInfoSceneProps) {
       <Box sx={{ maxWidth: 918, mx: "auto" }}>
         <Box sx={{ mb: 4, maxWidth: 918 }}>
           <Typography
+            variant="h4"
             sx={{
-              fontWeight: 600,
               fontSize: { xs: 28, md: 34 },
               lineHeight: 1.3,
               mb: 2,
@@ -32,7 +32,7 @@ export function BusinessInfoScene({ onContinue }: BusinessInfoSceneProps) {
           >
             Enter your business information
           </Typography>
-          <Typography sx={{ fontSize: 16, lineHeight: 1.5, color: hcpColors.textPrimary }}>
+          <Typography variant="body1" sx={{ fontSize: 16, lineHeight: 1.5 }}>
             Please provide the following information about your business. How many
             employees do you currently have? If you are an owner/operator and have
             no other employees, please enter &quot;1&quot;. What is your annual
@@ -69,11 +69,9 @@ export function BusinessInfoScene({ onContinue }: BusinessInfoSceneProps) {
             variant="contained"
             onClick={onContinue}
             sx={{
-              bgcolor: hcpColors.primary,
               borderRadius: hcpRadius.control,
+              ...hcpPrimaryButtonSx,
               px: 3,
-              boxShadow: "none",
-              "&:hover": { bgcolor: hcpColors.primaryDark, boxShadow: "none" },
             }}
           >
             Continue

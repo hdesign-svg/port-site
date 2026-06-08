@@ -71,15 +71,13 @@ export function ActivityTimeRangeMenu({
           setTriggerEl(event.currentTarget);
           setMenuAnchor(event.currentTarget);
         }}
-        endIcon={<CaretDown size={hcpIcon.sm} color={hcpColors.textMuted} />}
+        endIcon={<CaretDown size={hcpIcon.sm} />}
         sx={{
           minWidth: 0,
           px: 0.5,
           py: 0.25,
-          color: hcpColors.textSecondary,
-          fontWeight: hcpFontWeight.regular,
-          typography: "body2",
-          "&:hover": { bgcolor: "transparent", color: hcpColors.textPrimary },
+          typography: "button",
+          "&:hover": { bgcolor: "transparent" },
         }}
       >
         {shortLabel}

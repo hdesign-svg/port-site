@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { UnlockSlidePreview } from "./UnlockSlidePreview";
 import type { UnlockDeck, UnlockSlide } from "./unlockDecks";
-import { hcpColors, hcpContentSpacing, hcpFontWeight, hcpLayout, hcpRadius } from "../hcpTheme";
+import { hcpColors, hcpContentSpacing, hcpFontWeight, hcpLayout, hcpPrimaryButtonSx, hcpRadius } from "../hcpTheme";
 
 type UnlockModalDiscoverPanelProps = {
   deck: UnlockDeck;
@@ -50,19 +50,10 @@ export function UnlockModalDiscoverPanel({
       >
         <Box sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 3 }}>
           <Box>
-            <Typography
-              id="unlock-modal-title"
-              sx={{
-                fontWeight: hcpFontWeight.semibold,
-                fontSize: 20,
-                lineHeight: 1.35,
-                color: hcpColors.textPrimary,
-                mb: 0.75,
-              }}
-            >
+            <Typography id="unlock-modal-title" variant="h5" sx={{ mb: 0.75 }}>
               {deck.title}
             </Typography>
-            <Typography sx={{ fontSize: 14, lineHeight: 1.5, color: hcpColors.textSecondary }}>
+            <Typography variant="body1" color="text.secondary">
               {deck.subtitle}
             </Typography>
           </Box>
@@ -127,13 +118,9 @@ export function UnlockModalDiscoverPanel({
           sx={{
             mt: 2,
             alignSelf: "flex-start",
-            bgcolor: hcpColors.primary,
             borderRadius: hcpRadius.control,
+            ...hcpPrimaryButtonSx,
             px: 2.5,
-            py: 1.25,
-            fontWeight: hcpFontWeight.semibold,
-            boxShadow: "none",
-            "&:hover": { bgcolor: hcpColors.primaryDark, boxShadow: "none" },
           }}
         >
           Get started

@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import type { UnlockDeck } from "./unlockDecks";
-import { hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpRadius } from "../hcpTheme";
+import { hcpColors, hcpIcon, hcpLayout, hcpPrimaryButtonSx, hcpRadius } from "../hcpTheme";
 
 type UnlockModalEnrollPanelProps = {
   deck: UnlockDeck;
@@ -42,18 +42,10 @@ export function UnlockModalEnrollPanel({ deck, onBack, onContinue }: UnlockModal
           <ArrowLeft size={hcpIcon.md} />
         </IconButton>
 
-        <Typography
-          sx={{
-            fontWeight: hcpFontWeight.semibold,
-            fontSize: 22,
-            lineHeight: 1.35,
-            color: hcpColors.textPrimary,
-            mb: 1,
-          }}
-        >
+        <Typography variant="h5" sx={{ mb: 1 }}>
           {deck.enrollTitle}
         </Typography>
-        <Typography sx={{ fontSize: 14, lineHeight: 1.5, color: hcpColors.textSecondary, maxWidth: 520 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 520 }}>
           {deck.enrollDescription}
         </Typography>
       </Box>
@@ -76,13 +68,9 @@ export function UnlockModalEnrollPanel({ deck, onBack, onContinue }: UnlockModal
           variant="contained"
           onClick={onContinue}
           sx={{
-            bgcolor: hcpColors.primary,
             borderRadius: hcpRadius.control,
+            ...hcpPrimaryButtonSx,
             px: 3,
-            py: 1.25,
-            fontWeight: hcpFontWeight.semibold,
-            boxShadow: "none",
-            "&:hover": { bgcolor: hcpColors.primaryDark, boxShadow: "none" },
           }}
         >
           Continue

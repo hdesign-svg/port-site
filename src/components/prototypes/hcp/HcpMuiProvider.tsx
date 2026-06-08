@@ -2,8 +2,10 @@
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { hcpColors, hcpLayout } from "./hcpTheme";
-import { createHcpTypography } from "./hcpTypography";
+import { hcpColors, hcpContentSpacing, hcpLayout } from "./hcpTheme";
+import { createHcpTypography, hcpHtmlFontSize } from "./hcpTypography";
+
+const chromeFontSize = `${hcpHtmlFontSize / 16}rem`;
 
 const hcpTheme = createTheme({
   palette: {
@@ -32,16 +34,29 @@ const hcpTheme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
-          fontWeight: 600,
           borderRadius: `${hcpLayout.controlRadius}px`,
+          fontWeight: 600,
+          color: hcpColors.textPrimary,
+        },
+        text: {
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
+        },
+        outlined: {
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
+        },
+        contained: {
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
         },
         sizeSmall: {
-          minHeight: 28,
-          paddingInline: 14,
+          minHeight: hcpLayout.chromeControlHeight,
+          paddingInline: 10,
         },
         sizeMedium: {
-          minHeight: 36,
-          paddingInline: 20,
+          minHeight: hcpLayout.actionControlHeight,
+          paddingInline: 16,
         },
       },
     },
@@ -50,8 +65,8 @@ const hcpTheme = createTheme({
         root: {
           textTransform: "none",
           fontWeight: 400,
-          fontSize: "0.8125rem",
-          lineHeight: 1.5,
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
           borderRadius: `${hcpLayout.controlRadius}px`,
           color: hcpColors.textSecondary,
           px: 1.25,
@@ -66,7 +81,7 @@ const hcpTheme = createTheme({
           },
         },
         sizeSmall: {
-          minHeight: 32,
+          minHeight: hcpLayout.chromeControlHeight,
         },
       },
     },
@@ -88,19 +103,19 @@ const hcpTheme = createTheme({
     MuiChip: {
       styleOverrides: {
         label: {
-          fontSize: "0.857rem",
+          fontSize: chromeFontSize,
           fontWeight: 600,
           lineHeight: 1.33,
         },
         sizeSmall: {
-          height: 20,
+          height: 22,
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          fontSize: "1rem",
+          fontSize: chromeFontSize,
           lineHeight: 1.43,
         },
         input: {
@@ -109,11 +124,121 @@ const hcpTheme = createTheme({
         },
       },
     },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
+        },
+      },
+    },
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          fontSize: "1rem",
+          fontSize: chromeFontSize,
           fontWeight: 400,
+          lineHeight: 1.43,
+        },
+      },
+    },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          bgcolor: hcpColors.paper,
+        },
+      },
+    },
+    MuiTable: {
+      defaultProps: {
+        size: "small",
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: `1px solid ${hcpColors.borderSubtle}`,
+          px: `${hcpContentSpacing.inset}px`,
+          py: 1.75,
+          fontSize: chromeFontSize,
+          lineHeight: 1.43,
+        },
+        head: {
+          bgcolor: hcpColors.tableHeaderBg,
+          color: hcpColors.textDisabled,
+          fontSize: "0.75rem",
+          lineHeight: 1.33,
+          fontWeight: 400,
+          py: 1.25,
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          "&:last-child td, &:last-child th": {
+            borderBottom: 0,
+          },
+          "&:hover": {
+            bgcolor: "rgba(33, 33, 33, 0.02)",
+          },
+        },
+        head: {
+          "&:hover": {
+            bgcolor: hcpColors.tableHeaderBg,
+          },
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          color: "inherit",
+          fontSize: "inherit",
+          lineHeight: "inherit",
+          fontWeight: "inherit",
+          gap: 0.5,
+          "&:hover": {
+            color: hcpColors.textSecondary,
+          },
+          "&.Mui-active": {
+            color: hcpColors.textPrimary,
+            "& .MuiTableSortLabel-icon": {
+              opacity: 1,
+              color: `${hcpColors.textMuted} !important`,
+            },
+          },
+        },
+        icon: {
+          fontSize: "1rem",
+          opacity: 0.35,
+          color: `${hcpColors.textDisabled} !important`,
+        },
+      },
+    },
+    MuiTablePagination: {
+      styleOverrides: {
+        root: {
+          borderTop: `1px solid ${hcpColors.borderSubtle}`,
+          color: hcpColors.textSecondary,
+          fontSize: chromeFontSize,
+        },
+        toolbar: {
+          minHeight: 48,
+          px: `${hcpContentSpacing.inset}px`,
+        },
+        select: {
+          fontSize: chromeFontSize,
+        },
+        displayedRows: {
+          fontSize: chromeFontSize,
+        },
+        actions: {
+          "& .MuiIconButton-root": {
+            color: hcpColors.textSecondary,
+          },
+          "& .Mui-disabled": {
+            color: hcpColors.textDisabled,
+          },
         },
       },
     },

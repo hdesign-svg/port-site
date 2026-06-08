@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ExpensesOverviewScene } from "@/components/prototypes/hcp/activation/ExpensesOverviewScene";
+import { ExpensesScene } from "@/components/prototypes/hcp/activation/ExpensesScene";
+import type { ExpensesTab } from "@/components/prototypes/hcp/activation/expensesTabs";
 import { UnlockModal } from "@/components/prototypes/hcp/activation/UnlockModal";
 import {
   getUnlockDeck,
@@ -14,6 +15,7 @@ import { HcpFramedShell } from "@/components/prototypes/hcp/HcpFramedShell";
 export default function HcpActivationPrototypePage() {
   const router = useRouter();
   const [unlockTarget, setUnlockTarget] = useState<UnlockTarget | null>(null);
+  const [expensesTab, setExpensesTab] = useState<ExpensesTab>("Overview");
 
   const handleMoneySubNavClick = (label: MoneySubNavLabel) => {
     if (label === "Accounting") {
@@ -35,7 +37,7 @@ export default function HcpActivationPrototypePage() {
           onMoneySubNavClick: handleMoneySubNavClick,
         }}
       >
-        <ExpensesOverviewScene />
+        <ExpensesScene activeTab={expensesTab} onTabChange={setExpensesTab} />
       </HcpFramedShell>
 
       {unlockTarget ? (

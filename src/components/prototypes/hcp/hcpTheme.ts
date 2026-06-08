@@ -1,3 +1,5 @@
+import { hcpHtmlFontSize } from "./hcpTypography";
+
 export const hcpColors = {
   primary: "#0e6fbe",
   primaryDark: "#0d47a1",
@@ -135,6 +137,14 @@ export const hcpLayout = {
   navSubLabelInset: 36,
   /** Default corner radius — cards, buttons, inputs, chart bars, nav rows */
   controlRadius: 8,
+  /** Compact utility chrome — toolbar text buttons, search, pagination */
+  chromeControlHeight: 32,
+  /** Outlined/contained CTAs — pairs with summary metrics on Overview */
+  actionControlHeight: 36,
+  /** Icon-only chrome control — education, dismiss */
+  chromeIconButtonSize: 34,
+  /** Icon-only action chrome — aligns with actionControlHeight */
+  actionIconButtonSize: 36,
 } as const;
 
 /** Border radius tokens — use instead of magic numbers */
@@ -191,16 +201,230 @@ export const hcpBreakdownChartCardBodySx = hcpActivityChartCardBodySx;
 /** @deprecated Use hcpChartCardHeaderSx / hcpChartCardBodySx */
 export const hcpChartCardInsetSx = hcpChartCardHeaderSx;
 
-/** Icon sizes — 20px chrome balances with 400-weight labels */
+/** 14px — shared label size for buttons, search, and inline chrome */
+export const hcpChromeFontSize = `${hcpHtmlFontSize / 16}rem`;
+
+/** Icon sizes — sm 16px pairs with 14px button labels; md 20px pairs with action controls */
 export const hcpIcon = {
   md: 20,
   sm: 16,
+  chrome: 14,
   xs: 12,
 } as const;
 
 export const hcpFontWeight = {
   regular: 400,
+  medium: 500,
   semibold: 600,
+} as const;
+
+/** Filter, export, view-all — same 14px / 600 / textPrimary as all text & outlined buttons */
+export const hcpChromeActionButtonSx = {
+  typography: "button",
+  fontSize: hcpChromeFontSize,
+  lineHeight: 1.43,
+  fontWeight: hcpFontWeight.semibold,
+  minWidth: 0,
+  minHeight: hcpLayout.chromeControlHeight,
+  px: 1.25,
+  "&:hover": {
+    bgcolor: "rgba(33, 33, 33, 0.04)",
+  },
+  "& .MuiButton-startIcon": {
+    mr: 0.75,
+    color: "inherit",
+    "& > svg": {
+      width: hcpIcon.sm,
+      height: hcpIcon.sm,
+    },
+  },
+} as const;
+
+/** Outlined CTAs — same label color as text buttons; border differentiates */
+export const hcpSecondaryButtonSx = {
+  borderColor: hcpColors.borderControl,
+  bgcolor: hcpColors.paper,
+  minHeight: hcpLayout.actionControlHeight,
+  px: 2,
+  fontSize: hcpChromeFontSize,
+  lineHeight: 1.43,
+  fontWeight: hcpFontWeight.semibold,
+  "&:hover": {
+    bgcolor: hcpColors.paper,
+    borderColor: hcpColors.borderInput,
+  },
+} as const;
+
+/** Contained primary — enrollment, add funds, continue */
+export const hcpPrimaryButtonSx = {
+  bgcolor: hcpColors.primary,
+  boxShadow: "none",
+  minHeight: hcpLayout.actionControlHeight,
+  px: 2,
+  fontSize: hcpChromeFontSize,
+  lineHeight: 1.43,
+  fontWeight: hcpFontWeight.semibold,
+  "&:hover": {
+    bgcolor: hcpColors.primaryDark,
+    boxShadow: "none",
+  },
+} as const;
+
+/** Bordered icon-only chrome — pairs with action buttons on Overview */
+export const hcpChromeIconButtonSx = {
+  width: hcpLayout.actionIconButtonSize,
+  height: hcpLayout.actionIconButtonSize,
+  color: hcpColors.chromeIcon,
+  border: `1px solid ${hcpColors.borderControl}`,
+  borderRadius: hcpRadius.control,
+  bgcolor: hcpColors.paper,
+  "&:hover": {
+    bgcolor: hcpColors.paper,
+    borderColor: hcpColors.borderInput,
+  },
+} as const;
+
+/** Search fields — same 14px label size as buttons */
+export const hcpSearchFieldSx = {
+  width: hcpLayout.searchFieldWidth,
+  flexShrink: 0,
+  "& .MuiOutlinedInput-root": {
+    minHeight: hcpLayout.chromeControlHeight,
+    bgcolor: hcpColors.paper,
+    borderRadius: hcpRadius.control,
+    fontSize: hcpChromeFontSize,
+    lineHeight: 1.43,
+    alignItems: "center",
+    transition: "border-color 0.15s ease",
+    "& fieldset": {
+      borderColor: hcpColors.searchBorder,
+    },
+    "&:hover fieldset": {
+      borderColor: hcpColors.border,
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: hcpColors.border,
+      borderWidth: 1,
+    },
+  },
+  "& .MuiInputBase-input": {
+    fontSize: "inherit",
+    lineHeight: "inherit",
+    fontWeight: hcpFontWeight.regular,
+    py: 0.75,
+    "&::placeholder": {
+      fontSize: "inherit",
+      lineHeight: "inherit",
+      fontWeight: hcpFontWeight.regular,
+      color: hcpColors.searchPlaceholder,
+      opacity: 1,
+    },
+  },
+} as const;
+
+/** Toolbar band inside a Data Grid card */
+export const hcpDataGridToolbarSx = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 2,
+  flexWrap: "wrap",
+  px: `${hcpContentSpacing.inset}px`,
+  py: 1.5,
+  bgcolor: hcpColors.paper,
+  borderBottom: `1px solid ${hcpColors.borderSubtle}`,
+} as const;
+
+/** MUI X Data Grid — card-embedded tables */
+export const hcpDataGridSx = {
+  border: 0,
+  bgcolor: hcpColors.paper,
+  "--DataGrid-containerBackground": hcpColors.paper,
+  "--DataGrid-rowBorderColor": hcpColors.borderSubtle,
+  fontSize: "0.875rem",
+  "& .MuiDataGrid-columnSeparator": {
+    display: "none",
+  },
+  "& .MuiDataGrid-columnHeaders": {
+    bgcolor: hcpColors.tableHeaderBg,
+  },
+  "& .MuiDataGrid-columnHeader": {
+    px: `${hcpContentSpacing.inset}px`,
+    "&:focus, &:focus-within": {
+      outline: "none",
+    },
+  },
+  "& .MuiDataGrid-columnHeader--withRightBorder": {
+    borderRight: "none",
+  },
+  "& .MuiDataGrid-columnHeaderTitle": {
+    fontSize: "0.875rem",
+    lineHeight: 1.43,
+    fontWeight: hcpFontWeight.regular,
+    color: hcpColors.textSecondary,
+  },
+  "& .MuiDataGrid-iconButtonContainer": {
+    visibility: "visible",
+    width: "auto",
+    ml: 0.5,
+  },
+  "& .MuiDataGrid-sortIcon": {
+    fontSize: "1rem",
+    color: hcpColors.textMuted,
+    opacity: 0.45,
+  },
+  "& .MuiDataGrid-columnHeader--sorted .MuiDataGrid-sortIcon": {
+    opacity: 1,
+    color: hcpColors.textSecondary,
+  },
+  "& .MuiDataGrid-row:hover": {
+    bgcolor: "rgba(33, 33, 33, 0.02)",
+  },
+  "& .MuiDataGrid-cell": {
+    px: `${hcpContentSpacing.inset}px`,
+    display: "flex",
+    alignItems: "center",
+    whiteSpace: "normal",
+    "&:focus, &:focus-within": {
+      outline: "none",
+    },
+  },
+  "& .MuiDataGrid-cell--textRight": {
+    justifyContent: "flex-end",
+  },
+  "& .MuiDataGrid-footerContainer": {
+    minHeight: 52,
+    color: hcpColors.textSecondary,
+    fontSize: "0.875rem",
+    borderTop: "none",
+    "& > div": {
+      maxHeight: "100%",
+    },
+  },
+  "& .MuiTablePagination-root": {
+    color: hcpColors.textSecondary,
+  },
+  "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
+    fontSize: "0.875rem",
+    color: hcpColors.textSecondary,
+  },
+  "& .MuiDataGrid-overlay": {
+    bgcolor: hcpColors.paper,
+  },
+} as const;
+
+/** Pagination prev/next — tertiary chrome icon buttons */
+export const hcpDataGridPaginationIconButtonSx = {
+  width: 32,
+  height: 32,
+  color: hcpColors.chromeIcon,
+  borderRadius: hcpRadius.control,
+  "&:hover": {
+    bgcolor: "rgba(33, 33, 33, 0.04)",
+  },
+  "&.Mui-disabled": {
+    color: hcpColors.textDisabled,
+  },
 } as const;
 
 /** Shared chrome bar layout — top nav, rail logo row, rail footer */

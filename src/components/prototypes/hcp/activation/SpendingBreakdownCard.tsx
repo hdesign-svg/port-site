@@ -14,7 +14,7 @@ import {
   getTimeRangeLabel,
   type ActivityTimeRange,
 } from "./activityTimeRange";
-import { hcpActivityChartCardBodySx, hcpColors, hcpContentSpacing, hcpFontWeight, hcpLayout } from "../hcpTheme";
+import { hcpActivityChartCardBodySx, hcpColors, hcpContentSpacing, hcpLayout } from "../hcpTheme";
 
 const breakdownBarHeight = 28;
 const breakdownBarRadius = hcpLayout.controlRadius / 2;
@@ -52,7 +52,7 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
             </Typography>
             <Typography
               variant="body2"
-              sx={{ flexShrink: 0, fontWeight: hcpFontWeight.semibold, fontVariantNumeric: "tabular-nums" }}
+              sx={{ flexShrink: 0, fontVariantNumeric: "tabular-nums" }}
             >
               {formatCurrency(category.amount)}
             </Typography>
