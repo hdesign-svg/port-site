@@ -1,15 +1,16 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import { HcpGlobalNav } from "./HcpGlobalNav";
+import { HcpGlobalNav, type HcpGlobalNavProps } from "./HcpGlobalNav";
 import { HcpTopBar } from "./HcpTopBar";
 import { hcpColors } from "./hcpTheme";
 
 type HcpAppShellProps = {
   children: React.ReactNode;
+  navProps?: HcpGlobalNavProps;
 };
 
-export function HcpAppShell({ children }: HcpAppShellProps) {
+export function HcpAppShell({ children, navProps }: HcpAppShellProps) {
   return (
     <Box
       sx={{
@@ -20,7 +21,7 @@ export function HcpAppShell({ children }: HcpAppShellProps) {
         color: hcpColors.textPrimary,
       }}
     >
-      <HcpGlobalNav />
+      <HcpGlobalNav {...navProps} />
 
       <Box
         component="main"

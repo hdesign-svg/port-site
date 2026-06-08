@@ -7,6 +7,7 @@ import {
   ChartBar,
   ChatCircle,
   CreditCard,
+  Diamond,
   FileText,
   Gear,
   House,
@@ -127,13 +128,46 @@ function NavRow({
   );
 }
 
+export type MoneySubNavLabel = "Payments" | "Expenses" | "Business Financing" | "Accounting";
+
+export type HcpGlobalNavProps = {
+  activeMoneySubNav?: MoneySubNavLabel;
+  lockedMoneySubNav?: readonly MoneySubNavLabel[];
+  onMoneySubNavClick?: (label: MoneySubNavLabel) => void;
+};
+
 function SubNavItem({
   label,
   active,
+  locked,
+  onClick,
 }: {
-  label: string;
+  label: MoneySubNavLabel;
   active?: boolean;
+  locked?: boolean;
+  onClick?: () => void;
 }) {
+  const content = (
+    <>
+      <Typography
+        variant="caption"
+        sx={{
+          flex: 1,
+          color: active ? hcpColors.textPrimary : hcpColors.textMuted,
+          fontWeight: hcpFontWeight.regular,
+          minWidth: 0,
+        }}
+      >
+        {label}
+      </Typography>
+      {locked ? (
+        <TrailingSlot>
+          <Diamond size={12} color={hcpColors.purple} weight="fill" aria-hidden />
+        </TrailingSlot>
+      ) : null}
+    </>
+  );
+
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
       {active ? (
@@ -149,26 +183,32 @@ function SubNavItem({
         />
       ) : null}
       <Box
+        component={onClick ? "button" : "div"}
+        type={onClick ? "button" : undefined}
+        onClick={onClick}
         sx={{
           position: "relative",
           zIndex: 1,
           display: "flex",
           alignItems: "center",
+          width: "100%",
           py: 0.75,
           pl: `${hcpLayout.navSubLabelInset}px`,
+          pr: 1,
+          border: "none",
+          bgcolor: "transparent",
+          cursor: onClick ? "pointer" : "default",
+          font: "inherit",
+          textAlign: "left",
+          borderRadius: hcpRadius.control,
+          "&:hover": onClick
+            ? {
+                bgcolor: active ? "transparent" : hcpColors.borderSubtle,
+              }
+            : undefined,
         }}
       >
-        <Typography
-          variant="caption"
-          sx={{
-            flex: 1,
-            color: active ? hcpColors.textPrimary : hcpColors.textMuted,
-            fontWeight: hcpFontWeight.regular,
-            minWidth: 0,
-          }}
-        >
-          {label}
-        </Typography>
+        {content}
       </Box>
     </Box>
   );
@@ -239,7 +279,18 @@ function FooterUserAccount() {
   );
 }
 
-export function HcpGlobalNav() {
+export function HcpGlobalNav({
+  activeMoneySubNav = "Expenses",
+  lockedMoneySubNav = [],
+  onMoneySubNavClick,
+}: HcpGlobalNavProps = {}) {
+  const moneySubNavItems: MoneySubNavLabel[] = [
+    "Payments",
+    "Expenses",
+    "Business Financing",
+    "Accounting",
+  ];
+
   return (
     <Box
       component="nav"
@@ -317,10 +368,19 @@ export function HcpGlobalNav() {
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: `${hcpLayout.navItemGap}px` }}>
             <NavRow icon={CreditCard} label="Money" selected chevron="up" />
-            <SubNavItem label="Payments" />
-            <SubNavItem label="Expenses" active />
-            <SubNavItem label="Business Financing" />
-            <SubNavItem label="Accounting" />
+            {moneySubNavItems.map((label) => (
+              <SubNavItem
+                key={label}
+                label={label}
+                active={label === activeMoneySubNav}
+                locked={lockedMoneySubNav.includes(label)}
+                onClick={
+                  onMoneySubNavClick
+                    ? () => onMoneySubNavClick(label)
+                    : undefined
+                }
+              />
+            ))}
           </Box>
 
           <NavRow icon={Megaphone} label="Marketing" chevron="down" />
