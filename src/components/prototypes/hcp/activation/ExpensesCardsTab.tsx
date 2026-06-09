@@ -1,20 +1,17 @@
 "use client";
 
-import { PencilSimple } from "@phosphor-icons/react";
+import { DotsThree, FunnelSimple, PencilSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {
   DataGrid,
   type GridColDef,
-  type GridPaginationModel,
 } from "@mui/x-data-grid";
-import { useMemo, useState, type MouseEvent } from "react";
-import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
+import { useMemo, useState } from "react";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import {
   CARD_TYPE_FILTER_LABELS,
@@ -24,56 +21,115 @@ import {
   formatCardTypeLabel,
   type CardTypeFilter,
   type ExpenseCardRow,
-  type ExpenseCardStatus,
 } from "./expensesCardsData";
 import {
   hcpChromeActionButtonSx,
   hcpColors,
   hcpDataGridSx,
   hcpDataGridToolbarSx,
+  hcpFontWeight,
   hcpIcon,
   hcpRadius,
 } from "../hcpTheme";
+import { hcpTypographyRoles } from "../hcpTypography";
 
-function CardStatusChip({ status }: { status: ExpenseCardStatus }) {
-  if (status === "active") {
-    return (
-      <Chip
-        label="Active"
-        size="small"
-        sx={{
-          bgcolor: hcpColors.successLight,
-          color: hcpColors.successMain,
-          height: 24,
-        }}
-      />
-    );
-  }
+const filterMenuPaperSx = {
+  mt: 0.5,
+  minWidth: 188,
+  border: `1px solid ${hcpColors.border}`,
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+} as const;
 
-  if (status === "needs_activation") {
-    return (
-      <Chip
-        label="Needs activation"
-        size="small"
-        sx={{
-          bgcolor: hcpColors.chartSpendingFill,
-          color: hcpColors.chartSpending,
-          height: 24,
-        }}
-      />
-    );
-  }
+const stackedCellSx = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 0.25,
+  minWidth: 0,
+  py: 0.25,
+} as const;
+
+function CardholderCell({ row }: { row: ExpenseCardRow }) {
+  return (
+    <Box sx={stackedCellSx}>
+      <Typography variant="body1" noWrap component="span">
+        {row.cardholder}
+      </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        noWrap
+        component="span"
+        sx={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {row.cardNumber}
+      </Typography>
+    </Box>
+  );
+}
+
+function PurposeCell({ value }: { value: string }) {
+  return (
+    <Typography variant="body1" noWrap component="span">
+      {value}
+    </Typography>
+  );
+}
+
+function CardStatusCell({ row }: { row: ExpenseCardRow }) {
+  return (
+    <Typography
+      variant="body2"
+      color={row.status === "active" ? "text.primary" : "text.secondary"}
+      component="span"
+    >
+      {row.status === "active" ? "Active" : "Inactive"}
+    </Typography>
+  );
+}
+
+function CardActionsMenu({ row }: { row: ExpenseCardRow }) {
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(menuAnchor);
 
   return (
-    <Chip
-      label="Inactive"
-      size="small"
-      sx={{
-        bgcolor: hcpColors.surfaceMuted,
-        color: hcpColors.textSecondary,
-        height: 24,
-      }}
-    />
+    <>
+      <IconButton
+        aria-label={`Actions for ${row.cardholder}'s ${row.purpose} card`}
+        aria-haspopup="menu"
+        aria-expanded={menuOpen ? "true" : undefined}
+        onClick={(event) => {
+          event.stopPropagation();
+          setMenuAnchor(event.currentTarget);
+        }}
+        sx={{
+          width: hcpIcon.md,
+          height: hcpIcon.md,
+          p: 0,
+          color: hcpColors.chromeIcon,
+          borderRadius: hcpRadius.control,
+          "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
+        }}
+      >
+        <DotsThree size={hcpIcon.md} weight="bold" />
+      </IconButton>
+
+      <Menu
+        anchorEl={menuAnchor}
+        open={menuOpen}
+        onClose={() => setMenuAnchor(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{ paper: { sx: filterMenuPaperSx } }}
+      >
+        <MenuItem
+          onClick={() => setMenuAnchor(null)}
+          sx={{ gap: 1 }}
+        >
+          <PencilSimple size={hcpIcon.sm} weight="regular" />
+          Edit card
+        </MenuItem>
+      </Menu>
+    </>
   );
 }
 
@@ -81,46 +137,22 @@ const cardColumns: GridColDef<ExpenseCardRow>[] = [
   {
     field: "cardholder",
     headerName: "Cardholder",
-    flex: 1.2,
-    minWidth: 160,
-    renderCell: ({ value }) => (
-      <Typography variant="body1" noWrap component="span">
-        {value}
-      </Typography>
-    ),
+    flex: 1,
+    minWidth: 120,
+    renderCell: ({ row }) => <CardholderCell row={row} />,
   },
   {
     field: "purpose",
     headerName: "Purpose",
     flex: 1,
-    minWidth: 140,
-    renderCell: ({ value }) => (
-      <Typography variant="body2" color="text.secondary" noWrap component="span">
-        {value}
-      </Typography>
-    ),
-  },
-  {
-    field: "cardNumber",
-    headerName: "Card #",
-    flex: 0.75,
-    minWidth: 112,
-    renderCell: ({ value }) => (
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        component="span"
-        sx={{ fontVariantNumeric: "tabular-nums" }}
-      >
-        {value}
-      </Typography>
-    ),
+    minWidth: 120,
+    renderCell: ({ value }) => <PurposeCell value={value} />,
   },
   {
     field: "cardType",
-    headerName: "Card type",
-    flex: 0.75,
-    minWidth: 112,
+    headerName: "Type",
+    flex: 1,
+    minWidth: 96,
     valueFormatter: (value: ExpenseCardRow["cardType"]) => formatCardTypeLabel(value),
     renderCell: ({ formattedValue }) => (
       <Typography variant="body2" color="text.secondary" noWrap component="span">
@@ -130,78 +162,51 @@ const cardColumns: GridColDef<ExpenseCardRow>[] = [
   },
   {
     field: "status",
-    headerName: "Card status",
-    flex: 0.95,
-    minWidth: 148,
+    headerName: "Status",
+    flex: 1,
+    minWidth: 88,
     sortable: false,
-    renderCell: ({ row }) => <CardStatusChip status={row.status} />,
+    renderCell: ({ row }) => <CardStatusCell row={row} />,
   },
   {
     field: "spendingLimit",
-    headerName: "Spending limits",
-    flex: 0.9,
-    minWidth: 132,
+    headerName: "Spending limit",
+    flex: 1,
+    minWidth: 120,
     renderCell: ({ value }) => (
-      <Typography variant="body1" noWrap component="span">
+      <Typography variant="body1" noWrap component="span" sx={{ fontVariantNumeric: "tabular-nums" }}>
         {value}
       </Typography>
     ),
   },
   {
-    field: "activate",
-    headerName: "Activate",
-    flex: 0.7,
-    minWidth: 100,
-    sortable: false,
-    renderCell: ({ row }) =>
-      row.status === "needs_activation" ? (
-        <Button variant="text" sx={hcpChromeActionButtonSx}>
-          Activate
-        </Button>
-      ) : null,
-  },
-  {
-    field: "edit",
+    field: "actions",
     headerName: "",
-    flex: 0.35,
-    minWidth: 56,
+    width: 72,
+    flex: 0,
     sortable: false,
     align: "center",
     headerAlign: "center",
-    renderCell: () => (
-      <IconButton
-        size="small"
-        aria-label="Edit card"
-        sx={{
-          color: hcpColors.chromeIcon,
-          "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
-        }}
-      >
-        <PencilSimple size={hcpIcon.sm} weight="regular" />
-      </IconButton>
-    ),
+    renderCell: ({ row }) => <CardActionsMenu row={row} />,
   },
 ];
 
 export function ExpensesCardsTab() {
   const [typeFilter, setTypeFilter] = useState<CardTypeFilter>("all");
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
+  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
+
+  const filterMenuOpen = Boolean(filterMenuAnchor);
 
   const visibleRows = useMemo(
     () => filterCardsByType(expenseCards, typeFilter),
     [typeFilter],
   );
 
-  const handleTypeFilterChange = (_: MouseEvent<HTMLElement>, next: CardTypeFilter | null) => {
-    if (!next) {
-      return;
-    }
+  const cardCountLabel = `${visibleRows.length} ${visibleRows.length === 1 ? "card" : "cards"}`;
 
+  const handleTypeFilterChange = (next: CardTypeFilter) => {
     setTypeFilter(next);
-    setPaginationModel((current) => ({ ...current, page: 0 }));
+    setFilterMenuAnchor(null);
   };
 
   return (
@@ -214,48 +219,63 @@ export function ExpensesCardsTab() {
           overflow: "hidden",
         }}
       >
-          <Box sx={hcpDataGridToolbarSx}>
-            <ToggleButtonGroup
-              exclusive
-              size="small"
-              value={typeFilter}
-              onChange={handleTypeFilterChange}
-              aria-label="Filter cards by type"
-            >
-              {CARD_TYPE_FILTERS.map((filter) => (
-                <ToggleButton key={filter} value={filter}>
-                  {CARD_TYPE_FILTER_LABELS[filter]}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
-          </Box>
+        <Box sx={hcpDataGridToolbarSx}>
+          <Typography
+            variant={hcpTypographyRoles.cardTitle}
+            sx={{ fontWeight: hcpFontWeight.semibold, fontVariantNumeric: "tabular-nums" }}
+          >
+            {cardCountLabel}
+          </Typography>
 
-          <DataGrid
-            rows={visibleRows}
-            columns={cardColumns}
-            autoHeight
-            disableRowSelectionOnClick
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-            showCellVerticalBorder={false}
-            showColumnVerticalBorder={false}
-            paginationMode="client"
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            pageSizeOptions={[10, 25, 50]}
-            rowHeight={52}
-            columnHeaderHeight={48}
-            sx={hcpDataGridSx}
-            slotProps={{
-              basePagination: {
-                material: {
-                  ActionsComponent: HcpTablePaginationActions,
-                  labelRowsPerPage: "Rows per page:",
-                },
-              },
-            }}
-          />
+          <Button
+            variant="text"
+            startIcon={<FunnelSimple size={hcpIcon.sm} weight="regular" />}
+            aria-haspopup="menu"
+            aria-expanded={filterMenuOpen ? "true" : undefined}
+            aria-controls={filterMenuOpen ? "cards-type-filter-menu" : undefined}
+            onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
+            sx={hcpChromeActionButtonSx}
+          >
+            {typeFilter === "all" ? "Filter" : CARD_TYPE_FILTER_LABELS[typeFilter]}
+          </Button>
+        </Box>
+
+        <Menu
+          id="cards-type-filter-menu"
+          anchorEl={filterMenuAnchor}
+          open={filterMenuOpen}
+          onClose={() => setFilterMenuAnchor(null)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          slotProps={{ paper: { sx: filterMenuPaperSx } }}
+        >
+          {CARD_TYPE_FILTERS.map((filter) => (
+            <MenuItem
+              key={filter}
+              selected={typeFilter === filter}
+              onClick={() => handleTypeFilterChange(filter)}
+              sx={{ py: 1 }}
+            >
+              <Typography variant="body2">{CARD_TYPE_FILTER_LABELS[filter]}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+
+        <DataGrid
+          rows={visibleRows}
+          columns={cardColumns}
+          autoHeight
+          disableRowSelectionOnClick
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          showCellVerticalBorder={false}
+          showColumnVerticalBorder={false}
+          hideFooter
+          rowHeight={68}
+          columnHeaderHeight={48}
+          sx={hcpDataGridSx}
+        />
       </Box>
     </ExpensesTabPanel>
   );
