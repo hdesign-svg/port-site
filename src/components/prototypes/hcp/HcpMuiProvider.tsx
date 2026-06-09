@@ -157,7 +157,7 @@ const hcpTheme = createTheme({
       styleOverrides: {
         root: {
           borderBottom: `1px solid ${hcpColors.borderSubtle}`,
-          px: `${hcpContentSpacing.inset}px`,
+          px: `${hcpContentSpacing.surfaceInsetX}px`,
           py: 1.75,
           fontSize: chromeFontSize,
           lineHeight: 1.43,
@@ -169,6 +169,7 @@ const hcpTheme = createTheme({
           lineHeight: 1.33,
           fontWeight: 400,
           py: 1.25,
+          px: `${hcpContentSpacing.surfaceInsetX}px`,
         },
       },
     },
@@ -224,7 +225,7 @@ const hcpTheme = createTheme({
         },
         toolbar: {
           minHeight: 48,
-          px: `${hcpContentSpacing.inset}px`,
+          px: `${hcpContentSpacing.surfaceInsetX}px`,
         },
         select: {
           fontSize: chromeFontSize,

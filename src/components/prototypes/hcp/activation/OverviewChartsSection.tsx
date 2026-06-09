@@ -5,18 +5,13 @@ import { useState } from "react";
 import { OverallActivityCard } from "./OverallActivityCard";
 import { SpendingBreakdownCard } from "./SpendingBreakdownCard";
 import { DEFAULT_TIME_RANGE, type ActivityTimeRange } from "./activityTimeRange";
-import { hcpContentBlockStackSx, hcpContentHeaderSx } from "../hcpTheme";
+import { hcpContentBlockStackSx } from "../hcpTheme";
 
 export function OverviewChartsSection() {
   const [timeRange, setTimeRange] = useState<ActivityTimeRange>(DEFAULT_TIME_RANGE);
 
   return (
-    <Box
-      sx={{
-        ...hcpContentHeaderSx,
-        ...hcpContentBlockStackSx,
-      }}
-    >
+    <Box sx={hcpContentBlockStackSx}>
       <OverallActivityCard timeRange={timeRange} onTimeRangeChange={setTimeRange} />
       <SpendingBreakdownCard timeRange={timeRange} />
     </Box>

@@ -13,6 +13,7 @@ import {
 import { useMemo, useState } from "react";
 import { HcpSearchField } from "../HcpSearchField";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
+import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import {
   expensesTransactions,
   formatTransactionAmount,
@@ -22,9 +23,6 @@ import {
 import {
   hcpChromeActionButtonSx,
   hcpColors,
-  hcpContentBlockStackSx,
-  hcpContentHeaderSx,
-  hcpContentSpacing,
   hcpDataGridSx,
   hcpDataGridToolbarSx,
   hcpIcon,
@@ -131,22 +129,15 @@ export function ExpensesTransactionsTab() {
   };
 
   return (
-    <Box
-      component="section"
-      sx={{
-        ...hcpContentBlockStackSx,
-        pb: `${hcpContentSpacing.zoneInset}px`,
-      }}
-    >
-      <Box sx={{ ...hcpContentHeaderSx, flexShrink: 0 }}>
-        <Box
-          sx={{
-            bgcolor: hcpColors.paper,
-            border: `1px solid ${hcpColors.border}`,
-            borderRadius: hcpRadius.control,
-            overflow: "hidden",
-          }}
-        >
+    <ExpensesTabPanel>
+      <Box
+        sx={{
+          bgcolor: hcpColors.paper,
+          border: `1px solid ${hcpColors.border}`,
+          borderRadius: hcpRadius.control,
+          overflow: "hidden",
+        }}
+      >
           <Box sx={hcpDataGridToolbarSx}>
             <HcpSearchField
               placeholder="Search"
@@ -202,8 +193,7 @@ export function ExpensesTransactionsTab() {
               },
             }}
           />
-        </Box>
       </Box>
-    </Box>
+    </ExpensesTabPanel>
   );
 }

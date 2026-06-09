@@ -22,7 +22,7 @@ import {
   isPresetSelected,
   type ActivityTimeRange,
 } from "./activityTimeRange";
-import { hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "../hcpTheme";
+import { hcpChromeActionButtonSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "../hcpTheme";
 
 export function ActivityTimeRangeMenu({
   timeRange,
@@ -62,7 +62,6 @@ export function ActivityTimeRangeMenu({
     <>
       <Button
         variant="text"
-        size="small"
         aria-haspopup="listbox"
         aria-expanded={menuOpen || customOpen ? "true" : undefined}
         aria-controls={menuOpen ? "overall-activity-time-range-menu" : undefined}
@@ -71,14 +70,8 @@ export function ActivityTimeRangeMenu({
           setTriggerEl(event.currentTarget);
           setMenuAnchor(event.currentTarget);
         }}
-        endIcon={<CaretDown size={hcpIcon.sm} />}
-        sx={{
-          minWidth: 0,
-          px: 0.5,
-          py: 0.25,
-          typography: "button",
-          "&:hover": { bgcolor: "transparent" },
-        }}
+        endIcon={<CaretDown size={hcpIcon.sm} weight="regular" />}
+        sx={hcpChromeActionButtonSx}
       >
         {shortLabel}
       </Button>

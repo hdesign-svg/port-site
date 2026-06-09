@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import {
   ChartCardShell,
   chartCardFigureSx,
-  chartPlotBottomMargin,
   formatCurrency,
   visuallyHiddenSx,
 } from "./activityChartShared";
@@ -14,7 +13,7 @@ import {
   getTimeRangeLabel,
   type ActivityTimeRange,
 } from "./activityTimeRange";
-import { hcpActivityChartCardBodySx, hcpColors, hcpContentSpacing, hcpLayout } from "../hcpTheme";
+import { hcpChartCardBodySx, hcpColors, hcpContentSpacing, hcpLayout } from "../hcpTheme";
 
 const breakdownBarHeight = 28;
 const breakdownBarRadius = hcpLayout.controlRadius / 2;
@@ -34,7 +33,6 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
       sx={{
         ...chartCardFigureSx,
         gap: `${hcpContentSpacing.inset}px`,
-        pb: `${chartPlotBottomMargin}px`,
       }}
     >
       <Typography id="spending-breakdown-chart-title" component="figcaption" sx={visuallyHiddenSx}>
@@ -82,7 +80,7 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
 
 export function SpendingBreakdownCard({ timeRange }: { timeRange: ActivityTimeRange }) {
   return (
-    <ChartCardShell title="Spending breakdown" bodySx={hcpActivityChartCardBodySx}>
+    <ChartCardShell title="Spending breakdown" bodySx={hcpChartCardBodySx}>
       <SpendingBreakdownChart timeRange={timeRange} />
     </ChartCardShell>
   );

@@ -71,6 +71,10 @@ export const hcpContentSpacing = {
   blockGap: hcpSpacing.m,
   zoneGap: hcpSpacing.l,
   inset: hcpSpacing.s,
+  /** Chart cards & data grid surfaces — shared horizontal inset */
+  surfaceInsetX: 20,
+  /** Chart cards & data grid surfaces — shared vertical inset */
+  surfaceInsetY: hcpSpacing.s,
   /** Header border → legend / chart content */
   chartHeaderGap: hcpSpacing.m,
   /** Legend → plot */
@@ -179,24 +183,21 @@ export const hcpContentSectionGapSx = {
 
 /** Chart card header band */
 export const hcpChartCardHeaderSx = {
-  px: `${hcpContentSpacing.inset}px`,
-  py: `${hcpContentSpacing.inset}px`,
+  px: `${hcpContentSpacing.surfaceInsetX}px`,
+  py: `${hcpContentSpacing.surfaceInsetY}px`,
 } as const;
 
-/** Chart card body — even inset on all sides */
+/** Chart card body — matches header vertical inset */
 export const hcpChartCardBodySx = {
-  p: `${hcpContentSpacing.inset}px`,
+  px: `${hcpContentSpacing.surfaceInsetX}px`,
+  py: `${hcpContentSpacing.surfaceInsetY}px`,
 } as const;
 
-/** Activity card body — tighter below the x-axis */
-export const hcpActivityChartCardBodySx = {
-  px: `${hcpContentSpacing.inset}px`,
-  pt: `${hcpContentSpacing.inset}px`,
-  pb: `${hcpContentSpacing.chartBodyBottom}px`,
-} as const;
+/** @deprecated Use hcpChartCardBodySx */
+export const hcpActivityChartCardBodySx = hcpChartCardBodySx;
 
-/** @deprecated Use hcpActivityChartCardBodySx — breakdown matches activity card inset */
-export const hcpBreakdownChartCardBodySx = hcpActivityChartCardBodySx;
+/** @deprecated Use hcpChartCardBodySx */
+export const hcpBreakdownChartCardBodySx = hcpChartCardBodySx;
 
 /** @deprecated Use hcpChartCardHeaderSx / hcpChartCardBodySx */
 export const hcpChartCardInsetSx = hcpChartCardHeaderSx;
@@ -238,7 +239,19 @@ export const hcpChromeActionButtonSx = {
       height: hcpIcon.sm,
     },
   },
+  "& .MuiButton-endIcon": {
+    ml: 0.5,
+    mr: 0,
+    color: "inherit",
+    "& > svg": {
+      width: hcpIcon.sm,
+      height: hcpIcon.sm,
+    },
+  },
 } as const;
+
+/** @deprecated Use hcpChromeActionButtonSx */
+export const hcpChartHeaderTriggerSx = hcpChromeActionButtonSx;
 
 /** Outlined CTAs — same label color as text buttons; border differentiates */
 export const hcpSecondaryButtonSx = {
@@ -329,8 +342,8 @@ export const hcpDataGridToolbarSx = {
   justifyContent: "space-between",
   gap: 2,
   flexWrap: "wrap",
-  px: `${hcpContentSpacing.inset}px`,
-  py: 1.5,
+  px: `${hcpContentSpacing.surfaceInsetX}px`,
+  py: `${hcpContentSpacing.surfaceInsetY}px`,
   bgcolor: hcpColors.paper,
   borderBottom: `1px solid ${hcpColors.borderSubtle}`,
 } as const;
@@ -349,7 +362,7 @@ export const hcpDataGridSx = {
     bgcolor: hcpColors.tableHeaderBg,
   },
   "& .MuiDataGrid-columnHeader": {
-    px: `${hcpContentSpacing.inset}px`,
+    px: `${hcpContentSpacing.surfaceInsetX}px`,
     "&:focus, &:focus-within": {
       outline: "none",
     },
@@ -381,7 +394,7 @@ export const hcpDataGridSx = {
     bgcolor: "rgba(33, 33, 33, 0.02)",
   },
   "& .MuiDataGrid-cell": {
-    px: `${hcpContentSpacing.inset}px`,
+    px: `${hcpContentSpacing.surfaceInsetX}px`,
     display: "flex",
     alignItems: "center",
     whiteSpace: "normal",
@@ -394,6 +407,8 @@ export const hcpDataGridSx = {
   },
   "& .MuiDataGrid-footerContainer": {
     minHeight: 52,
+    px: `${hcpContentSpacing.surfaceInsetX}px`,
+    py: `${hcpContentSpacing.surfaceInsetY}px`,
     color: hcpColors.textSecondary,
     fontSize: "0.875rem",
     borderTop: "none",

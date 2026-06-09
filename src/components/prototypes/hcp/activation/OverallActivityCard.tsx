@@ -18,7 +18,7 @@ import {
   getTimeRangeLabel,
   type ActivityTimeRange,
 } from "./activityTimeRange";
-import { hcpActivityChartCardBodySx, hcpColors, hcpContentSpacing, hcpLayout } from "../hcpTheme";
+import { hcpColors, hcpContentSpacing, hcpLayout } from "../hcpTheme";
 
 const activityChartSummary =
   "Grouped bar chart of monthly deposits and spending for a small home service business with about eight employees.";
@@ -154,7 +154,6 @@ export function OverallActivityCard({
     <ChartCardShell
       title="Activity"
       headerAside={<ActivityTimeRangeMenu timeRange={timeRange} onTimeRangeChange={onTimeRangeChange} />}
-      bodySx={hcpActivityChartCardBodySx}
     >
       <OverallActivityChart timeRange={timeRange} />
     </ChartCardShell>
