@@ -19,10 +19,10 @@ export const expensesUnlockDeck: UnlockDeck = {
   title: "Unlock Expenses",
   subtitle: "Take control of team spending with cards, limits, and real-time visibility.",
   slides: [
+    { id: "overview", label: "Understand cash flow" },
     { id: "transactions", label: "See every transaction" },
     { id: "cards", label: "Control team spending" },
-    { id: "overview", label: "Understand cash flow" },
-    { id: "bills", label: "Pay bills in one place" },
+    { id: "bills", label: "Pay and track bills" },
   ],
   enrollTitle: "Enter your business information",
   enrollDescription:

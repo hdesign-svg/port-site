@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  ArrowsClockwise,
   CalendarBlank,
-  CaretDown,
   CaretUp,
   ChartBar,
+  ChartLineUp,
   ChatCircle,
   CreditCard,
-  Diamond,
+  Lock,
   FileText,
   Gear,
   House,
@@ -15,21 +16,36 @@ import {
   Receipt,
   SquaresFour,
   Tag,
+  Target,
   Users,
   UsersThree,
   Wrench,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpRadius } from "./hcpTheme";
 
 const NAV_PRIMARY_ICON = hcpIcon.md;
-const NAV_CHEVRON_SIZE = 16;
+const NAV_TRAILING_ICON_SIZE = 16;
 const NAV_TRAILING_SLOT = 20;
+/** Sub-nav stem — centered in the 20px parent icon column (Linktree-style) */
+const NAV_SUB_NAV_STEM_X = NAV_PRIMARY_ICON / 2;
 const FOOTER_USER_DISPLAY_NAME = "Sarah";
 const FOOTER_USER_FULL_NAME = "Sarah Mitchell";
+const FOOTER_AVATAR_SIZE = 28;
+
+const navIconSlotSx = {
+  width: NAV_PRIMARY_ICON,
+  height: NAV_PRIMARY_ICON,
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+} as const;
 
 const navItemSx = {
   display: "flex",
@@ -37,7 +53,16 @@ const navItemSx = {
   gap: `${hcpLayout.navIconLabelGap}px`,
   width: "100%",
   py: `${hcpLayout.navRowPy}px`,
+  px: 0,
   borderRadius: hcpRadius.control,
+  border: "none",
+  bgcolor: "transparent",
+  font: "inherit",
+  textAlign: "left" as const,
+  cursor: "pointer",
+  "&:hover": {
+    bgcolor: hcpColors.borderSubtle,
+  },
 };
 
 const trailingSlotSx = {
@@ -55,50 +80,35 @@ function TrailingSlot({ children }: { children?: React.ReactNode }) {
 
 function NavDivider() {
   return (
-    <Box
-      sx={{
-        py: `${hcpLayout.navRowPy}px`,
-      }}
-    >
-      <Box
-        sx={{
-          width: "100%",
-          height: "1px",
-          bgcolor: hcpColors.border,
-        }}
-      />
+    <Box sx={{ py: `${hcpLayout.navRowPy}px` }}>
+      <Box sx={{ width: "100%", height: "1px", bgcolor: hcpColors.border }} />
     </Box>
   );
 }
 
 function NavRow({
-  icon: Icon,
+  icon: IconComponent,
   label,
   chevron,
   selected = false,
 }: {
   icon: Icon;
   label: string;
-  chevron?: "down" | "up";
+  chevron?: "up";
   selected?: boolean;
 }) {
-  const iconColor = selected ? hcpColors.primary : hcpColors.navIcon;
+  const iconColor = selected ? hcpColors.navIconSelected : hcpColors.navIcon;
   const labelColor = selected ? hcpColors.textPrimary : hcpColors.textMuted;
-  const chevronColor = selected ? labelColor : iconColor;
 
   return (
-    <Box sx={navItemSx}>
-      <Box
-        sx={{
-          width: NAV_PRIMARY_ICON,
-          height: NAV_PRIMARY_ICON,
-          flexShrink: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Icon
+    <Box
+      component="button"
+      type="button"
+      aria-current={selected ? "page" : undefined}
+      sx={navItemSx}
+    >
+      <Box sx={navIconSlotSx}>
+        <IconComponent
           size={NAV_PRIMARY_ICON}
           color={iconColor}
           weight={selected ? "fill" : "regular"}
@@ -109,7 +119,7 @@ function NavRow({
         sx={{
           flex: 1,
           color: labelColor,
-          fontWeight: hcpFontWeight.regular,
+          fontWeight: selected ? hcpFontWeight.semibold : hcpFontWeight.regular,
           minWidth: 0,
         }}
       >
@@ -117,24 +127,45 @@ function NavRow({
       </Typography>
       {chevron ? (
         <TrailingSlot>
-          {chevron === "down" ? (
-            <CaretDown size={NAV_CHEVRON_SIZE} color={chevronColor} weight="regular" />
-          ) : (
-            <CaretUp size={NAV_CHEVRON_SIZE} color={chevronColor} weight="regular" />
-          )}
+          <CaretUp size={NAV_TRAILING_ICON_SIZE} color={labelColor} weight="regular" />
         </TrailingSlot>
       ) : null}
     </Box>
   );
 }
 
-export type MoneySubNavLabel = "Payments" | "Expenses" | "Business Financing" | "Accounting";
+export type MoneySubNavLabel = "Payments" | "Expenses" | "Financing" | "Accounting";
 
 export type HcpGlobalNavProps = {
   activeMoneySubNav?: MoneySubNavLabel;
   lockedMoneySubNav?: readonly MoneySubNavLabel[];
   onMoneySubNavClick?: (label: MoneySubNavLabel) => void;
 };
+
+function MoneySubNavGroup({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        gap: `${hcpLayout.navItemGap}px`,
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          left: NAV_SUB_NAV_STEM_X - 0.5,
+          top: 0,
+          bottom: 0,
+          width: "1px",
+          bgcolor: hcpColors.border,
+          pointerEvents: "none",
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
 
 function SubNavItem({
   label,
@@ -147,14 +178,40 @@ function SubNavItem({
   locked?: boolean;
   onClick?: () => void;
 }) {
-  const content = (
-    <>
+  const row = (
+    <Box
+      component={onClick ? "button" : "div"}
+      type={onClick ? "button" : undefined}
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      sx={{
+        ...navItemSx,
+        pl: `${hcpLayout.navSubLabelInset}px`,
+        cursor: onClick ? "pointer" : "default",
+        "&:hover": onClick
+          ? {
+              bgcolor: "transparent",
+              backgroundColor: "transparent",
+              "& .money-sub-nav-label": {
+                fontWeight: hcpFontWeight.semibold,
+              },
+            }
+          : { bgcolor: "transparent", backgroundColor: "transparent" },
+        "&:focus, &:active, &:focus-visible": {
+          bgcolor: "transparent",
+          backgroundColor: "transparent",
+          outline: "none",
+          boxShadow: "none",
+        },
+      }}
+    >
       <Typography
-        variant="caption"
+        className="money-sub-nav-label"
+        variant="body2"
         sx={{
           flex: 1,
           color: active ? hcpColors.textPrimary : hcpColors.textMuted,
-          fontWeight: hcpFontWeight.regular,
+          fontWeight: active ? hcpFontWeight.semibold : hcpFontWeight.regular,
           minWidth: 0,
         }}
       >
@@ -162,56 +219,30 @@ function SubNavItem({
       </Typography>
       {locked ? (
         <TrailingSlot>
-          <Diamond size={12} color={hcpColors.purple} weight="fill" aria-hidden />
+          <Lock
+            size={NAV_TRAILING_ICON_SIZE}
+            color={hcpColors.navIconSelected}
+            weight="regular"
+            aria-hidden
+          />
         </TrailingSlot>
-      ) : null}
-    </>
-  );
-
-  return (
-    <Box sx={{ width: "100%", position: "relative" }}>
-      {active ? (
-        <Box
-          aria-hidden
-          sx={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: hcpRadius.control,
-            bgcolor: hcpColors.expensesActive,
-            zIndex: 0,
-          }}
-        />
-      ) : null}
-      <Box
-        component={onClick ? "button" : "div"}
-        type={onClick ? "button" : undefined}
-        onClick={onClick}
-        sx={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          py: 0.75,
-          pl: `${hcpLayout.navSubLabelInset}px`,
-          pr: 1,
-          border: "none",
-          bgcolor: "transparent",
-          cursor: onClick ? "pointer" : "default",
-          font: "inherit",
-          textAlign: "left",
-          borderRadius: hcpRadius.control,
-          "&:hover": onClick
-            ? {
-                bgcolor: active ? "transparent" : hcpColors.borderSubtle,
-              }
-            : undefined,
-        }}
-      >
-        {content}
-      </Box>
+      ) : (
+        <Box sx={{ ...trailingSlotSx, visibility: "hidden" }} aria-hidden />
+      )}
     </Box>
   );
+
+  if (locked) {
+    return (
+      <Tooltip title={`Unlock ${label}`}>
+        <Box component="span" sx={{ display: "block", width: "100%" }}>
+          {row}
+        </Box>
+      </Tooltip>
+    );
+  }
+
+  return row;
 }
 
 function FooterUserAccount() {
@@ -220,25 +251,16 @@ function FooterUserAccount() {
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: 2,
+        gap: `${hcpLayout.navIconLabelGap}px`,
         width: "100%",
         minWidth: 0,
       }}
     >
-      <Box
-        sx={{
-          width: NAV_PRIMARY_ICON,
-          flexShrink: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "visible",
-        }}
-      >
+      <Box sx={{ ...navIconSlotSx, overflow: "visible" }}>
         <Box
           sx={{
-            width: 28,
-            height: 28,
+            width: FOOTER_AVATAR_SIZE,
+            height: FOOTER_AVATAR_SIZE,
             borderRadius: "50%",
             overflow: "hidden",
             position: "relative",
@@ -256,25 +278,35 @@ function FooterUserAccount() {
       </Box>
 
       <Typography
-        variant="caption"
+        variant="navLabel"
         sx={{
+          flex: 1,
           color: hcpColors.textPrimary,
           fontWeight: hcpFontWeight.regular,
-          maxWidth: 64,
+          minWidth: 0,
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          flexShrink: 0,
         }}
       >
         {FOOTER_USER_DISPLAY_NAME}
       </Typography>
 
-      <Box sx={{ flex: 1, minWidth: 0 }} />
-
-      <TrailingSlot>
-        <Gear size={NAV_PRIMARY_ICON} color={hcpColors.chromeIcon} weight="regular" aria-label="Settings" />
-      </TrailingSlot>
+      <Box sx={{ ...trailingSlotSx, overflow: "visible" }}>
+        <IconButton
+          aria-label="Settings"
+          sx={{
+            width: hcpLayout.actionIconButtonSize,
+            height: hcpLayout.actionIconButtonSize,
+            p: 0,
+            color: hcpColors.chromeIcon,
+            borderRadius: hcpRadius.control,
+            "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
+          }}
+        >
+          <Gear size={NAV_PRIMARY_ICON} weight="regular" />
+        </IconButton>
+      </Box>
     </Box>
   );
 }
@@ -287,7 +319,7 @@ export function HcpGlobalNav({
   const moneySubNavItems: MoneySubNavLabel[] = [
     "Payments",
     "Expenses",
-    "Business Financing",
+    "Financing",
     "Accounting",
   ];
 
@@ -307,7 +339,6 @@ export function HcpGlobalNav({
         isolation: "isolate",
       }}
     >
-      {/* Header — logo row, height matched to top bar */}
       <Box
         sx={{
           ...hcpChromeBarSx,
@@ -330,7 +361,6 @@ export function HcpGlobalNav({
         />
       </Box>
 
-      {/* Scrollable nav */}
       <Box
         sx={{
           flex: 1,
@@ -364,38 +394,39 @@ export function HcpGlobalNav({
 
           <NavDivider />
 
-          <NavRow icon={ChatCircle} label="Communications" chevron="down" />
+          <NavRow icon={ChatCircle} label="Communications" />
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: `${hcpLayout.navItemGap}px` }}>
             <NavRow icon={CreditCard} label="Money" selected chevron="up" />
-            {moneySubNavItems.map((label) => (
-              <SubNavItem
-                key={label}
-                label={label}
-                active={label === activeMoneySubNav}
-                locked={lockedMoneySubNav.includes(label)}
-                onClick={
-                  onMoneySubNavClick
-                    ? () => onMoneySubNavClick(label)
-                    : undefined
-                }
-              />
-            ))}
+            <MoneySubNavGroup>
+              {moneySubNavItems.map((label) => (
+                <SubNavItem
+                  key={label}
+                  label={label}
+                  active={label === activeMoneySubNav}
+                  locked={lockedMoneySubNav.includes(label)}
+                  onClick={
+                    onMoneySubNavClick
+                      ? () => onMoneySubNavClick(label)
+                      : undefined
+                  }
+                />
+              ))}
+            </MoneySubNavGroup>
           </Box>
 
-          <NavRow icon={Megaphone} label="Marketing" chevron="down" />
-          <NavRow icon={ChartBar} label="Reporting" chevron="down" />
-          <NavRow icon={UsersThree} label="Team" chevron="down" />
+          <NavRow icon={Target} label="Marketing" />
+          <NavRow icon={ChartLineUp} label="Reporting" />
+          <NavRow icon={UsersThree} label="Team" />
 
           <NavDivider />
 
           <NavRow icon={Tag} label="Price Book" />
           <NavRow icon={SquaresFour} label="Apps" />
-          <NavRow icon={Receipt} label="Service Plans" />
+          <NavRow icon={ArrowsClockwise} label="Service Plans" />
         </Box>
       </Box>
 
-      {/* Footer — user account, height matched to logo header */}
       <Box
         sx={{
           ...hcpChromeBarSx,

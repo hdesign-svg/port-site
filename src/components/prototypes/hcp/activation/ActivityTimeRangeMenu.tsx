@@ -22,7 +22,14 @@ import {
   isPresetSelected,
   type ActivityTimeRange,
 } from "./activityTimeRange";
-import { hcpChromeActionButtonSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout } from "../hcpTheme";
+import {
+  hcpChromeActionButtonSx,
+  hcpFontWeight,
+  hcpIcon,
+  hcpLayout,
+  hcpMenuPaperSx,
+  hcpPopoverPaperSx,
+} from "../hcpTheme";
 
 export function ActivityTimeRangeMenu({
   timeRange,
@@ -83,16 +90,7 @@ export function ActivityTimeRangeMenu({
         onClose={() => setMenuAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{
-          paper: {
-            sx: {
-              mt: 0.5,
-              minWidth: 188,
-              border: `1px solid ${hcpColors.border}`,
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-            },
-          },
-        }}
+        slotProps={{ paper: { sx: hcpMenuPaperSx } }}
       >
         {ACTIVITY_TIME_PRESETS.map((preset) => (
           <MenuItem
@@ -123,17 +121,7 @@ export function ActivityTimeRangeMenu({
         onClose={() => setCustomOpen(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{
-          paper: {
-            sx: {
-              mt: 0.5,
-              p: 2,
-              width: 280,
-              border: `1px solid ${hcpColors.border}`,
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-            },
-          },
-        }}
+        slotProps={{ paper: { sx: hcpPopoverPaperSx } }}
       >
         <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 1.5 }}>
           Custom range

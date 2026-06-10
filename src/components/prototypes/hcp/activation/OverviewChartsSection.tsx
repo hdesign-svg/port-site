@@ -13,7 +13,7 @@ export function OverviewChartsSection() {
   return (
     <Box sx={hcpContentBlockStackSx}>
       <OverallActivityCard timeRange={timeRange} onTimeRangeChange={setTimeRange} />
-      <SpendingBreakdownCard timeRange={timeRange} />
+      <SpendingBreakdownCard timeRange={timeRange} onTimeRangeChange={setTimeRange} />
     </Box>
   );
 }

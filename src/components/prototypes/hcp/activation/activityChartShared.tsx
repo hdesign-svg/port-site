@@ -32,14 +32,14 @@ export const months = ["Apr", "May", "Jun", "Jul", "Aug", "Sep"] as const;
 export const deposits = [68_200, 58_400, 62_100, 74_800, 61_200, 52_600];
 export const spending = [54_800, 51_200, 53_600, 57_400, 49_100, 47_800];
 
-/** Blue shades for breakdown bars — darkest = largest typical categories */
+/** Spending breakdown — tints of chartSpending (money out), darkest = largest category */
 const spendingCategoryBlueShades = [
-  hcpColors.primaryDark,
-  "#1565c0",
   hcpColors.chartSpending,
-  "#3282c8",
-  "#4894d4",
-  "#5fa3de",
+  "rgba(43, 108, 184, 0.88)",
+  "rgba(43, 108, 184, 0.72)",
+  "rgba(43, 108, 184, 0.58)",
+  "rgba(43, 108, 184, 0.44)",
+  "rgba(43, 108, 184, 0.32)",
 ] as const;
 
 /** Past 6 months spend mix (~$314K out) */

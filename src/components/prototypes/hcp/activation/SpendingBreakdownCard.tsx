@@ -8,6 +8,7 @@ import {
   formatCurrency,
   visuallyHiddenSx,
 } from "./activityChartShared";
+import { ActivityTimeRangeMenu } from "./ActivityTimeRangeMenu";
 import {
   getFilteredSpendingCategories,
   getTimeRangeLabel,
@@ -78,9 +79,21 @@ function SpendingBreakdownChart({ timeRange }: { timeRange: ActivityTimeRange })
   );
 }
 
-export function SpendingBreakdownCard({ timeRange }: { timeRange: ActivityTimeRange }) {
+export function SpendingBreakdownCard({
+  timeRange,
+  onTimeRangeChange,
+}: {
+  timeRange: ActivityTimeRange;
+  onTimeRangeChange: (next: ActivityTimeRange) => void;
+}) {
   return (
-    <ChartCardShell title="Spending breakdown" bodySx={hcpChartCardBodySx}>
+    <ChartCardShell
+      title="Spending breakdown"
+      headerAside={
+        <ActivityTimeRangeMenu timeRange={timeRange} onTimeRangeChange={onTimeRangeChange} />
+      }
+      bodySx={hcpChartCardBodySx}
+    >
       <SpendingBreakdownChart timeRange={timeRange} />
     </ChartCardShell>
   );

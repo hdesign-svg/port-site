@@ -1,7 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { ExpensesBillPayTab } from "./ExpensesBillPayTab";
 import { ExpensesCardsTab } from "./ExpensesCardsTab";
 import { ExpensesPageHeader } from "./ExpensesPageHeader";
 import { ExpensesTabBar } from "./ExpensesTabBar";
@@ -12,7 +12,6 @@ import type { ExpensesTab } from "./expensesTabs";
 import {
   hcpColors,
   hcpContentHeaderSx,
-  hcpLayout,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
 
@@ -20,28 +19,6 @@ function ExpensesOverviewTab() {
   return (
     <ExpensesTabPanel>
       <OverviewChartsSection />
-    </ExpensesTabPanel>
-  );
-}
-
-function ExpensesPlaceholderTab({ label }: { label: string }) {
-  return (
-    <ExpensesTabPanel>
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.borderSubtle}`,
-          borderRadius: `${hcpLayout.controlRadius}px`,
-          p: 3,
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          {label}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Coming soon in the prototype.
-        </Typography>
-      </Box>
     </ExpensesTabPanel>
   );
 }
@@ -82,7 +59,7 @@ export function ExpensesScene({ activeTab, onTabChange }: ExpensesSceneProps) {
       {activeTab === "Overview" ? <ExpensesOverviewTab /> : null}
       {activeTab === "Transactions" ? <ExpensesTransactionsTab /> : null}
       {activeTab === "Cards" ? <ExpensesCardsTab /> : null}
-      {activeTab === "Bill Pay" ? <ExpensesPlaceholderTab label="Bill Pay" /> : null}
+      {activeTab === "Bill Pay" ? <ExpensesBillPayTab /> : null}
     </Box>
   );
 }

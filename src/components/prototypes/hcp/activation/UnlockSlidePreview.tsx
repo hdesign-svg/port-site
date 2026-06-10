@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { UnlockTarget } from "./unlockDecks";
 import { fadeInSx, fadeUpSx, scaleXSx, scaleYSx, unlockKeyframes } from "./unlockSlideAnimation";
+import { HcpStatusTag } from "../HcpStatusTag";
 import { hcpColors, hcpFontWeight, hcpLayout } from "../hcpTheme";
 
 function PreviewFrame({ children }: { children: React.ReactNode }) {
@@ -43,30 +44,45 @@ function PreviewChrome({ title }: { title: string }) {
   );
 }
 
+function MiniTableHeader({ columns }: { columns: string[] }) {
+  return (
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
+        gap: 1,
+        px: 1.5,
+        py: 1,
+        bgcolor: hcpColors.tableHeaderBg,
+      }}
+    >
+      {columns.map((label) => (
+        <Typography key={label} variant="caption" sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textSecondary }}>
+          {label}
+        </Typography>
+      ))}
+    </Box>
+  );
+}
+
 function ExpensesTransactionsPreview({ playKey }: { playKey: number }) {
   const rows = [
-    { date: "Jun 2", desc: "Amazon Retail", amount: "$89.45", deposit: false },
-    { date: "Jun 2", desc: "Inbound transfer", amount: "$54.32", deposit: true },
-    { date: "Jun 1", desc: "Home Depot", amount: "$124.00", deposit: false },
+    { date: "May 28", desc: "Home Depot", category: "Materials", amount: "$142.50" },
+    { date: "May 27", desc: "ACH Transfer", category: "Deposit", amount: "$3,200.00" },
+    { date: "May 26", desc: "Shell Oil", category: "Fuel", amount: "$68.40" },
   ];
 
   return (
     <PreviewFrame key={playKey}>
       <PreviewChrome title="Transactions" />
       <Box sx={{ bgcolor: hcpColors.paper, borderRadius: `${hcpLayout.controlRadius}px`, border: `1px solid ${hcpColors.borderSubtle}`, overflow: "hidden" }}>
-        <Box sx={{ display: "grid", gridTemplateColumns: "72px 1fr 72px", gap: 1, px: 1.5, py: 1, bgcolor: hcpColors.tableHeaderBg }}>
-          {["Date", "Description", "Amount"].map((label) => (
-            <Typography key={label} variant="caption" sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textSecondary }}>
-              {label}
-            </Typography>
-          ))}
-        </Box>
+        <MiniTableHeader columns={["Date", "Description", "Category", "Amount"]} />
         {rows.map((row, index) => (
           <Box
             key={row.desc}
             sx={{
               display: "grid",
-              gridTemplateColumns: "72px 1fr 72px",
+              gridTemplateColumns: "56px 1fr 64px 56px",
               gap: 1,
               px: 1.5,
               py: 1.25,
@@ -77,11 +93,13 @@ function ExpensesTransactionsPreview({ playKey }: { playKey: number }) {
             <Typography variant="caption" color="text.secondary">
               {row.date}
             </Typography>
-            <Typography variant="caption">{row.desc}</Typography>
-            <Typography
-              variant="caption"
-              sx={{ fontWeight: hcpFontWeight.semibold, color: row.deposit ? hcpColors.chartDeposit : hcpColors.textPrimary }}
-            >
+            <Typography variant="caption" noWrap>
+              {row.desc}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap>
+              {row.category}
+            </Typography>
+            <Typography variant="caption" sx={{ fontVariantNumeric: "tabular-nums" }}>
               {row.amount}
             </Typography>
           </Box>
@@ -93,51 +111,49 @@ function ExpensesTransactionsPreview({ playKey }: { playKey: number }) {
 
 function ExpensesCardsPreview({ playKey }: { playKey: number }) {
   const rows = [
-    { name: "Leslie Knope", purpose: "Petty Cash", status: "Active", limit: "$650/wk" },
-    { name: "Ron Swanson", purpose: "Physical card", status: "Activate", limit: "No limit" },
+    { name: "Leslie Knope", meta: "Department spend · •••• 2208", status: "Active" },
+    { name: "Ron Swanson", meta: "Physical card · •••• 9134", status: "Inactive" },
   ];
 
   return (
     <PreviewFrame key={playKey}>
       <PreviewChrome title="Expense cards" />
       <Box sx={{ bgcolor: hcpColors.paper, borderRadius: `${hcpLayout.controlRadius}px`, border: `1px solid ${hcpColors.borderSubtle}`, overflow: "hidden" }}>
+        <Box sx={{ px: 1.5, py: 1.25, borderBottom: `1px solid ${hcpColors.borderSubtle}` }}>
+          <Typography variant="caption" sx={{ fontWeight: hcpFontWeight.semibold }}>
+            5 cards
+          </Typography>
+        </Box>
+        <MiniTableHeader columns={["Cardholder", "Purpose", "Status"]} />
         {rows.map((row, index) => (
           <Box
             key={row.name}
             sx={{
-              display: "flex",
+              display: "grid",
+              gridTemplateColumns: "1.2fr 1fr 64px",
+              gap: 1,
               alignItems: "center",
-              gap: 2,
               px: 1.5,
               py: 1.25,
-              borderTop: index === 0 ? "none" : `1px solid ${hcpColors.borderSubtle}`,
+              borderTop: `1px solid ${hcpColors.borderSubtle}`,
               ...fadeUpSx(100 + index * 160),
             }}
           >
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="caption" sx={{ fontWeight: hcpFontWeight.semibold, display: "block" }}>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography variant="caption" sx={{ fontWeight: hcpFontWeight.regular, display: "block" }} noWrap>
                 {row.name}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {row.purpose}
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: 10 }} noWrap>
+                {row.meta.split(" · ")[1]}
               </Typography>
             </Box>
-            <Box
-              sx={{
-                px: 1,
-                py: 0.25,
-                borderRadius: "999px",
-                bgcolor: row.status === "Active" ? hcpColors.successLight : hcpColors.chartSpendingFill,
-                ...fadeInSx(420 + index * 120, 320),
-              }}
-            >
-              <Typography variant="caption" sx={{ fontSize: 11, fontWeight: hcpFontWeight.semibold }}>
-                {row.status}
-              </Typography>
-            </Box>
-            <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
-              {row.limit}
+            <Typography variant="caption" color="text.secondary" noWrap>
+              {row.meta.split(" · ")[0]}
             </Typography>
+            <HcpStatusTag
+              label={row.status}
+              tone={row.status === "Active" ? "success" : "neutral"}
+            />
           </Box>
         ))}
       </Box>
@@ -146,34 +162,66 @@ function ExpensesCardsPreview({ playKey }: { playKey: number }) {
 }
 
 function ExpensesOverviewPreview({ playKey }: { playKey: number }) {
-  const bars = [
-    { label: "Payroll", width: "88%", color: hcpColors.primaryDark },
-    { label: "Materials", width: "52%", color: hcpColors.chartSpending },
-    { label: "Fuel", width: "24%", color: "#4894d4" },
-  ];
+  const months = ["Apr", "May", "Jun"];
+  const deposits = [68, 58, 62];
+  const spending = [55, 51, 54];
 
   return (
     <PreviewFrame key={playKey}>
-      <PreviewChrome title="Spending breakdown" />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, flex: 1, justifyContent: "center" }}>
-        {bars.map((bar, index) => (
-          <Box key={bar.label}>
-            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: "block" }}>
-              {bar.label}
-            </Typography>
-            <Box sx={{ height: 12, borderRadius: `${hcpLayout.controlRadius / 2}px`, bgcolor: hcpColors.chartSpendingTrack, overflow: "hidden" }}>
-              <Box
-                sx={{
-                  height: "100%",
-                  width: bar.width,
-                  bgcolor: bar.color,
-                  borderRadius: `${hcpLayout.controlRadius / 2}px`,
-                  ...scaleXSx(120 + index * 140, 680),
-                }}
-              />
+      <PreviewChrome title="Activity" />
+      <Box
+        sx={{
+          bgcolor: hcpColors.paper,
+          borderRadius: `${hcpLayout.controlRadius}px`,
+          border: `1px solid ${hcpColors.borderSubtle}`,
+          p: 1.5,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Box sx={{ display: "flex", gap: 2, mb: 1.5 }}>
+          {[
+            { label: "Deposits", color: hcpColors.chartDeposit },
+            { label: "Spending", color: hcpColors.chartSpending },
+          ].map((item, index) => (
+            <Box key={item.label} sx={{ display: "flex", alignItems: "center", gap: 0.5, ...fadeInSx(80 + index * 100, 280) }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: "2px", bgcolor: item.color }} />
+              <Typography variant="caption" sx={{ fontSize: 10 }}>
+                {item.label}
+              </Typography>
             </Box>
-          </Box>
-        ))}
+          ))}
+        </Box>
+        <Box sx={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 1.5, px: 0.5, pb: 0.5 }}>
+          {months.map((month, index) => (
+            <Box key={month} sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5 }}>
+              <Box sx={{ display: "flex", alignItems: "flex-end", gap: 0.5, height: 72, width: "100%", justifyContent: "center" }}>
+                <Box
+                  sx={{
+                    width: "38%",
+                    height: `${deposits[index]}%`,
+                    bgcolor: hcpColors.chartDeposit,
+                    borderRadius: `${hcpLayout.controlRadius / 2}px`,
+                    ...scaleYSx(120 + index * 100, 520),
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: "38%",
+                    height: `${spending[index]}%`,
+                    bgcolor: hcpColors.chartSpending,
+                    borderRadius: `${hcpLayout.controlRadius / 2}px`,
+                    ...scaleYSx(180 + index * 100, 520),
+                  }}
+                />
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: 10 }}>
+                {month}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
       </Box>
     </PreviewFrame>
   );
@@ -183,41 +231,31 @@ function ExpensesBillsPreview({ playKey }: { playKey: number }) {
   return (
     <PreviewFrame key={playKey}>
       <PreviewChrome title="Bill Pay" />
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          borderRadius: `${hcpLayout.controlRadius}px`,
-          border: `1px solid ${hcpColors.borderSubtle}`,
-          p: 1.5,
-          ...fadeUpSx(100),
-        }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 1 }}>
-          <Box>
-            <Typography variant="caption" sx={{ fontWeight: hcpFontWeight.semibold, display: "block" }}>
-              Very Good Construction
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Due Apr 24, 2024
-            </Typography>
-          </Box>
-          <Typography variant="caption" sx={{ fontWeight: hcpFontWeight.semibold }}>
-            $1,240.00
-          </Typography>
-        </Box>
+      <Box sx={{ bgcolor: hcpColors.paper, borderRadius: `${hcpLayout.controlRadius}px`, border: `1px solid ${hcpColors.borderSubtle}`, overflow: "hidden", ...fadeUpSx(100) }}>
+        <MiniTableHeader columns={["Vendor", "Due", "Status", "Amount"]} />
         <Box
           sx={{
-            alignSelf: "flex-start",
-            display: "inline-flex",
-            px: 1,
-            py: 0.25,
-            borderRadius: "999px",
-            bgcolor: hcpColors.chartSpendingFill,
-            ...fadeInSx(520, 360),
+            display: "grid",
+            gridTemplateColumns: "1fr 64px 72px 48px",
+            gap: 1,
+            alignItems: "center",
+            px: 1.5,
+            py: 1.25,
+            borderTop: `1px solid ${hcpColors.borderSubtle}`,
+            ...fadeUpSx(260),
           }}
         >
-          <Typography variant="caption" sx={{ fontSize: 11, fontWeight: hcpFontWeight.semibold, color: hcpColors.chartSpending }}>
-            Submitted
+          <Typography variant="caption" sx={{ display: "block" }} noWrap>
+            Very Good Construction
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ fontSize: 10 }}>
+            Apr 24
+          </Typography>
+          <Box sx={{ ...fadeInSx(520, 320) }}>
+            <HcpStatusTag label="Submitted" tone="primary" />
+          </Box>
+          <Typography variant="caption" sx={{ fontVariantNumeric: "tabular-nums" }}>
+            $1.00
           </Typography>
         </Box>
       </Box>
@@ -370,9 +408,9 @@ function AccountingStatementsPreview({ playKey }: { playKey: number }) {
 }
 
 const expensesPreviewMap = {
+  overview: ExpensesOverviewPreview,
   transactions: ExpensesTransactionsPreview,
   cards: ExpensesCardsPreview,
-  overview: ExpensesOverviewPreview,
   bills: ExpensesBillsPreview,
 } as const;
 

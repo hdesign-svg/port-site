@@ -22,7 +22,8 @@ export const hcpColors = {
   navIcon: "#9e9e9e",
   /** Open/selected parent section icon + chevron */
   navIconSelected: "#0e6fbe",
-  expensesActive: "rgba(33, 33, 33, 0.12)",
+  /** Active Money sub-nav — matches tab indicator */
+  navSubItemIndicator: "#0e6fbe",
   purple: "#7e57c2",
   avatar: "#bf8600",
   successLight: "#dcf9d7",
@@ -109,8 +110,8 @@ export const hcpLayout = {
   /** Recording canvas — 16∶10, fits most screens; portfolio cards are taller (1024×704) */
   prototypeWidth: 1440,
   prototypeHeight: 900,
-  /** Shared horizontal inset for logo, nav, footer, top bar */
-  railInset: 20,
+  /** Shared horizontal inset for logo, nav, footer — matches contentMargin */
+  railInset: 32,
   /** Equal horizontal margin on both sides — main content column and top bar */
   contentMargin: 32,
   /** Core content column max width (optional cap inside margin field) */
@@ -124,8 +125,8 @@ export const hcpLayout = {
   tabIndicatorInactive: "rgba(33, 33, 33, 0.14)",
   /** Horizontal gap between summary metric groups */
   metricGroupGap: 40,
-  /** Top-bar search — fits placeholder, not full header width */
-  searchFieldWidth: 320,
+  /** Top-bar global search — capped so utility icons breathe */
+  searchFieldWidth: 280,
   /** Edge-to-edge distance between icon boxes — horizontal + vertical rhythm */
   iconGlyphGap: 20,
   navItemGap: 4,
@@ -253,6 +254,43 @@ export const hcpChromeActionButtonSx = {
 /** @deprecated Use hcpChromeActionButtonSx */
 export const hcpChartHeaderTriggerSx = hcpChromeActionButtonSx;
 
+/** Dropdown / filter menus — shared paper chrome */
+export const hcpMenuPaperSx = {
+  mt: 0.5,
+  minWidth: 188,
+  border: `1px solid ${hcpColors.border}`,
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+} as const;
+
+/** Anchored popovers — time range custom picker, etc. */
+export const hcpPopoverPaperSx = {
+  ...hcpMenuPaperSx,
+  p: 2,
+  width: 280,
+} as const;
+
+/** Tab workspace create actions — New card, New bill */
+export const hcpWorkspaceCreateButtonSx = {
+  borderColor: hcpColors.borderControl,
+  bgcolor: hcpColors.paper,
+  minHeight: hcpLayout.chromeControlHeight,
+  px: 1.25,
+  fontSize: "0.875rem",
+  lineHeight: 1.43,
+  fontWeight: hcpFontWeight.semibold,
+  "&:hover": {
+    bgcolor: hcpColors.paper,
+    borderColor: hcpColors.borderInput,
+  },
+  "& .MuiButton-startIcon": {
+    mr: 0.75,
+    "& > svg": {
+      width: hcpIcon.sm,
+      height: hcpIcon.sm,
+    },
+  },
+} as const;
+
 /** Outlined CTAs — same label color as text buttons; border differentiates */
 export const hcpSecondaryButtonSx = {
   borderColor: hcpColors.borderControl,
@@ -359,7 +397,8 @@ export const hcpDataGridSx = {
     display: "none",
   },
   "& .MuiDataGrid-columnHeaders": {
-    bgcolor: hcpColors.tableHeaderBg,
+    bgcolor: hcpColors.paper,
+    borderBottom: `1px solid ${hcpColors.borderSubtle}`,
   },
   "& .MuiDataGrid-columnHeader": {
     px: `${hcpContentSpacing.surfaceInsetX}px`,

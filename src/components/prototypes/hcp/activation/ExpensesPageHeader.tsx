@@ -1,43 +1,20 @@
 "use client";
 
-import { CaretDown, GraduationCap } from "@phosphor-icons/react";
+import { GraduationCap, Plus } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
 import {
   hcpChromeIconButtonSx,
   hcpColors,
   hcpContentSpacing,
   hcpIcon,
-  hcpSecondaryButtonSx,
+  hcpWorkspaceCreateButtonSx,
 } from "../hcpTheme";
-
-const CREATE_ACTIONS = [
-  { id: "add-funds", label: "Add funds" },
-  { id: "new-card", label: "New card" },
-  { id: "order-card", label: "Order card" },
-] as const;
-
-const addMenuButtonSx = {
-  ...hcpSecondaryButtonSx,
-  "& .MuiButton-endIcon": {
-    ml: 0.5,
-    mr: -0.25,
-    "& > svg": {
-      width: hcpIcon.sm,
-      height: hcpIcon.sm,
-    },
-  },
-} as const;
+import { hcpTypographyRoles } from "../hcpTypography";
 
 export function ExpensesPageHeader() {
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const menuOpen = Boolean(menuAnchor);
-
   return (
     <Box
       sx={{
@@ -52,16 +29,18 @@ export function ExpensesPageHeader() {
         <Typography component="h1" variant="h4" sx={{ color: hcpColors.textPrimary }}>
           Expenses
         </Typography>
-        <Typography variant="caption" color="text.disabled" component="div" sx={{ mt: 0.5 }}>
-          Available ·{" "}
+        <Box sx={{ mt: 1 }}>
+          <Typography variant={hcpTypographyRoles.metricLabel} color="text.secondary" component="div">
+            Available balance
+          </Typography>
           <Typography
-            component="span"
-            variant="caption"
-            sx={{ color: hcpColors.textPrimary, fontVariantNumeric: "tabular-nums" }}
+            variant={hcpTypographyRoles.metricValue}
+            component="div"
+            sx={{ color: hcpColors.textPrimary, fontVariantNumeric: "tabular-nums", lineHeight: 1.33 }}
           >
             $8,742.18
           </Typography>
-        </Typography>
+        </Box>
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexShrink: 0 }}>
@@ -75,31 +54,12 @@ export function ExpensesPageHeader() {
 
         <Button
           variant="outlined"
-          size="medium"
-          endIcon={<CaretDown size={hcpIcon.sm} weight="regular" />}
-          aria-haspopup="menu"
-          aria-expanded={menuOpen ? "true" : undefined}
-          aria-controls={menuOpen ? "expenses-create-menu" : undefined}
-          onClick={(event) => setMenuAnchor(event.currentTarget)}
-          sx={addMenuButtonSx}
+          size="small"
+          startIcon={<Plus size={hcpIcon.sm} weight="regular" />}
+          sx={hcpWorkspaceCreateButtonSx}
         >
-          Add
+          Add funds
         </Button>
-
-        <Menu
-          id="expenses-create-menu"
-          anchorEl={menuAnchor}
-          open={menuOpen}
-          onClose={() => setMenuAnchor(null)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          {CREATE_ACTIONS.map((action) => (
-            <MenuItem key={action.id} onClick={() => setMenuAnchor(null)}>
-              {action.label}
-            </MenuItem>
-          ))}
-        </Menu>
       </Box>
     </Box>
   );

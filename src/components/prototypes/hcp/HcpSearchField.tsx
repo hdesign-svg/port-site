@@ -9,9 +9,17 @@ const SEARCH_ICON = hcpIcon.sm;
 
 type HcpSearchFieldProps = Omit<TextFieldProps, "size" | "variant"> & {
   readOnly?: boolean;
+  /** Static chrome display — no pointer cursor when readOnly */
+  displayOnly?: boolean;
 };
 
-export function HcpSearchField({ placeholder, readOnly = false, sx, ...props }: HcpSearchFieldProps) {
+export function HcpSearchField({
+  placeholder,
+  readOnly = false,
+  displayOnly = false,
+  sx,
+  ...props
+}: HcpSearchFieldProps) {
   return (
     <TextField
       size="small"
@@ -29,7 +37,7 @@ export function HcpSearchField({ placeholder, readOnly = false, sx, ...props }: 
       }}
       sx={[
         hcpSearchFieldSx,
-        readOnly ? { "& .MuiInputBase-input": { cursor: "pointer" } } : {},
+        readOnly && !displayOnly ? { "& .MuiInputBase-input": { cursor: "pointer" } } : {},
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
       ]}
       {...props}

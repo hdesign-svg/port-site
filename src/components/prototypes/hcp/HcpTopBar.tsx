@@ -15,10 +15,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { HcpSearchField } from "./HcpSearchField";
-import { hcpChromeBarSx, hcpColors, hcpIcon, hcpLayout } from "./hcpTheme";
+import { hcpChromeBarSx, hcpColors, hcpIcon, hcpLayout, hcpMenuPaperSx } from "./hcpTheme";
 
 const TOP_ICON = hcpIcon.md;
-const AI_SPARKLE_COLOR = "#623CC9";
 const SEARCH_PLACEHOLDER = "Search jobs, customers, invoices";
 
 const linkedAccountMenuItems = [
@@ -74,6 +73,18 @@ const aiIconButtonSx = {
   },
 } as const;
 
+const notificationDotSx = {
+  position: "absolute",
+  top: -1,
+  right: -1,
+  width: 8,
+  height: 8,
+  borderRadius: "50%",
+  bgcolor: hcpColors.primary,
+  border: `2px solid ${hcpColors.paper}`,
+  pointerEvents: "none",
+} as const;
+
 export function HcpTopBar() {
   const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
   const [bankAnchor, setBankAnchor] = useState<null | HTMLElement>(null);
@@ -93,7 +104,20 @@ export function HcpTopBar() {
         gap: 2,
       }}
     >
-      <HcpSearchField placeholder={SEARCH_PLACEHOLDER} readOnly />
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          maxWidth: hcpLayout.searchFieldWidth,
+        }}
+      >
+        <HcpSearchField
+          placeholder={SEARCH_PLACEHOLDER}
+          readOnly
+          displayOnly
+          sx={{ width: "100%" }}
+        />
+      </Box>
 
       <Box
         sx={{
@@ -104,7 +128,7 @@ export function HcpTopBar() {
         }}
       >
         <Box component="button" type="button" aria-label="AI" sx={aiIconButtonSx}>
-          <Sparkle size={TOP_ICON} color={AI_SPARKLE_COLOR} weight="regular" />
+          <Sparkle size={TOP_ICON} color={hcpColors.primary} weight="regular" />
         </Box>
 
         <Box
@@ -117,11 +141,12 @@ export function HcpTopBar() {
           onClick={(event) => setBankAnchor(event.currentTarget)}
           sx={iconButtonSx}
         >
-          <Bank size={TOP_ICON} color={hcpColors.chromeIcon} />
+          <Bank size={TOP_ICON} color={hcpColors.chromeIcon} weight="regular" />
         </Box>
 
         <Box component="button" type="button" aria-label="Notifications" sx={iconButtonSx}>
-          <Bell size={TOP_ICON} color={hcpColors.chromeIcon} />
+          <Bell size={TOP_ICON} color={hcpColors.chromeIcon} weight="regular" />
+          <Box aria-hidden sx={notificationDotSx} />
         </Box>
 
         <Menu
@@ -131,16 +156,7 @@ export function HcpTopBar() {
           onClose={() => setBankAnchor(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{
-            paper: {
-              sx: {
-                mt: 1,
-                minWidth: 200,
-                border: `1px solid ${hcpColors.border}`,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-              },
-            },
-          }}
+          slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 200 } } }}
         >
           {linkedAccountMenuItems.map((label) => (
             <MenuItem
@@ -166,7 +182,7 @@ export function HcpTopBar() {
           onClick={(event) => setMoreAnchor(event.currentTarget)}
           sx={iconButtonSx}
         >
-          <DotsThree size={TOP_ICON} weight="bold" color={hcpColors.chromeIcon} />
+          <DotsThree size={TOP_ICON} weight="regular" color={hcpColors.chromeIcon} />
         </Box>
 
         <Menu
@@ -176,16 +192,7 @@ export function HcpTopBar() {
           onClose={() => setMoreAnchor(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{
-            paper: {
-              sx: {
-                mt: 1,
-                minWidth: 180,
-                border: `1px solid ${hcpColors.border}`,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-              },
-            },
-          }}
+          slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 180 } } }}
         >
           {moreMenuItems.map(({ Icon, label }) => (
             <MenuItem
@@ -197,7 +204,7 @@ export function HcpTopBar() {
                 color: hcpColors.textSecondary,
               }}
             >
-              <Icon size={hcpIcon.sm} />
+              <Icon size={hcpIcon.sm} weight="regular" />
               <Typography component="span" variant="body1">
                 {label}
               </Typography>
