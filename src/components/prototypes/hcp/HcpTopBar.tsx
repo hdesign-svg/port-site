@@ -18,6 +18,7 @@ import { HcpSearchField } from "./HcpSearchField";
 import { hcpChromeBarSx, hcpColors, hcpIcon, hcpLayout, hcpMenuPaperSx } from "./hcpTheme";
 
 const TOP_ICON = hcpIcon.md;
+const AI_SPARKLE_COLOR = "#623CC9";
 const SEARCH_PLACEHOLDER = "Search jobs, customers, invoices";
 
 const linkedAccountMenuItems = [
@@ -77,8 +78,8 @@ const notificationDotSx = {
   position: "absolute",
   top: -1,
   right: -1,
-  width: 8,
-  height: 8,
+  width: 9,
+  height: 9,
   borderRadius: "50%",
   bgcolor: hcpColors.primary,
   border: `2px solid ${hcpColors.paper}`,
@@ -128,7 +129,7 @@ export function HcpTopBar() {
         }}
       >
         <Box component="button" type="button" aria-label="AI" sx={aiIconButtonSx}>
-          <Sparkle size={TOP_ICON} color={hcpColors.primary} weight="regular" />
+          <Sparkle size={TOP_ICON} color={AI_SPARKLE_COLOR} weight="regular" />
         </Box>
 
         <Box
@@ -182,7 +183,7 @@ export function HcpTopBar() {
           onClick={(event) => setMoreAnchor(event.currentTarget)}
           sx={iconButtonSx}
         >
-          <DotsThree size={TOP_ICON} weight="regular" color={hcpColors.chromeIcon} />
+          <DotsThree size={TOP_ICON} weight="bold" color={hcpColors.chromeIcon} />
         </Box>
 
         <Menu

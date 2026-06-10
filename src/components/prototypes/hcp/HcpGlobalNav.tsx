@@ -3,6 +3,7 @@
 import {
   ArrowsClockwise,
   CalendarBlank,
+  CaretDown,
   CaretUp,
   ChartBar,
   ChartLineUp,
@@ -32,7 +33,7 @@ import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpRadius
 const NAV_PRIMARY_ICON = hcpIcon.md;
 const NAV_TRAILING_ICON_SIZE = 16;
 const NAV_TRAILING_SLOT = 20;
-/** Sub-nav stem — centered in the 20px parent icon column (Linktree-style) */
+/** Stem centered on the 20px icon column (Linktree-style) */
 const NAV_SUB_NAV_STEM_X = NAV_PRIMARY_ICON / 2;
 const FOOTER_USER_DISPLAY_NAME = "Sarah";
 const FOOTER_USER_FULL_NAME = "Sarah Mitchell";
@@ -47,24 +48,6 @@ const navIconSlotSx = {
   justifyContent: "center",
 } as const;
 
-const navItemSx = {
-  display: "flex",
-  alignItems: "center",
-  gap: `${hcpLayout.navIconLabelGap}px`,
-  width: "100%",
-  py: `${hcpLayout.navRowPy}px`,
-  px: 0,
-  borderRadius: hcpRadius.control,
-  border: "none",
-  bgcolor: "transparent",
-  font: "inherit",
-  textAlign: "left" as const,
-  cursor: "pointer",
-  "&:hover": {
-    bgcolor: hcpColors.borderSubtle,
-  },
-};
-
 const trailingSlotSx = {
   width: NAV_TRAILING_SLOT,
   height: NAV_TRAILING_SLOT,
@@ -75,8 +58,56 @@ const trailingSlotSx = {
 } as const;
 
 function TrailingSlot({ children }: { children?: React.ReactNode }) {
-  return <Box sx={trailingSlotSx}>{children}</Box>;
+  return <Box sx={trailingSlotSx}>{children ?? null}</Box>;
 }
+
+/** Shared row grid: icon column | label | trailing column (chevrons, lock, settings) */
+const navRowGridSx = {
+  display: "flex",
+  alignItems: "center",
+  gap: `${hcpLayout.navIconLabelGap}px`,
+  width: "100%",
+  minWidth: 0,
+} as const;
+
+/** Hover pill — wider than row content; negative inset, row layout unchanged */
+const navRowHoverShellSx = {
+  position: "relative" as const,
+  width: "100%",
+  flexShrink: 0,
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: `-${hcpLayout.navRowHoverBleedX}px`,
+    right: `-${hcpLayout.navRowHoverBleedX}px`,
+    borderRadius: hcpRadius.control,
+    bgcolor: "transparent",
+    pointerEvents: "none",
+    transition: "background-color 150ms ease",
+    zIndex: 0,
+  },
+  "&:hover::before": {
+    bgcolor: hcpColors.borderSubtle,
+  },
+} as const;
+
+const navRowInteractiveSx = {
+  ...navRowGridSx,
+  py: `${hcpLayout.navRowPy}px`,
+  px: 0,
+  border: "none",
+  bgcolor: "transparent",
+  font: "inherit",
+  textAlign: "left" as const,
+  cursor: "pointer",
+  position: "relative" as const,
+  zIndex: 1,
+  "&:focus-visible": {
+    outline: "none",
+  },
+} as const;
 
 function NavDivider() {
   return (
@@ -94,42 +125,50 @@ function NavRow({
 }: {
   icon: Icon;
   label: string;
-  chevron?: "up";
+  chevron?: "up" | "down";
   selected?: boolean;
 }) {
   const iconColor = selected ? hcpColors.navIconSelected : hcpColors.navIcon;
   const labelColor = selected ? hcpColors.textPrimary : hcpColors.textMuted;
 
   return (
-    <Box
-      component="button"
-      type="button"
-      aria-current={selected ? "page" : undefined}
-      sx={navItemSx}
-    >
-      <Box sx={navIconSlotSx}>
-        <IconComponent
-          size={NAV_PRIMARY_ICON}
-          color={iconColor}
-          weight={selected ? "fill" : "regular"}
-        />
-      </Box>
-      <Typography
-        variant="navLabel"
-        sx={{
-          flex: 1,
-          color: labelColor,
-          fontWeight: selected ? hcpFontWeight.semibold : hcpFontWeight.regular,
-          minWidth: 0,
-        }}
+    <Box sx={navRowHoverShellSx}>
+      <Box
+        component="button"
+        type="button"
+        aria-current={selected ? "page" : undefined}
+        aria-expanded={chevron === "up" ? "true" : chevron === "down" ? "false" : undefined}
+        sx={navRowInteractiveSx}
       >
-        {label}
-      </Typography>
-      {chevron ? (
+        <Box sx={navIconSlotSx}>
+          <IconComponent
+            size={NAV_PRIMARY_ICON}
+            color={iconColor}
+            weight={selected ? "fill" : "regular"}
+          />
+        </Box>
+        <Typography
+          variant="navLabel"
+          sx={{
+            flex: 1,
+            color: labelColor,
+            fontWeight: selected ? hcpFontWeight.semibold : hcpFontWeight.regular,
+            minWidth: 0,
+            textAlign: "left",
+          }}
+        >
+          {label}
+        </Typography>
         <TrailingSlot>
-          <CaretUp size={NAV_TRAILING_ICON_SIZE} color={labelColor} weight="regular" />
+          {chevron ? (
+            chevron === "up" ? (
+              <CaretUp size={NAV_TRAILING_ICON_SIZE} color={labelColor} weight="regular" />
+            ) : (
+              <CaretDown size={NAV_TRAILING_ICON_SIZE} color={hcpColors.navIcon} weight="regular" />
+            )
+          ) : null}
         </TrailingSlot>
-      ) : null}
+      </Box>
     </Box>
   );
 }
@@ -180,55 +219,51 @@ function SubNavItem({
 }) {
   const row = (
     <Box
-      component={onClick ? "button" : "div"}
-      type={onClick ? "button" : undefined}
-      onClick={onClick}
-      aria-current={active ? "page" : undefined}
       sx={{
-        ...navItemSx,
-        pl: `${hcpLayout.navSubLabelInset}px`,
-        cursor: onClick ? "pointer" : "default",
-        "&:hover": onClick
+        ...navRowHoverShellSx,
+        ...(!onClick
           ? {
-              bgcolor: "transparent",
-              backgroundColor: "transparent",
-              "& .money-sub-nav-label": {
-                fontWeight: hcpFontWeight.semibold,
+              "&:hover::before": {
+                bgcolor: "transparent",
               },
             }
-          : { bgcolor: "transparent", backgroundColor: "transparent" },
-        "&:focus, &:active, &:focus-visible": {
-          bgcolor: "transparent",
-          backgroundColor: "transparent",
-          outline: "none",
-          boxShadow: "none",
-        },
+          : {}),
       }}
     >
-      <Typography
-        className="money-sub-nav-label"
-        variant="body2"
+      <Box
+        component={onClick ? "button" : "div"}
+        type={onClick ? "button" : undefined}
+        onClick={onClick}
+        aria-current={active ? "page" : undefined}
         sx={{
-          flex: 1,
-          color: active ? hcpColors.textPrimary : hcpColors.textMuted,
-          fontWeight: active ? hcpFontWeight.semibold : hcpFontWeight.regular,
-          minWidth: 0,
+          ...navRowInteractiveSx,
+          pl: `${hcpLayout.navSubLabelInset}px`,
+          cursor: onClick ? "pointer" : "default",
         }}
       >
-        {label}
-      </Typography>
-      {locked ? (
+        <Typography
+          variant="body2"
+          sx={{
+            flex: 1,
+            color: active ? hcpColors.textPrimary : hcpColors.textMuted,
+            fontWeight: active ? hcpFontWeight.semibold : hcpFontWeight.regular,
+            minWidth: 0,
+            textAlign: "left",
+          }}
+        >
+          {label}
+        </Typography>
         <TrailingSlot>
-          <Lock
-            size={NAV_TRAILING_ICON_SIZE}
-            color={hcpColors.navIconSelected}
-            weight="regular"
-            aria-hidden
-          />
+          {locked ? (
+            <Lock
+              size={NAV_TRAILING_ICON_SIZE}
+              color={hcpColors.navIconSelected}
+              weight="regular"
+              aria-hidden
+            />
+          ) : null}
         </TrailingSlot>
-      ) : (
-        <Box sx={{ ...trailingSlotSx, visibility: "hidden" }} aria-hidden />
-      )}
+      </Box>
     </Box>
   );
 
@@ -247,15 +282,7 @@ function SubNavItem({
 
 function FooterUserAccount() {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: `${hcpLayout.navIconLabelGap}px`,
-        width: "100%",
-        minWidth: 0,
-      }}
-    >
+    <Box sx={navRowGridSx}>
       <Box sx={{ ...navIconSlotSx, overflow: "visible" }}>
         <Box
           sx={{
@@ -366,7 +393,7 @@ export function HcpGlobalNav({
           flex: 1,
           minHeight: 0,
           overflowY: "auto",
-          overflowX: "hidden",
+          overflowX: "visible",
           px: `${hcpLayout.railInset}px`,
           py: `${hcpLayout.navListPaddingY}px`,
           bgcolor: hcpColors.paper,
@@ -382,11 +409,11 @@ export function HcpGlobalNav({
         >
           <NavRow icon={House} label="Home" />
           <NavRow icon={CalendarBlank} label="Schedule" />
-          <NavRow icon={ChartBar} label="Pipeline" />
+          <NavRow icon={ChartBar} label="Pipeline" chevron="down" />
 
           <NavDivider />
 
-          <NavRow icon={Users} label="Customers" />
+          <NavRow icon={Users} label="Customers" chevron="down" />
           <NavRow icon={Megaphone} label="Leads" />
           <NavRow icon={FileText} label="Estimates" />
           <NavRow icon={Wrench} label="Jobs" />
@@ -416,14 +443,14 @@ export function HcpGlobalNav({
           </Box>
 
           <NavRow icon={Target} label="Marketing" />
-          <NavRow icon={ChartLineUp} label="Reporting" />
-          <NavRow icon={UsersThree} label="Team" />
+          <NavRow icon={ChartLineUp} label="Reporting" chevron="down" />
+          <NavRow icon={UsersThree} label="Team" chevron="down" />
 
           <NavDivider />
 
           <NavRow icon={Tag} label="Price Book" />
           <NavRow icon={SquaresFour} label="Apps" />
-          <NavRow icon={ArrowsClockwise} label="Service Plans" />
+          <NavRow icon={ArrowsClockwise} label="Service Plans" chevron="down" />
         </Box>
       </Box>
 

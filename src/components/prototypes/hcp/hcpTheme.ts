@@ -138,8 +138,10 @@ export const hcpLayout = {
   navIconLabelGap: 16,
   /** Where rail nav labels begin — railInset + icon + gap */
   navLabelInset: 56,
-  /** Sub-nav label padding — same offset as parent label within the padded list */
+  /** Sub-nav label left edge — parent icon (20) + icon-label gap (16) */
   navSubLabelInset: 36,
+  /** Hover fill bleeds past row edges into rail padding — does not affect row width */
+  navRowHoverBleedX: 12,
   /** Default corner radius — cards, buttons, inputs, chart bars, nav rows */
   controlRadius: 8,
   /** Compact utility chrome — toolbar text buttons, search, pagination */

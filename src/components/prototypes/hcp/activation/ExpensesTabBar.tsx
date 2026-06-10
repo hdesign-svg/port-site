@@ -2,7 +2,6 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
 import { EXPENSES_TABS, type ExpensesTab } from "./expensesTabs";
 import { hcpColors, hcpFontWeight, hcpLayout } from "../hcpTheme";
 
@@ -12,8 +11,6 @@ type ExpensesTabBarProps = {
 };
 
 export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) {
-  const [hoveredTab, setHoveredTab] = useState<ExpensesTab | null>(null);
-
   return (
     <Box sx={{ position: "relative" }}>
       <Box
@@ -37,8 +34,6 @@ export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) 
               aria-selected={isActive}
               tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(label)}
-              onMouseEnter={() => setHoveredTab(label)}
-              onMouseLeave={() => setHoveredTab(null)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
                   event.preventDefault();
@@ -52,14 +47,17 @@ export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) 
                 pb: `${hcpLayout.tabLabelToIndicator}px`,
                 flexShrink: 0,
                 cursor: "pointer",
-                background: "none",
-                backgroundColor: "transparent",
-                WebkitTapHighlightColor: "transparent",
-                "&:hover, &:focus, &:active, &:focus-visible": {
-                  background: "none",
-                  backgroundColor: "transparent",
+                bgcolor: "transparent",
+                transition: "background-color 150ms ease",
+                ...(!isActive
+                  ? {
+                      "&:hover": {
+                        bgcolor: hcpColors.borderSubtle,
+                      },
+                    }
+                  : {}),
+                "&:focus-visible": {
                   outline: "none",
-                  boxShadow: "none",
                 },
               }}
             >
@@ -67,10 +65,7 @@ export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) 
                 variant="tabLabel"
                 sx={{
                   color: isActive ? hcpColors.textPrimary : hcpColors.textMuted,
-                  fontWeight:
-                    isActive || hoveredTab === label
-                      ? hcpFontWeight.semibold
-                      : hcpFontWeight.regular,
+                  fontWeight: isActive ? hcpFontWeight.semibold : hcpFontWeight.regular,
                   whiteSpace: "nowrap",
                 }}
               >
