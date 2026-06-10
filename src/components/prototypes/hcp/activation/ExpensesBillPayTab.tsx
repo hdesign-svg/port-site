@@ -1,9 +1,9 @@
 "use client";
 
-import { DownloadSimple, FunnelSimple, Receipt } from "@phosphor-icons/react";
+import { DownloadSimple, Receipt } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
+import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {
@@ -12,16 +12,19 @@ import {
   type GridPaginationModel,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
-import { HcpSearchField } from "../HcpSearchField";
 import {
   HcpTableCellPrimary,
+  HcpTableToolbarOverflowButton,
+  HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_DATA_GRID_ROW_HEIGHT,
+  hcpTableToolbarActionsSx,
   hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
 import { billPayStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
+import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
 import {
   BILL_PAY_FILTER_OPTIONS,
   expenseBills,
@@ -32,30 +35,13 @@ import {
   type BillPayRow,
 } from "./expensesBillPayData";
 import {
-  hcpChromeActionButtonSx,
   hcpColors,
   hcpDataGridSx,
   hcpDataGridToolbarSx,
   hcpIcon,
-  hcpLayout,
-  hcpMenuPaperSx,
   hcpRadius,
   hcpWorkspaceCreateButtonSx,
 } from "../hcpTheme";
-
-function getBillPayZoneDetail(rows: BillPayRow[]) {
-  const failed = rows.filter((row) => row.status === "failed").length;
-  if (failed > 0) {
-    return `${failed} need attention`;
-  }
-
-  const scheduled = rows.filter((row) => row.status === "scheduled").length;
-  if (scheduled > 0) {
-    return `${scheduled} scheduled`;
-  }
-
-  return undefined;
-}
 
 function filterBills(rows: BillPayRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -144,23 +130,18 @@ const billColumns: GridColDef<BillPayRow>[] = [
 export function ExpensesBillPayTab() {
   const [searchQuery, setSearchQuery] = useState("");
   const [billFilter, setBillFilter] = useState<BillPayFilterOption>("all");
-  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
+  const [moreMenuAnchor, setMoreMenuAnchor] = useState<null | HTMLElement>(null);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 15,
   });
 
-  const filterMenuOpen = Boolean(filterMenuAnchor);
-  const activeFilterLabel =
-    BILL_PAY_FILTER_OPTIONS.find((option) => option.id === billFilter)?.label ?? "Filter";
+  const moreMenuOpen = Boolean(moreMenuAnchor);
 
   const visibleRows = useMemo(() => {
     const filtered = filterBills(expenseBills, searchQuery);
     return sortBills(filtered, billFilter);
   }, [searchQuery, billFilter]);
-
-  const billCountLabel = `${visibleRows.length} ${visibleRows.length === 1 ? "bill" : "bills"}`;
-  const zoneDetail = getBillPayZoneDetail(visibleRows);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -169,7 +150,7 @@ export function ExpensesBillPayTab() {
 
   const handleFilterChange = (next: BillPayFilterOption) => {
     setBillFilter(next);
-    setFilterMenuAnchor(null);
+    setMoreMenuAnchor(null);
     setPaginationModel((current) => ({ ...current, page: 0 }));
   };
 
@@ -185,70 +166,46 @@ export function ExpensesBillPayTab() {
       >
         <Box sx={hcpDataGridToolbarSx}>
           <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label={billCountLabel} detail={zoneDetail} />
-            <HcpSearchField
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(event) => handleSearchChange(event.target.value)}
-              sx={{ width: { xs: "100%", sm: hcpLayout.searchFieldWidth } }}
-            />
+            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.bills} />
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, flexShrink: 0 }}>
+          <Box sx={hcpTableToolbarActionsSx}>
+            <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
+            <HcpTableToolbarOverflowButton
+              menuId="bills-toolbar-more-menu"
+              open={moreMenuOpen}
+              anchorEl={moreMenuAnchor}
+              onOpen={setMoreMenuAnchor}
+              onClose={() => setMoreMenuAnchor(null)}
+              active={billFilter !== "all"}
+            >
+              {BILL_PAY_FILTER_OPTIONS.map((option) => (
+                <MenuItem
+                  key={option.id}
+                  selected={billFilter === option.id}
+                  onClick={() => handleFilterChange(option.id)}
+                  sx={{ py: 1 }}
+                >
+                  <Typography variant="body2">{option.label}</Typography>
+                </MenuItem>
+              ))}
+              <Divider sx={{ my: 0.5 }} />
+              <MenuItem onClick={() => setMoreMenuAnchor(null)} sx={{ gap: 1.5, py: 1.25 }}>
+                <DownloadSimple size={hcpIcon.sm} weight="regular" />
+                <Typography variant="body2">Export</Typography>
+              </MenuItem>
+            </HcpTableToolbarOverflowButton>
             <Button
               variant="outlined"
               size="small"
               startIcon={<Receipt size={hcpIcon.sm} weight="regular" />}
+              aria-label="New bill"
               sx={hcpWorkspaceCreateButtonSx}
             >
-              New bill
-            </Button>
-            <Button
-              variant="text"
-              startIcon={<FunnelSimple size={hcpIcon.sm} weight="regular" />}
-              aria-haspopup="menu"
-              aria-expanded={filterMenuOpen ? "true" : undefined}
-              aria-controls={filterMenuOpen ? "bill-pay-filter-menu" : undefined}
-              onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
-              sx={{
-                ...hcpChromeActionButtonSx,
-                ...(billFilter !== "all"
-                  ? { bgcolor: "rgba(33, 33, 33, 0.04)" }
-                  : undefined),
-              }}
-            >
-              {billFilter === "all" ? "Filter" : activeFilterLabel}
-            </Button>
-            <Button
-              variant="text"
-              startIcon={<DownloadSimple size={hcpIcon.sm} weight="regular" />}
-              sx={hcpChromeActionButtonSx}
-            >
-              Export
+              New
             </Button>
           </Box>
         </Box>
-
-        <Menu
-          id="bill-pay-filter-menu"
-          anchorEl={filterMenuAnchor}
-          open={filterMenuOpen}
-          onClose={() => setFilterMenuAnchor(null)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
-        >
-          {BILL_PAY_FILTER_OPTIONS.map((option) => (
-            <MenuItem
-              key={option.id}
-              selected={billFilter === option.id}
-              onClick={() => handleFilterChange(option.id)}
-              sx={{ py: 1 }}
-            >
-              <Typography variant="body2">{option.label}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
 
         <DataGrid
           rows={visibleRows}

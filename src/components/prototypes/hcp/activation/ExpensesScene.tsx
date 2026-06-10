@@ -59,7 +59,7 @@ export function ExpensesScene({ activeTab, onTabChange }: ExpensesSceneProps) {
       {activeTab === "Overview" ? <ExpensesOverviewTab /> : null}
       {activeTab === "Transactions" ? <ExpensesTransactionsTab /> : null}
       {activeTab === "Cards" ? <ExpensesCardsTab /> : null}
-      {activeTab === "Bill Pay" ? <ExpensesBillPayTab /> : null}
+      {activeTab === "Bills" ? <ExpensesBillPayTab /> : null}
     </Box>
   );
 }

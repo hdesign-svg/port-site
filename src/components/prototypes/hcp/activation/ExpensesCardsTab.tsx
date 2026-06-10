@@ -10,19 +10,22 @@ import Typography from "@mui/material/Typography";
 import {
   DataGrid,
   type GridColDef,
-  type GridPaginationModel,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableToolbarIconButton,
+  HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   hcpTableStackedCellSx,
+  hcpTableToolbarActionsSx,
+  hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
-import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { cardStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
+import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
 import {
   CARD_TYPE_FILTER_LABELS,
   CARD_TYPE_FILTERS,
@@ -33,7 +36,6 @@ import {
   type ExpenseCardRow,
 } from "./expensesCardsData";
 import {
-  hcpChromeActionButtonSx,
   hcpColors,
   hcpDataGridSx,
   hcpDataGridToolbarSx,
@@ -42,6 +44,26 @@ import {
   hcpRadius,
   hcpWorkspaceCreateButtonSx,
 } from "../hcpTheme";
+
+function filterCards(rows: ExpenseCardRow[], query: string) {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) {
+    return rows;
+  }
+
+  return rows.filter((row) => {
+    const haystack = [
+      row.cardholder,
+      row.purpose,
+      row.cardNumber,
+      formatCardTypeLabel(row.cardType),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(normalized);
+  });
+}
 
 function CardholderCell({ row }: { row: ExpenseCardRow }) {
   return (
@@ -155,24 +177,18 @@ const cardColumns: GridColDef<ExpenseCardRow>[] = [
 ];
 
 export function ExpensesCardsTab() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<CardTypeFilter>("all");
   const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
 
   const filterMenuOpen = Boolean(filterMenuAnchor);
+  const filterAriaLabel =
+    typeFilter === "all" ? "Filter" : `Filter: ${CARD_TYPE_FILTER_LABELS[typeFilter]}`;
 
-  const visibleRows = useMemo(
-    () => filterCardsByType(expenseCards, typeFilter),
-    [typeFilter],
-  );
-
-  const cardCountLabel = `${visibleRows.length} ${visibleRows.length === 1 ? "card" : "cards"}`;
-  const inactiveCount = visibleRows.filter((row) => row.status === "inactive").length;
-  const zoneDetail =
-    inactiveCount > 0 ? `${inactiveCount} inactive` : undefined;
+  const visibleRows = useMemo(() => {
+    const filtered = filterCardsByType(expenseCards, typeFilter);
+    return filterCards(filtered, searchQuery);
+  }, [typeFilter, searchQuery]);
 
   const handleTypeFilterChange = (next: CardTypeFilter) => {
     setTypeFilter(next);
@@ -190,33 +206,32 @@ export function ExpensesCardsTab() {
         }}
       >
         <Box sx={hcpDataGridToolbarSx}>
-          <HcpTableZoneHeader label={cardCountLabel} detail={zoneDetail} />
+          <Box sx={hcpTableToolbarLeadingSx}>
+            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.cards} />
+          </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, flexShrink: 0 }}>
+          <Box sx={hcpTableToolbarActionsSx}>
+            <HcpTableToolbarSearchButton value={searchQuery} onChange={setSearchQuery} />
+            <HcpTableToolbarIconButton
+              tooltip={filterAriaLabel}
+              aria-label={filterAriaLabel}
+              aria-haspopup="menu"
+              aria-expanded={filterMenuOpen ? "true" : undefined}
+              aria-controls={filterMenuOpen ? "cards-type-filter-menu" : undefined}
+              active={typeFilter !== "all"}
+              onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
+            >
+              <FunnelSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
             <Button
               variant="outlined"
               size="small"
               startIcon={<CreditCard size={hcpIcon.sm} weight="regular" />}
+              aria-label="New card"
               sx={hcpWorkspaceCreateButtonSx}
             >
-              New card
+              New
             </Button>
-            <Button
-              variant="text"
-              startIcon={<FunnelSimple size={hcpIcon.sm} weight="regular" />}
-            aria-haspopup="menu"
-            aria-expanded={filterMenuOpen ? "true" : undefined}
-            aria-controls={filterMenuOpen ? "cards-type-filter-menu" : undefined}
-            onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
-            sx={{
-              ...hcpChromeActionButtonSx,
-              ...(typeFilter !== "all"
-                ? { bgcolor: "rgba(33, 33, 33, 0.04)" }
-                : undefined),
-            }}
-          >
-            {typeFilter === "all" ? "Filter" : CARD_TYPE_FILTER_LABELS[typeFilter]}
-          </Button>
           </Box>
         </Box>
 
@@ -251,21 +266,11 @@ export function ExpensesCardsTab() {
           disableColumnSelector
           showCellVerticalBorder={false}
           showColumnVerticalBorder={false}
-          paginationMode="client"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[10, 25, 50]}
+          pagination={false}
+          hideFooter
           rowHeight={HCP_DATA_GRID_STACKED_ROW_HEIGHT}
           columnHeaderHeight={48}
           sx={hcpDataGridSx}
-          slotProps={{
-            basePagination: {
-              material: {
-                ActionsComponent: HcpTablePaginationActions,
-                labelRowsPerPage: "Rows per page:",
-              },
-            },
-          }}
         />
       </Box>
     </ExpensesTabPanel>

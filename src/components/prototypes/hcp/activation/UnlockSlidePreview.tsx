@@ -230,7 +230,7 @@ function ExpensesOverviewPreview({ playKey }: { playKey: number }) {
 function ExpensesBillsPreview({ playKey }: { playKey: number }) {
   return (
     <PreviewFrame key={playKey}>
-      <PreviewChrome title="Bill Pay" />
+      <PreviewChrome title="Bills" />
       <Box sx={{ bgcolor: hcpColors.paper, borderRadius: `${hcpLayout.controlRadius}px`, border: `1px solid ${hcpColors.borderSubtle}`, overflow: "hidden", ...fadeUpSx(100) }}>
         <MiniTableHeader columns={["Vendor", "Due", "Status", "Amount"]} />
         <Box

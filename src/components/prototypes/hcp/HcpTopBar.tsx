@@ -7,10 +7,12 @@ import {
   DotsThree,
   ListChecks,
   Phone,
+  Plus,
   Question,
   Sparkle,
 } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -26,6 +28,8 @@ const linkedAccountMenuItems = [
   "Refresh connection",
   "Disconnect account",
 ] as const;
+
+const bankMenuPrimaryAction = { label: "Add funds" } as const;
 
 const moreMenuItems = [
   { Icon: Phone, label: "Phone" },
@@ -159,6 +163,11 @@ export function HcpTopBar() {
           transformOrigin={{ vertical: "top", horizontal: "right" }}
           slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 200 } } }}
         >
+          <MenuItem onClick={() => setBankAnchor(null)} sx={{ gap: 1.5, py: 1.25 }}>
+            <Plus size={hcpIcon.sm} weight="regular" />
+            <Typography variant="body1">{bankMenuPrimaryAction.label}</Typography>
+          </MenuItem>
+          <Divider sx={{ my: 0.5 }} />
           {linkedAccountMenuItems.map((label) => (
             <MenuItem
               key={label}

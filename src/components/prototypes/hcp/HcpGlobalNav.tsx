@@ -9,6 +9,7 @@ import {
   ChartLineUp,
   ChatCircle,
   CreditCard,
+  GraduationCap,
   Lock,
   FileText,
   Gear,
@@ -25,10 +26,13 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpRadius } from "./hcpTheme";
+import { useState } from "react";
+import { hcpChromeBarSx, hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpMenuPaperSx, hcpRadius } from "./hcpTheme";
 
 const NAV_PRIMARY_ICON = hcpIcon.md;
 const NAV_TRAILING_ICON_SIZE = 16;
@@ -281,60 +285,84 @@ function SubNavItem({
 }
 
 function FooterUserAccount() {
+  const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
+  const settingsOpen = Boolean(settingsAnchor);
+
   return (
-    <Box sx={navRowGridSx}>
-      <Box sx={{ ...navIconSlotSx, overflow: "visible" }}>
-        <Box
+    <>
+      <Box sx={navRowGridSx}>
+        <Box sx={{ ...navIconSlotSx, overflow: "visible" }}>
+          <Box
+            sx={{
+              width: FOOTER_AVATAR_SIZE,
+              height: FOOTER_AVATAR_SIZE,
+              borderRadius: "50%",
+              overflow: "hidden",
+              position: "relative",
+              flexShrink: 0,
+            }}
+          >
+            <Image
+              src="/images/hcp/user-jill.png"
+              alt={FOOTER_USER_FULL_NAME}
+              fill
+              sizes="28px"
+              style={{ objectFit: "cover" }}
+            />
+          </Box>
+        </Box>
+
+        <Typography
+          variant="navLabel"
           sx={{
-            width: FOOTER_AVATAR_SIZE,
-            height: FOOTER_AVATAR_SIZE,
-            borderRadius: "50%",
+            flex: 1,
+            color: hcpColors.textPrimary,
+            fontWeight: hcpFontWeight.regular,
+            minWidth: 0,
             overflow: "hidden",
-            position: "relative",
-            flexShrink: 0,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
-          <Image
-            src="/images/hcp/user-jill.png"
-            alt={FOOTER_USER_FULL_NAME}
-            fill
-            sizes="28px"
-            style={{ objectFit: "cover" }}
-          />
+          {FOOTER_USER_DISPLAY_NAME}
+        </Typography>
+
+        <Box sx={{ ...trailingSlotSx, overflow: "visible" }}>
+          <IconButton
+            aria-label="Settings"
+            aria-haspopup="menu"
+            aria-expanded={settingsOpen ? "true" : undefined}
+            aria-controls={settingsOpen ? "hcp-nav-settings-menu" : undefined}
+            onClick={(event) => setSettingsAnchor(event.currentTarget)}
+            sx={{
+              width: hcpLayout.actionIconButtonSize,
+              height: hcpLayout.actionIconButtonSize,
+              p: 0,
+              color: hcpColors.chromeIcon,
+              borderRadius: hcpRadius.control,
+              "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
+            }}
+          >
+            <Gear size={NAV_PRIMARY_ICON} weight="regular" />
+          </IconButton>
         </Box>
       </Box>
 
-      <Typography
-        variant="navLabel"
-        sx={{
-          flex: 1,
-          color: hcpColors.textPrimary,
-          fontWeight: hcpFontWeight.regular,
-          minWidth: 0,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
+      <Menu
+        id="hcp-nav-settings-menu"
+        anchorEl={settingsAnchor}
+        open={settingsOpen}
+        onClose={() => setSettingsAnchor(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+        slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 220 } } }}
       >
-        {FOOTER_USER_DISPLAY_NAME}
-      </Typography>
-
-      <Box sx={{ ...trailingSlotSx, overflow: "visible" }}>
-        <IconButton
-          aria-label="Settings"
-          sx={{
-            width: hcpLayout.actionIconButtonSize,
-            height: hcpLayout.actionIconButtonSize,
-            p: 0,
-            color: hcpColors.chromeIcon,
-            borderRadius: hcpRadius.control,
-            "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
-          }}
-        >
-          <Gear size={NAV_PRIMARY_ICON} weight="regular" />
-        </IconButton>
-      </Box>
-    </Box>
+        <MenuItem onClick={() => setSettingsAnchor(null)} sx={{ gap: 1.5, py: 1.25 }}>
+          <GraduationCap size={hcpIcon.sm} weight="regular" />
+          <Typography variant="body1">Pro Coach</Typography>
+        </MenuItem>
+      </Menu>
+    </>
   );
 }
 
@@ -421,7 +449,7 @@ export function HcpGlobalNav({
 
           <NavDivider />
 
-          <NavRow icon={ChatCircle} label="Communications" />
+          <NavRow icon={ChatCircle} label="Messaging" />
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: `${hcpLayout.navItemGap}px` }}>
             <NavRow icon={CreditCard} label="Money" selected chevron="up" />

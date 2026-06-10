@@ -2,7 +2,6 @@
 
 import { DownloadSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import {
   DataGrid,
   type GridColDef,
@@ -10,17 +9,20 @@ import {
   type GridSortModel,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
-import { HcpSearchField } from "../HcpSearchField";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableToolbarIconButton,
+  HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   hcpTableStackedCellSx,
+  hcpTableToolbarActionsSx,
   hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
+import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
 import {
   expensesTransactions,
   formatTransactionAmount,
@@ -28,12 +30,10 @@ import {
   type ExpensesTransactionRow,
 } from "./expensesTransactionsData";
 import {
-  hcpChromeActionButtonSx,
   hcpColors,
   hcpDataGridSx,
   hcpDataGridToolbarSx,
   hcpIcon,
-  hcpLayout,
   hcpRadius,
 } from "../hcpTheme";
 
@@ -125,10 +125,6 @@ export function ExpensesTransactionsTab() {
     [searchQuery],
   );
 
-  const transactionCountLabel = `${visibleRows.length} ${
-    visibleRows.length === 1 ? "transaction" : "transactions"
-  }`;
-
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setPaginationModel((current) => ({ ...current, page: 0 }));
@@ -146,22 +142,15 @@ export function ExpensesTransactionsTab() {
       >
         <Box sx={hcpDataGridToolbarSx}>
           <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label={transactionCountLabel} />
-            <HcpSearchField
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(event) => handleSearchChange(event.target.value)}
-              sx={{ width: { xs: "100%", sm: hcpLayout.searchFieldWidth } }}
-            />
+            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.transactions} />
           </Box>
 
-          <Button
-            variant="text"
-            startIcon={<DownloadSimple size={hcpIcon.sm} weight="regular" />}
-            sx={hcpChromeActionButtonSx}
-          >
-            Export
-          </Button>
+          <Box sx={hcpTableToolbarActionsSx}>
+            <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
+            <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+              <DownloadSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+          </Box>
         </Box>
 
         <DataGrid

@@ -88,7 +88,7 @@ export function SpendingBreakdownCard({
 }) {
   return (
     <ChartCardShell
-      title="Spending breakdown"
+      title="Spend"
       headerAside={
         <ActivityTimeRangeMenu timeRange={timeRange} onTimeRangeChange={onTimeRangeChange} />
       }
