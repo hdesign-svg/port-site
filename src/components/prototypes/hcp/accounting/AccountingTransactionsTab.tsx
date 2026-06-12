@@ -24,12 +24,12 @@ import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { AccountingFlowFilterToggle } from "./AccountingFlowFilterToggle";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingFlowFilter } from "./accountingTabs";
+import type { AccountingReadiness } from "./accountingReadiness";
+import { getReviewQueueTransactions } from "./accountingReadiness";
 import {
   ACCOUNTING_CATEGORIES,
-  countReviewTransactions,
   formatAccountingAmount,
   formatAccountingDate,
-  isUncategorized,
   type AccountingCategory,
   type AccountingTransactionRow,
 } from "./accountingTransactionData";
@@ -129,12 +129,14 @@ type AccountingTransactionsTabProps = {
   activeView: "toReview" | "all";
   transactions: AccountingTransactionRow[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
+  readiness: AccountingReadiness;
 };
 
 export function AccountingTransactionsTab({
   activeView,
   transactions,
   onTransactionsChange,
+  readiness,
 }: AccountingTransactionsTabProps) {
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -144,8 +146,7 @@ export function AccountingTransactionsTab({
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: "date", sort: "desc" }]);
 
-  const reviewCount = countReviewTransactions(transactions);
-  const totalCount = transactions.length;
+  const reviewCount = readiness.needsYouCount;
   const showPagination = activeView === "all" || reviewCount > 10;
 
   const handleCategoryChange = (id: string, category: AccountingCategory) => {
@@ -168,7 +169,7 @@ export function AccountingTransactionsTab({
     let rows = transactions;
 
     if (activeView === "toReview") {
-      rows = rows.filter(isUncategorized);
+      rows = getReviewQueueTransactions(rows);
     }
 
     rows = filterByFlow(rows, activeView === "all" ? flowFilter : "all");
@@ -266,7 +267,7 @@ export function AccountingTransactionsTab({
             You&apos;re all caught up
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Every transaction is categorized. Switch to All to review or recategorize anytime.
+            Every recent transaction is categorized. Switch to All to review or recategorize anytime.
           </Typography>
         </Box>
       ) : (

@@ -11,24 +11,15 @@ import { hcpColors, hcpFontWeight, hcpLayout } from "../hcpTheme";
 
 type AccountingTabBarProps = {
   activeTab: AccountingTab;
-  reviewCount: number;
-  totalCount: number;
+  showReviewDot: boolean;
   onTabChange: (tab: AccountingTab) => void;
-};
-
-const TAB_COUNTS: Partial<Record<AccountingTab, "review" | "total">> = {
-  toReview: "review",
-  all: "total",
 };
 
 export function AccountingTabBar({
   activeTab,
-  reviewCount,
-  totalCount,
+  showReviewDot,
   onTabChange,
 }: AccountingTabBarProps) {
-  const counts = { review: reviewCount, total: totalCount };
-
   return (
     <Box sx={{ position: "relative" }}>
       <Box
@@ -44,8 +35,7 @@ export function AccountingTabBar({
         {ACCOUNTING_TABS.map((tab) => {
           const label = ACCOUNTING_TAB_LABELS[tab];
           const isActive = tab === activeTab;
-          const countKey = TAB_COUNTS[tab];
-          const count = countKey ? counts[countKey] : null;
+          const showDot = tab === "toReview" && showReviewDot && !isActive;
 
           return (
             <Box
@@ -93,26 +83,18 @@ export function AccountingTabBar({
               >
                 {label}
               </Typography>
-              {count !== null ? (
+              {showDot ? (
                 <Box
                   component="span"
+                  aria-hidden
                   sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minWidth: 20,
-                    height: 20,
-                    px: 0.75,
-                    borderRadius: 999,
-                    fontSize: "0.75rem",
-                    fontWeight: hcpFontWeight.semibold,
-                    fontVariantNumeric: "tabular-nums",
-                    bgcolor: isActive ? hcpColors.primaryLight : hcpColors.surfaceMuted,
-                    color: isActive ? hcpColors.primaryDark : hcpColors.textSecondary,
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    bgcolor: hcpColors.primary,
+                    flexShrink: 0,
                   }}
-                >
-                  {count}
-                </Box>
+                />
               ) : null}
               {isActive ? (
                 <Box

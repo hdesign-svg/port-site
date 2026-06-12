@@ -4,13 +4,14 @@ import { X } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { PlaidConnectPanel } from "./PlaidConnectPanel";
 import { UnlockModalDiscoverPanel } from "./UnlockModalDiscoverPanel";
 import { UnlockModalEnrollPanel } from "./UnlockModalEnrollPanel";
 import type { UnlockDeck, UnlockSlide } from "./unlockDecks";
 import { hcpColors, hcpIcon, hcpLayout } from "../hcpTheme";
 
-type UnlockModalPanel = "discover" | "enroll";
+type UnlockModalPanel = "discover" | "enroll" | "connect";
 
 type UnlockModalProps = {
   open: boolean;
@@ -25,6 +26,15 @@ export function UnlockModal({ open, deck, onClose, onComplete }: UnlockModalProp
   const [panel, setPanel] = useState<UnlockModalPanel>("discover");
   const [activeSlideId, setActiveSlideId] = useState(deck.slides[0]?.id ?? "");
 
+  const includesConnectStep = deck.target === "accounting";
+  const panelCount = includesConnectStep ? 3 : 2;
+
+  const panelIndex = useMemo(() => {
+    if (panel === "discover") return 0;
+    if (panel === "enroll") return 1;
+    return 2;
+  }, [panel]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -34,6 +44,15 @@ export function UnlockModal({ open, deck, onClose, onComplete }: UnlockModalProp
 
   const handleSlideSelect = (slide: UnlockSlide) => {
     setActiveSlideId(slide.id);
+  };
+
+  const handleEnrollContinue = () => {
+    if (includesConnectStep) {
+      setPanel("connect");
+      return;
+    }
+
+    onComplete();
   };
 
   return (
@@ -89,15 +108,15 @@ export function UnlockModal({ open, deck, onClose, onComplete }: UnlockModalProp
         <Box
           sx={{
             display: "flex",
-            width: "200%",
+            width: `${panelCount * 100}%`,
             height: "100%",
-            transform: panel === "enroll" ? "translateX(-50%)" : "translateX(0)",
+            transform: `translateX(-${(panelIndex / panelCount) * 100}%)`,
             transition: `transform ${PANEL_TRANSITION_MS}ms ease-in-out`,
           }}
         >
           <Box
             sx={{
-              width: "50%",
+              width: `${100 / panelCount}%`,
               height: "100%",
               minHeight: 0,
             }}
@@ -112,7 +131,7 @@ export function UnlockModal({ open, deck, onClose, onComplete }: UnlockModalProp
 
           <Box
             sx={{
-              width: "50%",
+              width: `${100 / panelCount}%`,
               height: "100%",
               minHeight: 0,
             }}
@@ -120,9 +139,24 @@ export function UnlockModal({ open, deck, onClose, onComplete }: UnlockModalProp
             <UnlockModalEnrollPanel
               deck={deck}
               onBack={() => setPanel("discover")}
-              onContinue={onComplete}
+              onContinue={handleEnrollContinue}
             />
           </Box>
+
+          {includesConnectStep ? (
+            <Box
+              sx={{
+                width: `${100 / panelCount}%`,
+                height: "100%",
+                minHeight: 0,
+              }}
+            >
+              <PlaidConnectPanel
+                onBack={() => setPanel("enroll")}
+                onContinue={onComplete}
+              />
+            </Box>
+          ) : null}
         </Box>
       </Box>
     </Dialog>

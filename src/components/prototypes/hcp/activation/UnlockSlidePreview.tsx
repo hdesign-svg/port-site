@@ -264,38 +264,37 @@ function ExpensesBillsPreview({ playKey }: { playKey: number }) {
 }
 
 function AccountingReviewPreview({ playKey }: { playKey: number }) {
-  const rows = ["Amazon Retail", "Idaho State Insurance", "Inbound transfer"];
+  const rows = [
+    { date: "Oct 29", desc: "Amazon Marketplace", amount: "$127.43" },
+    { date: "Oct 29", desc: "Costco Wholesale", amount: "$284.17" },
+    { date: "Oct 28", desc: "Zelle to J. Rivera", amount: "$350.00" },
+  ];
 
   return (
     <PreviewFrame key={playKey}>
-      <PreviewChrome title="Transaction review" />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {rows.map((label, index) => (
+      <PreviewChrome title="To review" />
+      <Box sx={{ bgcolor: hcpColors.paper, borderRadius: `${hcpLayout.controlRadius}px`, border: `1px solid ${hcpColors.borderSubtle}`, overflow: "hidden" }}>
+        <MiniTableHeader columns={["Date", "Description", "Amount"]} />
+        {rows.map((row, index) => (
           <Box
-            key={label}
+            key={row.desc}
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              bgcolor: hcpColors.paper,
-              border: `1px solid ${hcpColors.borderSubtle}`,
-              borderRadius: `${hcpLayout.controlRadius}px`,
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 0.8fr)",
+              gap: 1,
               px: 1.5,
               py: 1,
+              borderTop: index === 0 ? "none" : `1px solid ${hcpColors.borderSubtle}`,
               ...fadeUpSx(80 + index * 130),
             }}
           >
-            <Box
-              sx={{
-                width: 16,
-                height: 16,
-                borderRadius: "50%",
-                border: `2px solid ${hcpColors.primary}`,
-                flexShrink: 0,
-                ...fadeInSx(360 + index * 120, 280),
-              }}
-            />
-            <Typography variant="caption">{label}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              {row.date}
+            </Typography>
+            <Typography variant="caption">{row.desc}</Typography>
+            <Typography variant="caption" sx={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+              {row.amount}
+            </Typography>
           </Box>
         ))}
       </Box>

@@ -5,14 +5,19 @@ import Typography from "@mui/material/Typography";
 
 const flows = [
   {
+    href: "/prototypes/hcp/activation/expenses",
+    title: "Activation · Expenses",
+    shots: "Unlock modal → business info → done",
+  },
+  {
     href: "/prototypes/hcp/activation",
-    title: "HCP Money Activation",
-    shots: "Activation gate · business info · enrolled overview (shipped)",
+    title: "Activation · Accounting",
+    shots: "Unlock modal → business info → Plaid connect → done",
   },
   {
     href: "/prototypes/hcp/accounting",
     title: "Basic Accounting",
-    shots: "Transaction review · reporting (TBD from your screenshots)",
+    shots: "To review · All · Reports (post-activation)",
   },
 ];
 
@@ -23,7 +28,7 @@ export default function HcpPrototypesIndexPage() {
         HCP prototypes
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Not linked from the portfolio — bookmark a flow URL for interviews.
+        Not linked from the portfolio — bookmark a flow URL for interviews and GIF recording.
       </Typography>
       <Stack spacing={2}>
         {flows.map((flow) => (

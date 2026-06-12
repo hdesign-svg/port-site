@@ -1,17 +1,16 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AccountingPageHeader } from "./AccountingPageHeader";
+import { AccountingReadinessStrip } from "./AccountingReadinessStrip";
 import { AccountingReportsTab } from "./AccountingReportsTab";
 import { AccountingTabBar } from "./AccountingTabBar";
 import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
 import type { AccountingTab } from "./accountingTabs";
 import { isAccountingTransactionTab } from "./accountingTabs";
-import {
-  accountingTransactions as initialTransactions,
-  countReviewTransactions,
-} from "./accountingTransactionData";
+import { getAccountingReadiness } from "./accountingReadiness";
+import { accountingTransactions as initialTransactions } from "./accountingTransactionData";
 import {
   hcpColors,
   hcpContentHeaderSx,
@@ -22,8 +21,7 @@ export function AccountingScene() {
   const [activeTab, setActiveTab] = useState<AccountingTab>("toReview");
   const [transactions, setTransactions] = useState(initialTransactions);
 
-  const reviewCount = countReviewTransactions(transactions);
-  const totalCount = transactions.length;
+  const readiness = useMemo(() => getAccountingReadiness(transactions), [transactions]);
 
   return (
     <Box
@@ -48,10 +46,10 @@ export function AccountingScene() {
       >
         <Box sx={hcpContentHeaderSx}>
           <AccountingPageHeader />
+          <AccountingReadinessStrip readiness={readiness} />
           <AccountingTabBar
             activeTab={activeTab}
-            reviewCount={reviewCount}
-            totalCount={totalCount}
+            showReviewDot={readiness.needsYouCount > 0}
             onTabChange={setActiveTab}
           />
         </Box>
@@ -62,9 +60,12 @@ export function AccountingScene() {
           activeView={activeTab}
           transactions={transactions}
           onTransactionsChange={setTransactions}
+          readiness={readiness}
         />
       ) : null}
-      {activeTab === "reports" ? <AccountingReportsTab /> : null}
+      {activeTab === "reports" ? (
+        <AccountingReportsTab transactions={transactions} readiness={readiness} />
+      ) : null}
     </Box>
   );
 }
