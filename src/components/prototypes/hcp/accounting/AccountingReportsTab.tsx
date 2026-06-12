@@ -20,7 +20,7 @@ export function AccountingReportsTab() {
           Reports
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Profit & loss and balance sheet views will build out here — Transactions is the post-activation
+          Profit & loss and balance sheet views will build out here — To review is the post-activation
           hero for the prototype.
         </Typography>
       </Box>

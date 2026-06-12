@@ -7,6 +7,11 @@ import { AccountingReportsTab } from "./AccountingReportsTab";
 import { AccountingTabBar } from "./AccountingTabBar";
 import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
 import type { AccountingTab } from "./accountingTabs";
+import { isAccountingTransactionTab } from "./accountingTabs";
+import {
+  accountingTransactions as initialTransactions,
+  countReviewTransactions,
+} from "./accountingTransactionData";
 import {
   hcpColors,
   hcpContentHeaderSx,
@@ -14,7 +19,11 @@ import {
 } from "../hcpTheme";
 
 export function AccountingScene() {
-  const [activeTab, setActiveTab] = useState<AccountingTab>("Transactions");
+  const [activeTab, setActiveTab] = useState<AccountingTab>("toReview");
+  const [transactions, setTransactions] = useState(initialTransactions);
+
+  const reviewCount = countReviewTransactions(transactions);
+  const totalCount = transactions.length;
 
   return (
     <Box
@@ -38,13 +47,24 @@ export function AccountingScene() {
         }}
       >
         <Box sx={hcpContentHeaderSx}>
-          <AccountingPageHeader activeTab={activeTab} />
-          <AccountingTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+          <AccountingPageHeader />
+          <AccountingTabBar
+            activeTab={activeTab}
+            reviewCount={reviewCount}
+            totalCount={totalCount}
+            onTabChange={setActiveTab}
+          />
         </Box>
       </Box>
 
-      {activeTab === "Transactions" ? <AccountingTransactionsTab /> : null}
-      {activeTab === "Reports" ? <AccountingReportsTab /> : null}
+      {isAccountingTransactionTab(activeTab) ? (
+        <AccountingTransactionsTab
+          activeView={activeTab}
+          transactions={transactions}
+          onTransactionsChange={setTransactions}
+        />
+      ) : null}
+      {activeTab === "reports" ? <AccountingReportsTab /> : null}
     </Box>
   );
 }

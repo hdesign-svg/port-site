@@ -43,8 +43,6 @@ export const hcpColors = {
   textDisabled: "#9e9e9e",
   textMuted: "#757575",
   surfaceMuted: "#eeeeee",
-  /** Table/chart/toolbar header bands — subtle lift from white body */
-  surfaceHeader: "#f7f7f8",
   /** Top-bar search — low-contrast outline, no fill */
   searchBorder: "#ececec",
   searchPlaceholder: "#9e9e9e",
@@ -190,7 +188,6 @@ export const hcpContentSectionGapSx = {
 export const hcpChartCardHeaderSx = {
   px: `${hcpContentSpacing.surfaceInsetX}px`,
   py: `${hcpContentSpacing.surfaceInsetY}px`,
-  bgcolor: hcpColors.surfaceHeader,
 } as const;
 
 /** Chart card body — matches header vertical inset */

@@ -1,14 +1,9 @@
 "use client";
 
 import Typography from "@mui/material/Typography";
-import type { AccountingTab } from "./accountingTabs";
 import { hcpColors, hcpContentSpacing } from "../hcpTheme";
 
-type AccountingPageHeaderProps = {
-  activeTab: AccountingTab;
-};
-
-export function AccountingPageHeader({ activeTab }: AccountingPageHeaderProps) {
+export function AccountingPageHeader() {
   return (
     <Typography
       component="h1"
@@ -18,7 +13,7 @@ export function AccountingPageHeader({ activeTab }: AccountingPageHeaderProps) {
         mb: `${hcpContentSpacing.pageHeaderStack}px`,
       }}
     >
-      {activeTab}
+      Accounting
     </Typography>
   );
 }

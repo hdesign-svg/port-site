@@ -23,11 +23,9 @@ import {
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { AccountingFlowFilterToggle } from "./AccountingFlowFilterToggle";
 import { AccountingTabPanel } from "./AccountingTabPanel";
-import { AccountingTransactionViewTabs } from "./AccountingTransactionViewTabs";
-import type { AccountingFlowFilter, AccountingTransactionView } from "./accountingTabs";
+import type { AccountingFlowFilter } from "./accountingTabs";
 import {
   ACCOUNTING_CATEGORIES,
-  accountingTransactions as initialTransactions,
   countReviewTransactions,
   formatAccountingAmount,
   formatAccountingDate,
@@ -46,7 +44,7 @@ import {
 
 const categorySelectSx = {
   width: "100%",
-  maxWidth: 220,
+  maxWidth: 260,
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: hcpColors.borderControl,
   },
@@ -127,9 +125,17 @@ function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilt
   return rows.filter((row) => !row.isDeposit);
 }
 
-export function AccountingTransactionsTab() {
-  const [transactions, setTransactions] = useState(initialTransactions);
-  const [activeView, setActiveView] = useState<AccountingTransactionView>("uncategorized");
+type AccountingTransactionsTabProps = {
+  activeView: "toReview" | "all";
+  transactions: AccountingTransactionRow[];
+  onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
+};
+
+export function AccountingTransactionsTab({
+  activeView,
+  transactions,
+  onTransactionsChange,
+}: AccountingTransactionsTabProps) {
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -140,10 +146,11 @@ export function AccountingTransactionsTab() {
 
   const reviewCount = countReviewTransactions(transactions);
   const totalCount = transactions.length;
+  const showPagination = activeView === "all" || reviewCount > 10;
 
   const handleCategoryChange = (id: string, category: AccountingCategory) => {
-    setTransactions((current) =>
-      current.map((row) => (row.id === id ? { ...row, category } : row)),
+    onTransactionsChange(
+      transactions.map((row) => (row.id === id ? { ...row, category } : row)),
     );
   };
 
@@ -160,7 +167,7 @@ export function AccountingTransactionsTab() {
   const visibleRows = useMemo(() => {
     let rows = transactions;
 
-    if (activeView === "uncategorized") {
+    if (activeView === "toReview") {
       rows = rows.filter(isUncategorized);
     }
 
@@ -240,18 +247,11 @@ export function AccountingTransactionsTab() {
     [],
   );
 
-  const showEmptyUncategorized = activeView === "uncategorized" && reviewCount === 0;
+  const showEmptyToReview = activeView === "toReview" && reviewCount === 0;
 
   return (
     <AccountingTabPanel>
-      <AccountingTransactionViewTabs
-        activeView={activeView}
-        reviewCount={reviewCount}
-        totalCount={totalCount}
-        onViewChange={setActiveView}
-      />
-
-      {showEmptyUncategorized ? (
+      {showEmptyToReview ? (
         <Box
           sx={{
             bgcolor: hcpColors.paper,
@@ -266,8 +266,7 @@ export function AccountingTransactionsTab() {
             You&apos;re all caught up
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Every transaction is categorized. Switch to All transactions to review or recategorize
-            anytime.
+            Every transaction is categorized. Switch to All to review or recategorize anytime.
           </Typography>
         </Box>
       ) : (
@@ -302,21 +301,19 @@ export function AccountingTransactionsTab() {
             disableColumnSelector
             showCellVerticalBorder={false}
             showColumnVerticalBorder={false}
-            hideFooter={activeView !== "all"}
-            sortingMode={activeView === "all" ? "client" : undefined}
-            paginationMode={activeView === "all" ? "client" : undefined}
-            paginationModel={activeView === "all" ? paginationModel : undefined}
-            onPaginationModelChange={
-              activeView === "all" ? setPaginationModel : undefined
-            }
-            sortModel={activeView === "all" ? sortModel : undefined}
-            onSortModelChange={activeView === "all" ? setSortModel : undefined}
-            pageSizeOptions={activeView === "all" ? [10, 25, 50] : undefined}
+            hideFooter={!showPagination}
+            sortingMode={showPagination ? "client" : undefined}
+            paginationMode={showPagination ? "client" : undefined}
+            paginationModel={showPagination ? paginationModel : undefined}
+            onPaginationModelChange={showPagination ? setPaginationModel : undefined}
+            sortModel={showPagination ? sortModel : undefined}
+            onSortModelChange={showPagination ? setSortModel : undefined}
+            pageSizeOptions={showPagination ? [10, 25, 50] : undefined}
             rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
             columnHeaderHeight={48}
             sx={hcpDataGridSx}
             slotProps={
-              activeView === "all"
+              showPagination
                 ? {
                     basePagination: {
                       material: {
@@ -329,8 +326,8 @@ export function AccountingTransactionsTab() {
             }
             localeText={{
               noRowsLabel:
-                activeView === "uncategorized"
-                  ? "No uncategorized transactions."
+                activeView === "toReview"
+                  ? "No transactions to review."
                   : "No transactions match your filters.",
             }}
           />
