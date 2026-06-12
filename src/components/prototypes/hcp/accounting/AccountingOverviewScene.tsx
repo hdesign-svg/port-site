@@ -1,16 +1,21 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import { AccountingPageHeader } from "./AccountingPageHeader";
+import { AccountingReportsTab } from "./AccountingReportsTab";
+import { AccountingTabBar } from "./AccountingTabBar";
+import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
+import type { AccountingTab } from "./accountingTabs";
 import {
   hcpColors,
   hcpContentHeaderSx,
-  hcpContentSpacing,
-  hcpLayout,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
 
-export function AccountingOverviewScene() {
+export function AccountingScene() {
+  const [activeTab, setActiveTab] = useState<AccountingTab>("Transactions");
+
   return (
     <Box
       sx={{
@@ -33,37 +38,18 @@ export function AccountingOverviewScene() {
         }}
       >
         <Box sx={hcpContentHeaderSx}>
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{
-              color: hcpColors.textPrimary,
-              mb: `${hcpContentSpacing.pageHeaderStack}px`,
-            }}
-          >
-            Accounting
-          </Typography>
+          <AccountingPageHeader activeTab={activeTab} />
+          <AccountingTabBar activeTab={activeTab} onTabChange={setActiveTab} />
         </Box>
       </Box>
 
-      <Box sx={{ ...hcpContentHeaderSx, pb: `${hcpContentSpacing.zoneInset}px` }}>
-        <Box
-          sx={{
-            bgcolor: hcpColors.paper,
-            border: `1px solid ${hcpColors.borderSubtle}`,
-            borderRadius: `${hcpLayout.controlRadius}px`,
-            p: 3,
-          }}
-        >
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Transaction review
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Basic Accounting prototype — hero view after unlock. Transaction review and reporting screens
-            will build out from here.
-          </Typography>
-        </Box>
-      </Box>
+      {activeTab === "Transactions" ? <AccountingTransactionsTab /> : null}
+      {activeTab === "Reports" ? <AccountingReportsTab /> : null}
     </Box>
   );
+}
+
+/** @deprecated Use AccountingScene */
+export function AccountingOverviewScene() {
+  return <AccountingScene />;
 }

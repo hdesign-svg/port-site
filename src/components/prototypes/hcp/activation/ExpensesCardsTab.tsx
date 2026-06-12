@@ -266,7 +266,6 @@ export function ExpensesCardsTab() {
           disableColumnSelector
           showCellVerticalBorder={false}
           showColumnVerticalBorder={false}
-          pagination={false}
           hideFooter
           rowHeight={HCP_DATA_GRID_STACKED_ROW_HEIGHT}
           columnHeaderHeight={48}

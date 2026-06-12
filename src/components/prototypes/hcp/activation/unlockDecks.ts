@@ -16,13 +16,13 @@ export type UnlockDeck = {
 
 export const expensesUnlockDeck: UnlockDeck = {
   target: "expenses",
-  title: "Unlock Expenses",
-  subtitle: "Take control of team spending with cards, limits, and real-time visibility.",
+  title: "Control team spending",
+  subtitle: "Cards, limits, and bill pay in one place.",
   slides: [
-    { id: "overview", label: "Understand cash flow" },
-    { id: "transactions", label: "See every transaction" },
-    { id: "cards", label: "Control team spending" },
-    { id: "bills", label: "Pay and track bills" },
+    { id: "overview", label: "Cash flow" },
+    { id: "transactions", label: "Every transaction" },
+    { id: "cards", label: "Spending limits" },
+    { id: "bills", label: "Bill pay" },
   ],
   enrollTitle: "Enter your business information",
   enrollDescription:
@@ -31,13 +31,13 @@ export const expensesUnlockDeck: UnlockDeck = {
 
 export const accountingUnlockDeck: UnlockDeck = {
   target: "accounting",
-  title: "Unlock Accounting",
-  subtitle: "Review transactions, categorize spend, and close the books without leaving Housecall Pro.",
+  title: "Books without busywork",
+  subtitle: "Categorize spend and sync QuickBooks in HCP.",
   slides: [
-    { id: "review", label: "Review transactions faster" },
-    { id: "categories", label: "See where money goes" },
-    { id: "qbo", label: "Reconcile with QuickBooks" },
-    { id: "statements", label: "Close the books" },
+    { id: "review", label: "Review faster" },
+    { id: "categories", label: "Track spending" },
+    { id: "qbo", label: "QuickBooks sync" },
+    { id: "statements", label: "Close the month" },
   ],
   enrollTitle: "Enter your business information",
   enrollDescription:

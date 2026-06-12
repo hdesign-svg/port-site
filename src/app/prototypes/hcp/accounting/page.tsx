@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AccountingOverviewScene } from "@/components/prototypes/hcp/accounting/AccountingOverviewScene";
+import { AccountingScene } from "@/components/prototypes/hcp/accounting/AccountingOverviewScene";
 import { UnlockModal } from "@/components/prototypes/hcp/activation/UnlockModal";
 import {
   getUnlockDeck,
@@ -35,7 +35,7 @@ export default function HcpAccountingPrototypePage() {
           onMoneySubNavClick: handleMoneySubNavClick,
         }}
       >
-        <AccountingOverviewScene />
+        <AccountingScene />
       </HcpFramedShell>
 
       {unlockTarget ? (
