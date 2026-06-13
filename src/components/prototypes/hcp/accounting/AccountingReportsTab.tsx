@@ -1,6 +1,8 @@
 "use client";
 
+import { FileArrowDown } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 import { AccountingTabPanel } from "./AccountingTabPanel";
@@ -10,7 +12,7 @@ import {
 } from "./accountingReportsData";
 import type { AccountingReadiness } from "./accountingReadiness";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
-import { hcpColors, hcpFontWeight, hcpRadius } from "../hcpTheme";
+import { hcpColors, hcpFontWeight, hcpIcon, hcpRadius, hcpSecondaryButtonSx } from "../hcpTheme";
 
 type AccountingReportsTabProps = {
   transactions: AccountingTransactionRow[];
@@ -114,14 +116,33 @@ export function AccountingReportsTab({ transactions, readiness }: AccountingRepo
             px: 3,
             py: 2,
             borderBottom: `1px solid ${hcpColors.borderSubtle}`,
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 2,
+            flexWrap: "wrap",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: hcpFontWeight.semibold, mb: 0.5 }}>
-            Profit & loss
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {report.periodLabel} · {readiness.readyPercent}% of transactions categorized
-          </Typography>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: hcpFontWeight.semibold, mb: 0.5 }}>
+              Profit & loss
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {report.periodLabel} · {readiness.readyPercent}% of transactions categorized
+            </Typography>
+          </Box>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<FileArrowDown size={hcpIcon.sm} />}
+            sx={{
+              borderRadius: hcpRadius.control,
+              ...hcpSecondaryButtonSx,
+              flexShrink: 0,
+            }}
+          >
+            Export PDF
+          </Button>
         </Box>
 
         <Box sx={{ px: 3, py: 3 }}>

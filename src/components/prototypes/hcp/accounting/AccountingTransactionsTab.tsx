@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown, CheckCircle } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -263,11 +263,17 @@ export function AccountingTransactionsTab({
             textAlign: "center",
           }}
         >
+          <CheckCircle
+            size={40}
+            weight="fill"
+            color={hcpColors.successMain}
+            style={{ marginBottom: 12 }}
+          />
           <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
-            You&apos;re all caught up
+            {readiness.periodLabel} is ready for your CPA
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Every recent transaction is categorized. Switch to All to review or recategorize anytime.
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: "auto" }}>
+            Every recent transaction is categorized. View reports or switch to All to audit anytime.
           </Typography>
         </Box>
       ) : (
@@ -279,6 +285,14 @@ export function AccountingTransactionsTab({
             overflow: "hidden",
           }}
         >
+          {activeView === "toReview" ? (
+            <Box sx={{ px: 2, pt: 2, pb: 0 }}>
+              <Typography variant="body2" color="text.secondary">
+                HCP sorted the rest — confirm how these should be categorized.
+              </Typography>
+            </Box>
+          ) : null}
+
           {activeView === "all" ? (
             <Box sx={{ ...hcpDataGridToolbarSx, justifyContent: "flex-end" }}>
               <Box sx={hcpTableToolbarActionsSx}>

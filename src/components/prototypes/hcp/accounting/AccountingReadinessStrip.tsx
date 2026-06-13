@@ -16,7 +16,7 @@ export function AccountingReadinessStrip({ readiness }: AccountingReadinessStrip
   const statusLine =
     needsYouCount === 0
       ? `${periodLabel} is ready for your CPA`
-      : `${needsYouCount} ${needsYouCount === 1 ? "item needs" : "items need"} you · ${sortedCount} already sorted`;
+      : `${needsYouCount} ${needsYouCount === 1 ? "item needs" : "items need"} you · ${sortedCount} sorted in ${periodLabel}`;
 
   return (
     <Box
