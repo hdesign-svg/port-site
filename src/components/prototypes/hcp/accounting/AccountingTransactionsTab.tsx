@@ -10,26 +10,26 @@ import {
   type GridPaginationModel,
   type GridSortModel,
 } from "@mui/x-data-grid";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
   HcpTableToolbarSearchButton,
   HCP_DATA_GRID_ROW_HEIGHT,
+  hcpTableStackedCellSx,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
-import { AccountingCategorySelect } from "./AccountingCategorySelect";
 import { AccountingFlowFilterToggle } from "./AccountingFlowFilterToggle";
 import { AccountingReviewFocus } from "./AccountingReviewFocus";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingFlowFilter } from "./accountingTabs";
+import type { AccountingPeriod } from "./accountingPeriods";
 import type { AccountingReadiness } from "./accountingReadiness";
 import { getReviewQueueTransactions } from "./accountingReadiness";
 import {
   formatAccountingAmount,
   formatAccountingDate,
-  type AccountingCategory,
   type AccountingTransactionRow,
 } from "./accountingTransactionData";
 import {
@@ -56,6 +56,15 @@ function filterBySearch(rows: AccountingTransactionRow[], query: string) {
   });
 }
 
+function TransactionCell({ row }: { row: AccountingTransactionRow }) {
+  return (
+    <Box sx={hcpTableStackedCellSx}>
+      <HcpTableCellPrimary>{row.description}</HcpTableCellPrimary>
+      <HcpTableCellSecondary>{row.account}</HcpTableCellSecondary>
+    </Box>
+  );
+}
+
 function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilter) {
   if (flow === "all") {
     return rows;
@@ -70,6 +79,7 @@ function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilt
 
 type AccountingTransactionsTabProps = {
   activeView: "toReview" | "all";
+  period: AccountingPeriod;
   transactions: AccountingTransactionRow[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   readiness: AccountingReadiness;
@@ -78,6 +88,7 @@ type AccountingTransactionsTabProps = {
 
 export function AccountingTransactionsTab({
   activeView,
+  period,
   transactions,
   onTransactionsChange,
   readiness,
@@ -92,15 +103,13 @@ export function AccountingTransactionsTab({
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: "date", sort: "desc" }]);
 
   const reviewQueue = useMemo(
-    () => getReviewQueueTransactions(transactions),
-    [transactions],
+    () => getReviewQueueTransactions(transactions, period),
+    [transactions, period],
   );
 
-  const handleCategoryChange = (id: string, category: AccountingCategory) => {
-    onTransactionsChange(
-      transactions.map((row) => (row.id === id ? { ...row, category } : row)),
-    );
-  };
+  useEffect(() => {
+    setPaginationModel((current) => ({ ...current, page: 0 }));
+  }, [period.prefix]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -112,12 +121,17 @@ export function AccountingTransactionsTab({
     setPaginationModel((current) => ({ ...current, page: 0 }));
   };
 
+  const periodTransactions = useMemo(
+    () => transactions.filter((row) => row.date.startsWith(period.prefix)),
+    [transactions, period.prefix],
+  );
+
   const allRows = useMemo(() => {
-    let rows = transactions;
+    let rows = periodTransactions;
     rows = filterByFlow(rows, flowFilter);
     rows = filterBySearch(rows, searchQuery);
     return rows;
-  }, [flowFilter, searchQuery, transactions]);
+  }, [flowFilter, periodTransactions, searchQuery]);
 
   const columns: GridColDef<AccountingTransactionRow>[] = useMemo(
     () => [
@@ -132,20 +146,12 @@ export function AccountingTransactionsTab({
         ),
       },
       {
-        field: "account",
-        headerName: "Account",
-        flex: 1.1,
-        minWidth: 160,
-        sortable: false,
-        renderCell: ({ value }) => <HcpTableCellSecondary>{value}</HcpTableCellSecondary>,
-      },
-      {
         field: "description",
-        headerName: "Description",
-        flex: 1.5,
-        minWidth: 220,
+        headerName: "Transaction",
+        flex: 1.8,
+        minWidth: 240,
         sortable: false,
-        renderCell: ({ value }) => <HcpTableCellPrimary>{value}</HcpTableCellPrimary>,
+        renderCell: ({ row }) => <TransactionCell row={row} />,
       },
       {
         field: "amount",
@@ -172,15 +178,13 @@ export function AccountingTransactionsTab({
       {
         field: "category",
         headerName: "Category",
-        flex: 1.2,
-        minWidth: 200,
+        flex: 1.1,
+        minWidth: 168,
         sortable: false,
         renderCell: ({ row }) => (
-          <AccountingCategorySelect
-            value={row.category}
-            onChange={(category) => handleCategoryChange(row.id, category)}
-            placeholder="Uncategorized"
-          />
+          <HcpTableCellSecondary>
+            {row.category ?? "Uncategorized"}
+          </HcpTableCellSecondary>
         ),
       },
     ],
@@ -211,8 +215,8 @@ export function AccountingTransactionsTab({
               {readiness.periodLabel} is ready for your CPA
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: "auto", mb: 3 }}>
-              Every recent transaction is categorized. View your profit & loss or switch to All to
-              audit anytime.
+              Every recent transaction is categorized. View your profit & loss or switch to
+              Transactions to audit anytime.
             </Typography>
             {onViewReports ? (
               <Button
@@ -235,6 +239,7 @@ export function AccountingTransactionsTab({
     return (
       <AccountingTabPanel>
         <AccountingReviewFocus
+          period={period}
           transactions={transactions}
           onTransactionsChange={onTransactionsChange}
         />
@@ -244,9 +249,6 @@ export function AccountingTransactionsTab({
 
   return (
     <AccountingTabPanel>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Full transaction history
-      </Typography>
       <Box
         sx={{
           bgcolor: hcpColors.paper,

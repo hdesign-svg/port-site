@@ -6,7 +6,7 @@ export type AccountingFlowFilter = "all" | "out" | "in";
 
 export const ACCOUNTING_TAB_LABELS: Record<AccountingTab, string> = {
   toReview: "To review",
-  all: "All",
+  all: "Transactions",
   reports: "Reports",
 };
 

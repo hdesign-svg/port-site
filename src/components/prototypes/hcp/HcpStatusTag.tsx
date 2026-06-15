@@ -1,6 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
+import type { ReactNode } from "react";
 import { hcpColors, hcpFontWeight } from "./hcpTheme";
 
 /** Semantic status tones — blue in-progress, green complete, gray inactive, red failed */
@@ -44,9 +45,10 @@ export function cardStatusTone(status: "active" | "inactive"): HcpStatusTagTone 
 type HcpStatusTagProps = {
   label: string;
   tone: HcpStatusTagTone;
+  icon?: ReactNode;
 };
 
-export function HcpStatusTag({ label, tone }: HcpStatusTagProps) {
+export function HcpStatusTag({ label, tone, icon }: HcpStatusTagProps) {
   const colors = toneStyles[tone];
 
   return (
@@ -55,6 +57,7 @@ export function HcpStatusTag({ label, tone }: HcpStatusTagProps) {
       sx={{
         display: "inline-flex",
         alignItems: "center",
+        gap: icon ? 0.5 : 0,
         px: 1,
         py: 0.25,
         borderRadius: 9999,
@@ -66,6 +69,7 @@ export function HcpStatusTag({ label, tone }: HcpStatusTagProps) {
         whiteSpace: "nowrap",
       }}
     >
+      {icon}
       {label}
     </Box>
   );

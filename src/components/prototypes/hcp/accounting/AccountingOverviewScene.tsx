@@ -8,7 +8,8 @@ import { AccountingTabBar } from "./AccountingTabBar";
 import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
 import type { AccountingTab } from "./accountingTabs";
 import { isAccountingTransactionTab } from "./accountingTabs";
-import { getAccountingReadiness } from "./accountingReadiness";
+import { DEFAULT_ACCOUNTING_PERIOD, type AccountingPeriod } from "./accountingPeriods";
+import { getAccountingReadiness, getReviewQueueTransactions } from "./accountingReadiness";
 import { accountingTransactions as initialTransactions } from "./accountingTransactionData";
 import {
   hcpColors,
@@ -18,9 +19,18 @@ import {
 
 export function AccountingScene() {
   const [activeTab, setActiveTab] = useState<AccountingTab>("toReview");
+  const [selectedPeriod, setSelectedPeriod] = useState<AccountingPeriod>(DEFAULT_ACCOUNTING_PERIOD);
   const [transactions, setTransactions] = useState(initialTransactions);
 
-  const readiness = useMemo(() => getAccountingReadiness(transactions), [transactions]);
+  const readiness = useMemo(
+    () => getAccountingReadiness(transactions, selectedPeriod),
+    [transactions, selectedPeriod],
+  );
+
+  const currentPeriodReviewCount = useMemo(
+    () => getReviewQueueTransactions(transactions, DEFAULT_ACCOUNTING_PERIOD).length,
+    [transactions],
+  );
 
   return (
     <Box
@@ -44,10 +54,14 @@ export function AccountingScene() {
         }}
       >
         <Box sx={hcpContentHeaderSx}>
-          <AccountingPageHeader />
+          <AccountingPageHeader
+            period={selectedPeriod}
+            transactions={transactions}
+            onPeriodChange={setSelectedPeriod}
+          />
           <AccountingTabBar
             activeTab={activeTab}
-            showReviewDot={readiness.needsYouCount > 0}
+            showReviewDot={currentPeriodReviewCount > 0}
             onTabChange={setActiveTab}
           />
         </Box>
@@ -56,6 +70,7 @@ export function AccountingScene() {
       {isAccountingTransactionTab(activeTab) ? (
         <AccountingTransactionsTab
           activeView={activeTab}
+          period={selectedPeriod}
           transactions={transactions}
           onTransactionsChange={setTransactions}
           readiness={readiness}
@@ -63,7 +78,7 @@ export function AccountingScene() {
         />
       ) : null}
       {activeTab === "reports" ? (
-        <AccountingReportsTab transactions={transactions} readiness={readiness} />
+        <AccountingReportsTab transactions={transactions} period={selectedPeriod} />
       ) : null}
     </Box>
   );

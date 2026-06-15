@@ -14,6 +14,7 @@ import {
   getReviewGroupTransactions,
   type ApplyReviewGroupInput,
 } from "./accountingReviewGroups";
+import type { AccountingPeriod } from "./accountingPeriods";
 import {
   formatAccountingAmount,
   formatAccountingDate,
@@ -29,6 +30,7 @@ import {
 } from "../hcpTheme";
 
 type AccountingReviewFocusProps = {
+  period: AccountingPeriod;
   transactions: AccountingTransactionRow[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
 };
@@ -46,10 +48,14 @@ const chipButtonSx = {
 } as const;
 
 export function AccountingReviewFocus({
+  period,
   transactions,
   onTransactionsChange,
 }: AccountingReviewFocusProps) {
-  const groups = useMemo(() => buildReviewGroups(transactions), [transactions]);
+  const groups = useMemo(
+    () => buildReviewGroups(transactions, period),
+    [transactions, period],
+  );
   const activeGroup = groups[0] ?? null;
   const activeTransactions = activeGroup
     ? getReviewGroupTransactions(transactions, activeGroup)

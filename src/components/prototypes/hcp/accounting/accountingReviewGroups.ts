@@ -1,4 +1,5 @@
 import type { AccountingCategory, AccountingTransactionRow } from "./accountingTransactionData";
+import type { AccountingPeriod } from "./accountingPeriods";
 import { getReviewQueueTransactions } from "./accountingReadiness";
 
 export type ReviewGroup = {
@@ -63,8 +64,11 @@ function getGroupMeta(row: AccountingTransactionRow): GroupMeta {
   };
 }
 
-export function buildReviewGroups(transactions: AccountingTransactionRow[]): ReviewGroup[] {
-  const queue = getReviewQueueTransactions(transactions);
+export function buildReviewGroups(
+  transactions: AccountingTransactionRow[],
+  period: AccountingPeriod,
+): ReviewGroup[] {
+  const queue = getReviewQueueTransactions(transactions, period);
   const groups = new Map<string, ReviewGroup>();
 
   for (const row of queue) {

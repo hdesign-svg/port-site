@@ -154,6 +154,59 @@ export const hcpLayout = {
   actionIconButtonSize: 36,
 } as const;
 
+/** Module tabs — YouTube-style: active thick bar, inactive hover thin bar, no fill */
+export const hcpModuleTabItemSx = {
+  position: "relative" as const,
+  display: "inline-flex",
+  flexShrink: 0,
+  cursor: "pointer",
+  bgcolor: "transparent",
+  "&:hover": {
+    bgcolor: "transparent",
+  },
+  "&:focus-visible": {
+    outline: "none",
+  },
+} as const;
+
+/** Inactive tab hover — same indicator weight as active, muted color only */
+export const hcpModuleTabInactiveHoverSx = {
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: `${hcpLayout.tabIndicatorWidth}px`,
+    bgcolor: hcpColors.textMuted,
+    opacity: 0,
+    zIndex: 1,
+    pointerEvents: "none",
+    transition: "opacity 150ms ease",
+  },
+  "&:hover::after": {
+    opacity: 1,
+  },
+} as const;
+
+export const hcpModuleTabActiveIndicatorSx = {
+  position: "absolute" as const,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  height: `${hcpLayout.tabIndicatorWidth}px`,
+  bgcolor: hcpColors.primary,
+  zIndex: 1,
+  pointerEvents: "none" as const,
+};
+
+export const hcpModuleTabLabelSx = (isActive: boolean) =>
+  ({
+    color: isActive ? hcpColors.textPrimary : hcpColors.textMuted,
+    fontWeight: hcpFontWeight.medium,
+    whiteSpace: "nowrap",
+  }) as const;
+
 /** Border radius tokens — use instead of magic numbers */
 export const hcpRadius = {
   control: `${hcpLayout.controlRadius}px`,

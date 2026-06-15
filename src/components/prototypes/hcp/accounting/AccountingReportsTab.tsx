@@ -6,100 +6,75 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 import { AccountingTabPanel } from "./AccountingTabPanel";
+import type { AccountingPeriod } from "./accountingPeriods";
 import {
   buildProfitAndLossReport,
   formatReportCurrency,
 } from "./accountingReportsData";
-import type { AccountingReadiness } from "./accountingReadiness";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
 import { hcpColors, hcpFontWeight, hcpIcon, hcpRadius, hcpSecondaryButtonSx } from "../hcpTheme";
 
 type AccountingReportsTabProps = {
   transactions: AccountingTransactionRow[];
-  readiness: AccountingReadiness;
+  period: AccountingPeriod;
 };
 
-function ReportSection({
-  title,
-  lines,
-  totalLabel,
-  totalAmount,
-  emphasizeTotal = false,
+function ReportRow({
+  label,
+  amount,
+  emphasize = false,
+  indent = false,
+  labelWeight = "regular",
+  amountColor,
 }: {
-  title: string;
-  lines: { label: string; amount: number; indent?: boolean }[];
-  totalLabel: string;
-  totalAmount: number;
-  emphasizeTotal?: boolean;
+  label: string;
+  amount: number;
+  emphasize?: boolean;
+  indent?: boolean;
+  labelWeight?: "regular" | "semibold";
+  amountColor?: string;
 }) {
+  const labelVariant = emphasize ? "body1" : "body2";
+  const labelSx = {
+    fontWeight: labelWeight === "semibold" ? hcpFontWeight.semibold : hcpFontWeight.regular,
+    pl: indent ? 2 : 0,
+  };
+
   return (
-    <Box sx={{ mb: 3 }}>
-      <Typography
-        variant="body2"
-        sx={{
-          fontWeight: hcpFontWeight.semibold,
-          color: hcpColors.textSecondary,
-          textTransform: "uppercase",
-          letterSpacing: "0.04em",
-          fontSize: "0.75rem",
-          mb: 1.5,
-        }}
-      >
-        {title}
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: 2,
+        py: emphasize ? 0.25 : 0,
+      }}
+    >
+      <Typography variant={labelVariant} sx={labelSx}>
+        {label}
       </Typography>
-
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {lines.map((line) => (
-          <Box
-            key={line.label}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 2,
-              pl: line.indent ? 2 : 0,
-            }}
-          >
-            <Typography variant="body2">{line.label}</Typography>
-            <Typography variant="body2" sx={{ fontVariantNumeric: "tabular-nums" }}>
-              {formatReportCurrency(line.amount)}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
-
-      <Box
+      <Typography
+        variant={labelVariant}
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 2,
-          mt: 1.5,
-          pt: 1.5,
-          borderTop: `1px solid ${hcpColors.borderSubtle}`,
+          fontWeight: labelWeight === "semibold" ? hcpFontWeight.semibold : hcpFontWeight.regular,
+          fontVariantNumeric: "tabular-nums",
+          color: amountColor ?? hcpColors.textPrimary,
+          flexShrink: 0,
         }}
       >
-        <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold }}>
-          {totalLabel}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: hcpFontWeight.semibold,
-            fontVariantNumeric: "tabular-nums",
-            color: emphasizeTotal && totalAmount >= 0 ? hcpColors.successMain : hcpColors.textPrimary,
-          }}
-        >
-          {formatReportCurrency(totalAmount)}
-        </Typography>
-      </Box>
+        {formatReportCurrency(amount)}
+      </Typography>
     </Box>
   );
 }
 
-export function AccountingReportsTab({ transactions, readiness }: AccountingReportsTabProps) {
+export function AccountingReportsTab({ transactions, period }: AccountingReportsTabProps) {
   const report = useMemo(
-    () => buildProfitAndLossReport(transactions, readiness.periodLabel),
-    [transactions, readiness.periodLabel],
+    () => buildProfitAndLossReport(transactions, period),
+    [transactions, period],
   );
+
+  const netProfitColor =
+    report.netProfit >= 0 ? hcpColors.successMain : hcpColors.spending;
 
   return (
     <AccountingTabPanel>
@@ -117,20 +92,15 @@ export function AccountingReportsTab({ transactions, readiness }: AccountingRepo
             py: 2,
             borderBottom: `1px solid ${hcpColors.borderSubtle}`,
             display: "flex",
-            alignItems: "flex-start",
+            alignItems: "center",
             justifyContent: "space-between",
             gap: 2,
             flexWrap: "wrap",
           }}
         >
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: hcpFontWeight.semibold, mb: 0.5 }}>
-              Profit & loss
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {report.periodLabel}
-            </Typography>
-          </Box>
+          <Typography variant="h6" sx={{ fontWeight: hcpFontWeight.semibold }}>
+            Profit & loss
+          </Typography>
           <Button
             variant="outlined"
             size="small"
@@ -146,42 +116,71 @@ export function AccountingReportsTab({ transactions, readiness }: AccountingRepo
         </Box>
 
         <Box sx={{ px: 3, py: 3 }}>
-          <ReportSection
-            title="Income"
-            lines={report.income}
-            totalLabel="Total income"
-            totalAmount={report.totalIncome}
-          />
-
-          <ReportSection
-            title="Expenses"
-            lines={report.expenses}
-            totalLabel="Total expenses"
-            totalAmount={report.totalExpenses}
-          />
-
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 2,
-              pt: 2,
-              borderTop: `2px solid ${hcpColors.border}`,
+              pb: 2.5,
+              mb: 2.5,
+              borderBottom: `1px solid ${hcpColors.borderSubtle}`,
             }}
           >
-            <Typography variant="body1" sx={{ fontWeight: hcpFontWeight.semibold }}>
-              Net profit
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: hcpFontWeight.semibold,
-                fontVariantNumeric: "tabular-nums",
-                color: report.netProfit >= 0 ? hcpColors.successMain : hcpColors.spending,
-              }}
-            >
-              {formatReportCurrency(report.netProfit)}
-            </Typography>
+            <ReportRow
+              label="Net profit"
+              amount={report.netProfit}
+              emphasize
+              labelWeight="semibold"
+              amountColor={netProfitColor}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+            <ReportRow
+              label="Income"
+              amount={report.totalIncome}
+              labelWeight="semibold"
+            />
+
+            {report.expenses.length > 0 ? (
+              <>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: hcpFontWeight.semibold,
+                    color: hcpColors.textSecondary,
+                    mt: 1.25,
+                    mb: 0.25,
+                  }}
+                >
+                  Expenses
+                </Typography>
+                {report.expenses.map((line) => (
+                  <ReportRow
+                    key={line.label}
+                    label={line.label}
+                    amount={line.amount}
+                    indent
+                  />
+                ))}
+                <Box
+                  sx={{
+                    pt: 1.25,
+                    mt: 0.5,
+                    borderTop: `1px solid ${hcpColors.borderSubtle}`,
+                  }}
+                >
+                  <ReportRow
+                    label="Total expenses"
+                    amount={report.totalExpenses}
+                    labelWeight="semibold"
+                  />
+                </Box>
+              </>
+            ) : (
+              <ReportRow
+                label="Expenses"
+                amount={report.totalExpenses}
+                labelWeight="semibold"
+              />
+            )}
           </Box>
         </Box>
       </Box>

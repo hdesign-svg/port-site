@@ -1,5 +1,5 @@
+import type { AccountingPeriod } from "./accountingPeriods";
 import type { AccountingCategory, AccountingTransactionRow } from "./accountingTransactionData";
-import { ACCOUNTING_PERIOD_PREFIX } from "./accountingReadiness";
 
 export type ProfitAndLossLine = {
   label: string;
@@ -24,10 +24,10 @@ function isIncomeRow(row: AccountingTransactionRow) {
 
 export function buildProfitAndLossReport(
   rows: AccountingTransactionRow[],
-  periodLabel: string,
+  period: AccountingPeriod,
 ): ProfitAndLossReport {
   const periodRows = rows.filter(
-    (row) => row.date.startsWith(ACCOUNTING_PERIOD_PREFIX) && row.category !== null,
+    (row) => row.date.startsWith(period.prefix) && row.category !== null,
   );
 
   const incomeTotal = periodRows
@@ -51,8 +51,8 @@ export function buildProfitAndLossReport(
   const totalExpenses = expenses.reduce((sum, line) => sum + line.amount, 0);
 
   return {
-    periodLabel,
-    income: [{ label: "Service revenue", amount: incomeTotal }],
+    periodLabel: period.label,
+    income: incomeTotal > 0 ? [{ label: "Income", amount: incomeTotal }] : [],
     expenses,
     totalIncome: incomeTotal,
     totalExpenses,

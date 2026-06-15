@@ -48,7 +48,7 @@ function rem(px: number) {
  * | 3 Data | Table & list cells | body1, body2 | 14–13px | 400 | Description, amount, date |
  * | 5 Chrome utility | Toolbar search, text buttons | button | 14px | 600 | Filter, View all |
  * | 6 Chrome inline | Compact triggers | button | 14px | 600 | Time range picker |
- * | 7 Navigation | Tabs, nav | tabLabel, navLabel | 14px | 400 | Overview tab |
+ * | 7 Navigation | Tabs, nav | tabLabel, navLabel | 14px | 500 / 400 | Overview tab |
  * | 8 Meta | Labels, headers | caption, body2 | 12–13px | 400 | Available, table headers |
  *
  * Buttons: text & outlined → 14px / 600 / textPrimary. Contained primary → white on fill. Hierarchy via border and fill.
@@ -140,7 +140,7 @@ export function createHcpTypography(): NonNullable<ThemeOptions["typography"]> {
     },
     tabLabel: {
       fontSize: rem(14),
-      fontWeight: 400,
+      fontWeight: 500,
       lineHeight: 1.43,
     },
     chromeAction: {
