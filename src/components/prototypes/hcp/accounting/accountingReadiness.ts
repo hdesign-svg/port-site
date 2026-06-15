@@ -1,8 +1,6 @@
 import type { AccountingPeriod } from "./accountingPeriods";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
 
-export const ACCOUNTING_SYNC_SUMMARY = "2h ago";
-export const ACCOUNTING_SYNC_DETAIL = "Chase & Amex · last synced 2 hours ago";
 export const REVIEW_WINDOW_DAYS = 30;
 
 function daysBeforeAnchor(date: string, anchorDate: string) {

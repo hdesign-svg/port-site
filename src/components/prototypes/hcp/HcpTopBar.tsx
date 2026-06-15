@@ -17,6 +17,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { HcpSearchField } from "./HcpSearchField";
+import { LINKED_ACCOUNTS_SYNC_DETAIL } from "./hcpLinkedAccounts";
 import { hcpChromeBarSx, hcpColors, hcpIcon, hcpLayout, hcpMenuPaperSx } from "./hcpTheme";
 
 const TOP_ICON = hcpIcon.md;
@@ -161,8 +162,21 @@ export function HcpTopBar() {
           onClose={() => setBankAnchor(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 200 } } }}
+          slotProps={{ paper: { sx: { ...hcpMenuPaperSx, minWidth: 260 } } }}
         >
+          <Box
+            sx={{
+              px: 2,
+              pt: 1.5,
+              pb: 1,
+              pointerEvents: "none",
+            }}
+          >
+            <Typography variant="caption" sx={{ color: hcpColors.textSecondary, display: "block" }}>
+              {LINKED_ACCOUNTS_SYNC_DETAIL}
+            </Typography>
+          </Box>
+          <Divider sx={{ my: 0.5 }} />
           <MenuItem onClick={() => setBankAnchor(null)} sx={{ gap: 1.5, py: 1.25 }}>
             <Plus size={hcpIcon.sm} weight="regular" />
             <Typography variant="body1">{bankMenuPrimaryAction.label}</Typography>
