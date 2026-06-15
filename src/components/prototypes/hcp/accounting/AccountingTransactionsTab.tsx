@@ -1,10 +1,8 @@
 "use client";
 
-import { CaretDown, CheckCircle } from "@phosphor-icons/react";
+import { CheckCircle } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
   DataGrid,
@@ -21,13 +19,14 @@ import {
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
+import { AccountingCategorySelect } from "./AccountingCategorySelect";
 import { AccountingFlowFilterToggle } from "./AccountingFlowFilterToggle";
+import { AccountingReviewFocus } from "./AccountingReviewFocus";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingFlowFilter } from "./accountingTabs";
 import type { AccountingReadiness } from "./accountingReadiness";
 import { getReviewQueueTransactions } from "./accountingReadiness";
 import {
-  ACCOUNTING_CATEGORIES,
   formatAccountingAmount,
   formatAccountingDate,
   type AccountingCategory,
@@ -38,65 +37,9 @@ import {
   hcpDataGridSx,
   hcpDataGridToolbarSx,
   hcpFontWeight,
-  hcpMenuPaperSx,
+  hcpPrimaryButtonSx,
   hcpRadius,
 } from "../hcpTheme";
-
-const categorySelectSx = {
-  width: "100%",
-  maxWidth: 260,
-  "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: hcpColors.borderControl,
-  },
-  "& .MuiSelect-select": {
-    py: 0.75,
-    fontSize: "0.875rem",
-    lineHeight: 1.43,
-    color: hcpColors.textPrimary,
-  },
-  "& .MuiSelect-select.MuiSelect-displayEmpty": {
-    color: hcpColors.textMuted,
-  },
-};
-
-function CategorySelect({
-  value,
-  onChange,
-}: {
-  value: AccountingCategory | null;
-  onChange: (category: AccountingCategory) => void;
-}) {
-  const handleChange = (event: SelectChangeEvent<string>) => {
-    onChange(event.target.value as AccountingCategory);
-  };
-
-  return (
-    <FormControl size="small" fullWidth sx={categorySelectSx}>
-      <Select
-        value={value ?? ""}
-        displayEmpty
-        onChange={handleChange}
-        IconComponent={(props) => <CaretDown {...props} size={16} weight="bold" />}
-        renderValue={(selected) => {
-          if (!selected) {
-            return "Uncategorized";
-          }
-
-          return selected;
-        }}
-        MenuProps={{
-          slotProps: { paper: { sx: hcpMenuPaperSx } },
-        }}
-      >
-        {ACCOUNTING_CATEGORIES.map((category) => (
-          <MenuItem key={category} value={category} sx={{ py: 1 }}>
-            <Typography variant="body2">{category}</Typography>
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-}
 
 function filterBySearch(rows: AccountingTransactionRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -130,6 +73,7 @@ type AccountingTransactionsTabProps = {
   transactions: AccountingTransactionRow[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   readiness: AccountingReadiness;
+  onViewReports?: () => void;
 };
 
 export function AccountingTransactionsTab({
@@ -137,6 +81,7 @@ export function AccountingTransactionsTab({
   transactions,
   onTransactionsChange,
   readiness,
+  onViewReports,
 }: AccountingTransactionsTabProps) {
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -146,8 +91,10 @@ export function AccountingTransactionsTab({
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: "date", sort: "desc" }]);
 
-  const reviewCount = readiness.needsYouCount;
-  const showPagination = activeView === "all" || reviewCount > 10;
+  const reviewQueue = useMemo(
+    () => getReviewQueueTransactions(transactions),
+    [transactions],
+  );
 
   const handleCategoryChange = (id: string, category: AccountingCategory) => {
     onTransactionsChange(
@@ -165,21 +112,12 @@ export function AccountingTransactionsTab({
     setPaginationModel((current) => ({ ...current, page: 0 }));
   };
 
-  const visibleRows = useMemo(() => {
+  const allRows = useMemo(() => {
     let rows = transactions;
-
-    if (activeView === "toReview") {
-      rows = getReviewQueueTransactions(rows);
-    }
-
-    rows = filterByFlow(rows, activeView === "all" ? flowFilter : "all");
-
-    if (activeView === "all") {
-      rows = filterBySearch(rows, searchQuery);
-    }
-
+    rows = filterByFlow(rows, flowFilter);
+    rows = filterBySearch(rows, searchQuery);
     return rows;
-  }, [activeView, flowFilter, searchQuery, transactions]);
+  }, [flowFilter, searchQuery, transactions]);
 
   const columns: GridColDef<AccountingTransactionRow>[] = useMemo(
     () => [
@@ -238,9 +176,10 @@ export function AccountingTransactionsTab({
         minWidth: 200,
         sortable: false,
         renderCell: ({ row }) => (
-          <CategorySelect
+          <AccountingCategorySelect
             value={row.category}
             onChange={(category) => handleCategoryChange(row.id, category)}
+            placeholder="Uncategorized"
           />
         ),
       },
@@ -248,106 +187,117 @@ export function AccountingTransactionsTab({
     [],
   );
 
-  const showEmptyToReview = activeView === "toReview" && reviewCount === 0;
+  if (activeView === "toReview") {
+    if (reviewQueue.length === 0) {
+      return (
+        <AccountingTabPanel>
+          <Box
+            sx={{
+              bgcolor: hcpColors.paper,
+              border: `1px solid ${hcpColors.border}`,
+              borderRadius: hcpRadius.control,
+              px: 3,
+              py: 6,
+              textAlign: "center",
+            }}
+          >
+            <CheckCircle
+              size={40}
+              weight="fill"
+              color={hcpColors.successMain}
+              style={{ marginBottom: 12 }}
+            />
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
+              {readiness.periodLabel} is ready for your CPA
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: "auto", mb: 3 }}>
+              Every recent transaction is categorized. View your profit & loss or switch to All to
+              audit anytime.
+            </Typography>
+            {onViewReports ? (
+              <Button
+                variant="contained"
+                onClick={onViewReports}
+                sx={{
+                  borderRadius: hcpRadius.control,
+                  ...hcpPrimaryButtonSx,
+                  px: 3,
+                }}
+              >
+                View profit & loss
+              </Button>
+            ) : null}
+          </Box>
+        </AccountingTabPanel>
+      );
+    }
+
+    return (
+      <AccountingTabPanel>
+        <AccountingReviewFocus
+          transactions={transactions}
+          onTransactionsChange={onTransactionsChange}
+        />
+      </AccountingTabPanel>
+    );
+  }
 
   return (
     <AccountingTabPanel>
-      {showEmptyToReview ? (
-        <Box
-          sx={{
-            bgcolor: hcpColors.paper,
-            border: `1px solid ${hcpColors.border}`,
-            borderRadius: hcpRadius.control,
-            px: 3,
-            py: 6,
-            textAlign: "center",
-          }}
-        >
-          <CheckCircle
-            size={40}
-            weight="fill"
-            color={hcpColors.successMain}
-            style={{ marginBottom: 12 }}
-          />
-          <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
-            {readiness.periodLabel} is ready for your CPA
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: "auto" }}>
-            Every recent transaction is categorized. View reports or switch to All to audit anytime.
-          </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        Full transaction history
+      </Typography>
+      <Box
+        sx={{
+          bgcolor: hcpColors.paper,
+          border: `1px solid ${hcpColors.border}`,
+          borderRadius: hcpRadius.control,
+          overflow: "hidden",
+        }}
+      >
+        <Box sx={{ ...hcpDataGridToolbarSx, justifyContent: "flex-end" }}>
+          <Box sx={hcpTableToolbarActionsSx}>
+            <HcpTableToolbarSearchButton
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search transactions"
+            />
+            <AccountingFlowFilterToggle value={flowFilter} onChange={handleFlowFilterChange} />
+          </Box>
         </Box>
-      ) : (
-        <Box
-          sx={{
-            bgcolor: hcpColors.paper,
-            border: `1px solid ${hcpColors.border}`,
-            borderRadius: hcpRadius.control,
-            overflow: "hidden",
+
+        <DataGrid
+          rows={allRows}
+          columns={columns}
+          autoHeight
+          disableRowSelectionOnClick
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          showCellVerticalBorder={false}
+          showColumnVerticalBorder={false}
+          paginationMode="client"
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
+          pageSizeOptions={[10, 25, 50]}
+          rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
+          columnHeaderHeight={48}
+          sx={hcpDataGridSx}
+          slotProps={{
+            basePagination: {
+              material: {
+                ActionsComponent: HcpTablePaginationActions,
+                labelRowsPerPage: "Rows per page:",
+              },
+            },
           }}
-        >
-          {activeView === "toReview" ? (
-            <Box sx={{ px: 2, pt: 2, pb: 0 }}>
-              <Typography variant="body2" color="text.secondary">
-                HCP sorted the rest — confirm how these should be categorized.
-              </Typography>
-            </Box>
-          ) : null}
-
-          {activeView === "all" ? (
-            <Box sx={{ ...hcpDataGridToolbarSx, justifyContent: "flex-end" }}>
-              <Box sx={hcpTableToolbarActionsSx}>
-                <HcpTableToolbarSearchButton
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search transactions"
-                />
-                <AccountingFlowFilterToggle value={flowFilter} onChange={handleFlowFilterChange} />
-              </Box>
-            </Box>
-          ) : null}
-
-          <DataGrid
-            rows={visibleRows}
-            columns={columns}
-            autoHeight
-            disableRowSelectionOnClick
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-            showCellVerticalBorder={false}
-            showColumnVerticalBorder={false}
-            hideFooter={!showPagination}
-            sortingMode={showPagination ? "client" : undefined}
-            paginationMode={showPagination ? "client" : undefined}
-            paginationModel={showPagination ? paginationModel : undefined}
-            onPaginationModelChange={showPagination ? setPaginationModel : undefined}
-            sortModel={showPagination ? sortModel : undefined}
-            onSortModelChange={showPagination ? setSortModel : undefined}
-            pageSizeOptions={showPagination ? [10, 25, 50] : undefined}
-            rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
-            columnHeaderHeight={48}
-            sx={hcpDataGridSx}
-            slotProps={
-              showPagination
-                ? {
-                    basePagination: {
-                      material: {
-                        ActionsComponent: HcpTablePaginationActions,
-                        labelRowsPerPage: "Rows per page:",
-                      },
-                    },
-                  }
-                : undefined
-            }
-            localeText={{
-              noRowsLabel:
-                activeView === "toReview"
-                  ? "No transactions to review."
-                  : "No transactions match your filters.",
-            }}
-          />
-        </Box>
-      )}
+          localeText={{
+            noRowsLabel: "No transactions match your filters.",
+          }}
+        />
+      </Box>
     </AccountingTabPanel>
   );
 }

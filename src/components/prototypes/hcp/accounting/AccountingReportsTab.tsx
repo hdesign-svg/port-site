@@ -128,7 +128,7 @@ export function AccountingReportsTab({ transactions, readiness }: AccountingRepo
               Profit & loss
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {report.periodLabel} · {readiness.readyPercent}% of transactions categorized
+              {report.periodLabel}
             </Typography>
           </Box>
           <Button

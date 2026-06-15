@@ -3,7 +3,6 @@
 import Box from "@mui/material/Box";
 import { useMemo, useState } from "react";
 import { AccountingPageHeader } from "./AccountingPageHeader";
-import { AccountingReadinessStrip } from "./AccountingReadinessStrip";
 import { AccountingReportsTab } from "./AccountingReportsTab";
 import { AccountingTabBar } from "./AccountingTabBar";
 import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
@@ -46,7 +45,6 @@ export function AccountingScene() {
       >
         <Box sx={hcpContentHeaderSx}>
           <AccountingPageHeader />
-          <AccountingReadinessStrip readiness={readiness} />
           <AccountingTabBar
             activeTab={activeTab}
             showReviewDot={readiness.needsYouCount > 0}
@@ -61,6 +59,7 @@ export function AccountingScene() {
           transactions={transactions}
           onTransactionsChange={setTransactions}
           readiness={readiness}
+          onViewReports={() => setActiveTab("reports")}
         />
       ) : null}
       {activeTab === "reports" ? (
