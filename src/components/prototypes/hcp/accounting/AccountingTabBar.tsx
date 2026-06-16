@@ -61,27 +61,30 @@ export function AccountingTabBar({
               sx={{
                 ...hcpModuleTabItemSx,
                 ...(!isActive ? hcpModuleTabInactiveHoverSx : {}),
-                alignItems: "center",
-                gap: 0.75,
                 pb: `${hcpLayout.tabLabelToIndicator}px`,
               }}
             >
-              <Typography variant="tabLabel" sx={hcpModuleTabLabelSx(isActive)}>
-                {label}
-              </Typography>
-              {showDot ? (
-                <Box
-                  component="span"
-                  aria-hidden
-                  sx={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    bgcolor: hcpColors.primary,
-                    flexShrink: 0,
-                  }}
-                />
-              ) : null}
+              <Box
+                component="span"
+                sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}
+              >
+                <Typography variant="tabLabel" sx={hcpModuleTabLabelSx(isActive)}>
+                  {label}
+                </Typography>
+                {showDot ? (
+                  <Box
+                    component="span"
+                    aria-hidden
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      bgcolor: hcpColors.primary,
+                      flexShrink: 0,
+                    }}
+                  />
+                ) : null}
+              </Box>
               {isActive ? (
                 <Box aria-hidden sx={hcpModuleTabActiveIndicatorSx} />
               ) : null}

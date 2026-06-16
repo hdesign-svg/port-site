@@ -4,14 +4,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { type SxProps, type Theme } from "@mui/material/styles";
 import { type ReactNode } from "react";
-import {
-  hcpColors,
-  hcpChartCardBodySx,
-  hcpChartCardHeaderSx,
-  hcpContentSpacing,
-  hcpFontWeight,
-  hcpLayout,
-} from "../hcpTheme";
+import { HcpTableZoneHeader } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
+import { hcpColors, hcpContentSpacing } from "../hcpTheme";
 
 export const CHART_HEIGHT = 320;
 
@@ -122,43 +117,12 @@ export function ChartCardShell({
   bodySx?: SxProps<Theme>;
 }) {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        bgcolor: hcpColors.paper,
-        border: `1px solid ${hcpColors.border}`,
-        borderRadius: `${hcpLayout.controlRadius}px`,
-        overflow: "hidden",
-      }}
+    <HcpSurfaceCard
+      toolbarLeading={<HcpTableZoneHeader label={title} />}
+      toolbarActions={headerAside}
+      bodySx={bodySx}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 2,
-          ...hcpChartCardHeaderSx,
-          borderBottom: `1px solid ${hcpColors.borderSubtle}`,
-        }}
-      >
-        <Typography variant="body1" sx={{ fontWeight: hcpFontWeight.semibold }}>
-          {title}
-        </Typography>
-        {headerAside}
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          ...(bodySx ?? hcpChartCardBodySx),
-        }}
-      >
-        {children}
-      </Box>
-    </Box>
+      {children}
+    </HcpSurfaceCard>
   );
 }

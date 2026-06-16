@@ -1,8 +1,7 @@
 "use client";
 
-import { CreditCard, DotsThree, FunnelSimple, PencilSimple } from "@phosphor-icons/react";
+import { DotsThree, DownloadSimple, FunnelSimple, PencilSimple, Plus } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,8 +20,8 @@ import {
   HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   hcpTableStackedCellSx,
   hcpTableToolbarActionsSx,
-  hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { cardStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
@@ -38,11 +37,9 @@ import {
 import {
   hcpColors,
   hcpDataGridSx,
-  hcpDataGridToolbarSx,
   hcpIcon,
   hcpMenuPaperSx,
   hcpRadius,
-  hcpWorkspaceCreateButtonSx,
 } from "../hcpTheme";
 
 function filterCards(rows: ExpenseCardRow[], query: string) {
@@ -197,19 +194,10 @@ export function ExpensesCardsTab() {
 
   return (
     <ExpensesTabPanel>
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.border}`,
-          borderRadius: hcpRadius.control,
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={hcpDataGridToolbarSx}>
-          <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.cards} />
-          </Box>
-
+      <HcpSurfaceCard
+        flush
+        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.cards} />}
+        toolbarActions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={setSearchQuery} />
             <HcpTableToolbarIconButton
@@ -223,18 +211,15 @@ export function ExpensesCardsTab() {
             >
               <FunnelSimple size={hcpIcon.md} weight="regular" />
             </HcpTableToolbarIconButton>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<CreditCard size={hcpIcon.sm} weight="regular" />}
-              aria-label="New card"
-              sx={hcpWorkspaceCreateButtonSx}
-            >
-              New
-            </Button>
+            <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+              <DownloadSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+            <HcpTableToolbarIconButton tooltip="New card" aria-label="New card">
+              <Plus size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
           </Box>
-        </Box>
-
+        }
+      >
         <Menu
           id="cards-type-filter-menu"
           anchorEl={filterMenuAnchor}
@@ -271,7 +256,7 @@ export function ExpensesCardsTab() {
           columnHeaderHeight={48}
           sx={hcpDataGridSx}
         />
-      </Box>
+      </HcpSurfaceCard>
     </ExpensesTabPanel>
   );
 }

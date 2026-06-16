@@ -50,7 +50,6 @@ export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) 
               sx={{
                 ...hcpModuleTabItemSx,
                 ...(!isActive ? hcpModuleTabInactiveHoverSx : {}),
-                flexDirection: "column",
                 pb: `${hcpLayout.tabLabelToIndicator}px`,
               }}
             >

@@ -1,9 +1,8 @@
 "use client";
 
-import { DownloadSimple, Receipt } from "@phosphor-icons/react";
+import { DownloadSimple, FunnelSimple, Plus } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {
@@ -14,13 +13,13 @@ import {
 import { useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
-  HcpTableToolbarOverflowButton,
+  HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_DATA_GRID_ROW_HEIGHT,
   hcpTableToolbarActionsSx,
-  hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { billPayStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
@@ -37,10 +36,9 @@ import {
 import {
   hcpColors,
   hcpDataGridSx,
-  hcpDataGridToolbarSx,
   hcpIcon,
+  hcpMenuPaperSx,
   hcpRadius,
-  hcpWorkspaceCreateButtonSx,
 } from "../hcpTheme";
 
 function filterBills(rows: BillPayRow[], query: string) {
@@ -130,13 +128,17 @@ const billColumns: GridColDef<BillPayRow>[] = [
 export function ExpensesBillPayTab() {
   const [searchQuery, setSearchQuery] = useState("");
   const [billFilter, setBillFilter] = useState<BillPayFilterOption>("all");
-  const [moreMenuAnchor, setMoreMenuAnchor] = useState<null | HTMLElement>(null);
+  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 15,
   });
 
-  const moreMenuOpen = Boolean(moreMenuAnchor);
+  const filterMenuOpen = Boolean(filterMenuAnchor);
+  const filterAriaLabel =
+    billFilter === "all"
+      ? "Filter"
+      : `Filter: ${BILL_PAY_FILTER_OPTIONS.find((option) => option.id === billFilter)?.label ?? "All bills"}`;
 
   const visibleRows = useMemo(() => {
     const filtered = filterBills(expenseBills, searchQuery);
@@ -150,62 +152,58 @@ export function ExpensesBillPayTab() {
 
   const handleFilterChange = (next: BillPayFilterOption) => {
     setBillFilter(next);
-    setMoreMenuAnchor(null);
+    setFilterMenuAnchor(null);
     setPaginationModel((current) => ({ ...current, page: 0 }));
   };
 
   return (
     <ExpensesTabPanel>
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.border}`,
-          borderRadius: hcpRadius.control,
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={hcpDataGridToolbarSx}>
-          <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.bills} />
-          </Box>
-
+      <HcpSurfaceCard
+        flush
+        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.bills} />}
+        toolbarActions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
-            <HcpTableToolbarOverflowButton
-              menuId="bills-toolbar-more-menu"
-              open={moreMenuOpen}
-              anchorEl={moreMenuAnchor}
-              onOpen={setMoreMenuAnchor}
-              onClose={() => setMoreMenuAnchor(null)}
+            <HcpTableToolbarIconButton
+              tooltip={filterAriaLabel}
+              aria-label={filterAriaLabel}
+              aria-haspopup="menu"
+              aria-expanded={filterMenuOpen ? "true" : undefined}
+              aria-controls={filterMenuOpen ? "bills-filter-menu" : undefined}
               active={billFilter !== "all"}
+              onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
             >
-              {BILL_PAY_FILTER_OPTIONS.map((option) => (
-                <MenuItem
-                  key={option.id}
-                  selected={billFilter === option.id}
-                  onClick={() => handleFilterChange(option.id)}
-                  sx={{ py: 1 }}
-                >
-                  <Typography variant="body2">{option.label}</Typography>
-                </MenuItem>
-              ))}
-              <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={() => setMoreMenuAnchor(null)} sx={{ gap: 1.5, py: 1.25 }}>
-                <DownloadSimple size={hcpIcon.sm} weight="regular" />
-                <Typography variant="body2">Export</Typography>
-              </MenuItem>
-            </HcpTableToolbarOverflowButton>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<Receipt size={hcpIcon.sm} weight="regular" />}
-              aria-label="New bill"
-              sx={hcpWorkspaceCreateButtonSx}
-            >
-              New
-            </Button>
+              <FunnelSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+            <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+              <DownloadSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+            <HcpTableToolbarIconButton tooltip="New bill" aria-label="New bill">
+              <Plus size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
           </Box>
-        </Box>
+        }
+      >
+        <Menu
+          id="bills-filter-menu"
+          anchorEl={filterMenuAnchor}
+          open={filterMenuOpen}
+          onClose={() => setFilterMenuAnchor(null)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+        >
+          {BILL_PAY_FILTER_OPTIONS.map((option) => (
+            <MenuItem
+              key={option.id}
+              selected={billFilter === option.id}
+              onClick={() => handleFilterChange(option.id)}
+              sx={{ py: 1 }}
+            >
+              <Typography variant="body2">{option.label}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
 
         <DataGrid
           rows={visibleRows}
@@ -233,7 +231,7 @@ export function ExpensesBillPayTab() {
             },
           }}
         />
-      </Box>
+      </HcpSurfaceCard>
     </ExpensesTabPanel>
   );
 }

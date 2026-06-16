@@ -1,8 +1,10 @@
 "use client";
 
-import { CheckCircle } from "@phosphor-icons/react";
+import { CheckCircle, DownloadSimple, FunnelSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {
   DataGrid,
@@ -14,16 +16,21 @@ import { useEffect, useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
+  HcpTableZoneHeader,
   HCP_DATA_GRID_ROW_HEIGHT,
   hcpTableStackedCellSx,
-  hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
-import { AccountingFlowFilterToggle } from "./AccountingFlowFilterToggle";
 import { AccountingReviewFocus } from "./AccountingReviewFocus";
 import { AccountingTabPanel } from "./AccountingTabPanel";
-import type { AccountingFlowFilter } from "./accountingTabs";
+import {
+  ACCOUNTING_FLOW_FILTERS,
+  ACCOUNTING_ZONE_TITLES,
+  type AccountingFlowFilter,
+} from "./accountingTabs";
 import type { AccountingPeriod } from "./accountingPeriods";
 import type { AccountingReadiness } from "./accountingReadiness";
 import { getReviewQueueTransactions } from "./accountingReadiness";
@@ -35,8 +42,9 @@ import {
 import {
   hcpColors,
   hcpDataGridSx,
-  hcpDataGridToolbarSx,
   hcpFontWeight,
+  hcpIcon,
+  hcpMenuPaperSx,
   hcpPrimaryButtonSx,
   hcpRadius,
 } from "../hcpTheme";
@@ -84,6 +92,7 @@ type AccountingTransactionsTabProps = {
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   readiness: AccountingReadiness;
   onViewReports?: () => void;
+  onSwitchToTransactions?: () => void;
 };
 
 export function AccountingTransactionsTab({
@@ -93,14 +102,22 @@ export function AccountingTransactionsTab({
   onTransactionsChange,
   readiness,
   onViewReports,
+  onSwitchToTransactions,
 }: AccountingTransactionsTabProps) {
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: "date", sort: "desc" }]);
+
+  const filterMenuOpen = Boolean(filterMenuAnchor);
+  const filterOption =
+    ACCOUNTING_FLOW_FILTERS.find((option) => option.id === flowFilter) ?? ACCOUNTING_FLOW_FILTERS[0];
+  const filterAriaLabel =
+    flowFilter === "all" ? "Filter" : `Filter: ${filterOption.label}`;
 
   const reviewQueue = useMemo(
     () => getReviewQueueTransactions(transactions, period),
@@ -118,6 +135,7 @@ export function AccountingTransactionsTab({
 
   const handleFlowFilterChange = (value: AccountingFlowFilter) => {
     setFlowFilter(value);
+    setFilterMenuAnchor(null);
     setPaginationModel((current) => ({ ...current, page: 0 }));
   };
 
@@ -181,11 +199,22 @@ export function AccountingTransactionsTab({
         flex: 1.1,
         minWidth: 168,
         sortable: false,
-        renderCell: ({ row }) => (
-          <HcpTableCellSecondary>
-            {row.category ?? "Uncategorized"}
-          </HcpTableCellSecondary>
-        ),
+        renderCell: ({ row }) => {
+          if (row.category === null) {
+            return (
+              <Typography
+                variant="body2"
+                component="span"
+                noWrap
+                sx={{ color: hcpColors.textMuted, fontStyle: "italic" }}
+              >
+                Uncategorized
+              </Typography>
+            );
+          }
+
+          return <HcpTableCellSecondary>{row.category}</HcpTableCellSecondary>;
+        },
       },
     ],
     [],
@@ -195,43 +224,71 @@ export function AccountingTransactionsTab({
     if (reviewQueue.length === 0) {
       return (
         <AccountingTabPanel>
-          <Box
-            sx={{
-              bgcolor: hcpColors.paper,
-              border: `1px solid ${hcpColors.border}`,
-              borderRadius: hcpRadius.control,
-              px: 3,
-              py: 6,
-              textAlign: "center",
-            }}
-          >
-            <CheckCircle
-              size={40}
-              weight="fill"
-              color={hcpColors.successMain}
-              style={{ marginBottom: 12 }}
-            />
-            <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
-              {readiness.periodLabel} is ready for your CPA
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: "auto", mb: 3 }}>
-              Every recent transaction is categorized. View your profit & loss or switch to
-              Transactions to audit anytime.
-            </Typography>
-            {onViewReports ? (
-              <Button
-                variant="contained"
-                onClick={onViewReports}
-                sx={{
-                  borderRadius: hcpRadius.control,
-                  ...hcpPrimaryButtonSx,
-                  px: 3,
-                }}
-              >
-                View profit & loss
-              </Button>
-            ) : null}
-          </Box>
+          <HcpSurfaceCard toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.review} />}>
+            <Box sx={{ py: 4, textAlign: "center" }}>
+              {period.isCurrent ? (
+                <>
+                  <CheckCircle
+                    size={40}
+                    weight="fill"
+                    color={hcpColors.successMain}
+                    style={{ marginBottom: 12 }}
+                  />
+                  <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
+                    {readiness.periodLabel} is ready for your CPA
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ maxWidth: 360, mx: "auto", mb: 3 }}
+                  >
+                    Every recent transaction is categorized. View your profit & loss or switch to
+                    Transactions to audit anytime.
+                  </Typography>
+                  {onViewReports ? (
+                    <Button
+                      variant="contained"
+                      onClick={onViewReports}
+                      sx={{
+                        borderRadius: hcpRadius.control,
+                        ...hcpPrimaryButtonSx,
+                        px: 3,
+                      }}
+                    >
+                      View profit & loss
+                    </Button>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
+                    Nothing to review for {period.label}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ maxWidth: 360, mx: "auto", mb: 3 }}
+                  >
+                    Review is only for recent activity in the current month. Open the register to
+                    audit {period.label} anytime.
+                  </Typography>
+                  {onSwitchToTransactions ? (
+                    <Button
+                      variant="contained"
+                      onClick={onSwitchToTransactions}
+                      sx={{
+                        borderRadius: hcpRadius.control,
+                        ...hcpPrimaryButtonSx,
+                        px: 3,
+                      }}
+                    >
+                      View register
+                    </Button>
+                  ) : null}
+                </>
+              )}
+            </Box>
+          </HcpSurfaceCard>
         </AccountingTabPanel>
       );
     }
@@ -249,24 +306,53 @@ export function AccountingTransactionsTab({
 
   return (
     <AccountingTabPanel>
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.border}`,
-          borderRadius: hcpRadius.control,
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={{ ...hcpDataGridToolbarSx, justifyContent: "flex-end" }}>
-          <Box sx={hcpTableToolbarActionsSx}>
+      <HcpSurfaceCard
+        flush
+        toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.register} />}
+        toolbarActions={
+          <>
             <HcpTableToolbarSearchButton
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search transactions"
             />
-            <AccountingFlowFilterToggle value={flowFilter} onChange={handleFlowFilterChange} />
-          </Box>
-        </Box>
+            <HcpTableToolbarIconButton
+              tooltip={filterAriaLabel}
+              aria-label={filterAriaLabel}
+              aria-haspopup="menu"
+              aria-expanded={filterMenuOpen ? "true" : undefined}
+              aria-controls={filterMenuOpen ? "accounting-flow-filter-menu" : undefined}
+              active={flowFilter !== "all"}
+              onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
+            >
+              <FunnelSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+            <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+              <DownloadSimple size={hcpIcon.md} weight="regular" />
+            </HcpTableToolbarIconButton>
+          </>
+        }
+      >
+        <Menu
+          id="accounting-flow-filter-menu"
+          anchorEl={filterMenuAnchor}
+          open={filterMenuOpen}
+          onClose={() => setFilterMenuAnchor(null)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+        >
+          {ACCOUNTING_FLOW_FILTERS.map((option) => (
+            <MenuItem
+              key={option.id}
+              selected={flowFilter === option.id}
+              onClick={() => handleFlowFilterChange(option.id)}
+              sx={{ py: 1 }}
+            >
+              <Typography variant="body2">{option.label}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
 
         <DataGrid
           rows={allRows}
@@ -299,7 +385,7 @@ export function AccountingTransactionsTab({
             noRowsLabel: "No transactions match your filters.",
           }}
         />
-      </Box>
+      </HcpSurfaceCard>
     </AccountingTabPanel>
   );
 }

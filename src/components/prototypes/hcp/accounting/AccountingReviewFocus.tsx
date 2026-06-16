@@ -7,6 +7,8 @@ import Collapse from "@mui/material/Collapse";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
+import { HcpTableZoneHeader } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { AccountingCategorySelect } from "./AccountingCategorySelect";
 import {
   applyReviewGroup,
@@ -15,6 +17,7 @@ import {
   type ApplyReviewGroupInput,
 } from "./accountingReviewGroups";
 import type { AccountingPeriod } from "./accountingPeriods";
+import { ACCOUNTING_ZONE_TITLES } from "./accountingTabs";
 import {
   formatAccountingAmount,
   formatAccountingDate,
@@ -24,10 +27,11 @@ import {
 import {
   hcpColors,
   hcpFontWeight,
+  hcpLayout,
   hcpPrimaryButtonSx,
   hcpRadius,
-  hcpSecondaryButtonSx,
 } from "../hcpTheme";
+import { hcpTypographyRoles } from "../hcpTypography";
 
 type AccountingReviewFocusProps = {
   period: AccountingPeriod;
@@ -35,15 +39,20 @@ type AccountingReviewFocusProps = {
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
 };
 
-const chipButtonSx = {
+const reviewChipSx = {
   borderRadius: 999,
   textTransform: "none",
-  ...hcpSecondaryButtonSx,
-  bgcolor: hcpColors.paper,
+  border: `1px solid ${hcpColors.borderControl}`,
+  bgcolor: hcpColors.surfaceMuted,
+  color: hcpColors.textPrimary,
+  minHeight: hcpLayout.chromeControlHeight,
   px: 2,
+  fontSize: "0.875rem",
+  lineHeight: 1.43,
+  fontWeight: hcpFontWeight.regular,
   "&:hover": {
-    bgcolor: hcpColors.primaryLight,
-    borderColor: hcpColors.primary,
+    bgcolor: hcpColors.paper,
+    borderColor: hcpColors.borderInput,
   },
 } as const;
 
@@ -64,7 +73,6 @@ export function AccountingReviewFocus({
   const [applyToFuture, setApplyToFuture] = useState(false);
   const [showOtherCategory, setShowOtherCategory] = useState(false);
   const [otherCategory, setOtherCategory] = useState<AccountingCategory | null>(null);
-  const [completedGroups, setCompletedGroups] = useState(0);
 
   useEffect(() => {
     setApplyToFuture(false);
@@ -76,7 +84,9 @@ export function AccountingReviewFocus({
     return null;
   }
 
-  const totalSteps = completedGroups + groups.length;
+  const remainingGroups = groups.length - 1;
+  const transactionLabel =
+    activeTransactions.length === 1 ? "1 transaction" : `${activeTransactions.length} transactions`;
 
   const applyCategory = (category: AccountingCategory) => {
     const input: ApplyReviewGroupInput = {
@@ -87,29 +97,29 @@ export function AccountingReviewFocus({
     };
 
     onTransactionsChange(applyReviewGroup(transactions, input));
-    setCompletedGroups((current) => current + 1);
     setApplyToFuture(false);
     setShowOtherCategory(false);
     setOtherCategory(null);
   };
 
   return (
-    <Box sx={{ maxWidth: 560, mx: "auto", width: "100%" }}>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: "center" }}>
-        {completedGroups} of {totalSteps} done
-      </Typography>
+    <HcpSurfaceCard toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.review} />}>
+      <Box sx={{ maxWidth: 560, mx: "auto", width: "100%" }}>
+        {remainingGroups > 0 ? (
+          <Typography
+            variant={hcpTypographyRoles.caption}
+            color="text.secondary"
+            sx={{ mb: 2, textAlign: "center" }}
+          >
+            {remainingGroups === 1 ? "1 group left after this" : `${remainingGroups} groups left after this`}
+          </Typography>
+        ) : null}
 
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.border}`,
-          borderRadius: hcpRadius.control,
-          px: 3,
-          py: 3,
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: hcpFontWeight.semibold, mb: 2 }}>
+        <Typography variant={hcpTypographyRoles.sectionTitle} sx={{ fontWeight: hcpFontWeight.semibold, mb: 0.5 }}>
           {activeGroup.label}
+        </Typography>
+        <Typography variant={hcpTypographyRoles.labelSecondary} color="text.secondary" sx={{ mb: 2 }}>
+          {transactionLabel}
         </Typography>
 
         <Box sx={{ mb: 3 }}>
@@ -167,7 +177,7 @@ export function AccountingReviewFocus({
           sx={{ alignItems: "center", mb: 2, mx: 0 }}
         />
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
+        <Typography variant={hcpTypographyRoles.labelSecondary} color="text.secondary" sx={{ mb: 1.25 }}>
           Pick a category
         </Typography>
 
@@ -178,7 +188,7 @@ export function AccountingReviewFocus({
               variant="outlined"
               size="small"
               onClick={() => applyCategory(category)}
-              sx={chipButtonSx}
+              sx={reviewChipSx}
             >
               {category}
             </Button>
@@ -204,7 +214,7 @@ export function AccountingReviewFocus({
         ) : null}
 
         <Collapse in={showOtherCategory}>
-          <Box sx={{ pt: 2, borderTop: `1px solid ${hcpColors.borderSubtle}`, mt: showOtherCategory ? 0 : 0 }}>
+          <Box sx={{ pt: 2, borderTop: `1px solid ${hcpColors.borderSubtle}` }}>
             <AccountingCategorySelect
               value={otherCategory}
               onChange={setOtherCategory}
@@ -226,6 +236,6 @@ export function AccountingReviewFocus({
           </Box>
         </Collapse>
       </Box>
-    </Box>
+    </HcpSurfaceCard>
   );
 }

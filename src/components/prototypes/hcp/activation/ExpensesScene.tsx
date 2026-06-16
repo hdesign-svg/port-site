@@ -51,8 +51,9 @@ export function ExpensesScene({ activeTab, onTabChange }: ExpensesSceneProps) {
         }}
       >
         <Box sx={hcpContentHeaderSx}>
-          <ExpensesPageHeader />
-          <ExpensesTabBar activeTab={activeTab} onTabChange={onTabChange} />
+          <ExpensesPageHeader
+            tabs={<ExpensesTabBar activeTab={activeTab} onTabChange={onTabChange} />}
+          />
         </Box>
       </Box>
 

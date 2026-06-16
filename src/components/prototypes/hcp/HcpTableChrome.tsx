@@ -42,7 +42,7 @@ export const hcpTableToolbarLeadingSx = {
   minWidth: 0,
 } as const;
 
-/** Right toolbar cluster — icons first, primary CTA last */
+/** Right toolbar cluster — filter, export, and create as standalone icon buttons */
 export const hcpTableToolbarActionsSx = {
   display: "flex",
   alignItems: "center",
@@ -219,12 +219,12 @@ type HcpTableToolbarOverflowButtonProps = {
   onOpen: (anchor: HTMLElement) => void;
   onClose: () => void;
   tooltip?: string;
-  /** e.g. filter applied in overflow menu */
+  /** e.g. secondary action applied from overflow menu */
   active?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
-/** Overflow menu — filter, export, and other secondary table actions */
+/** Overflow menu — other table actions; filter and export stay as standalone toolbar icons */
 export function HcpTableToolbarOverflowButton({
   menuId,
   open,

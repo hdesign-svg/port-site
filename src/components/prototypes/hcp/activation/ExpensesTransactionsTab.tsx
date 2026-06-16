@@ -18,9 +18,9 @@ import {
   HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   hcpTableStackedCellSx,
   hcpTableToolbarActionsSx,
-  hcpTableToolbarLeadingSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
 import {
@@ -30,11 +30,8 @@ import {
   type ExpensesTransactionRow,
 } from "./expensesTransactionsData";
 import {
-  hcpColors,
   hcpDataGridSx,
-  hcpDataGridToolbarSx,
   hcpIcon,
-  hcpRadius,
 } from "../hcpTheme";
 
 function filterRows(rows: ExpensesTransactionRow[], query: string) {
@@ -132,27 +129,18 @@ export function ExpensesTransactionsTab() {
 
   return (
     <ExpensesTabPanel>
-      <Box
-        sx={{
-          bgcolor: hcpColors.paper,
-          border: `1px solid ${hcpColors.border}`,
-          borderRadius: hcpRadius.control,
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={hcpDataGridToolbarSx}>
-          <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.transactions} />
-          </Box>
-
+      <HcpSurfaceCard
+        flush
+        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.transactions} />}
+        toolbarActions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
             <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
               <DownloadSimple size={hcpIcon.md} weight="regular" />
             </HcpTableToolbarIconButton>
           </Box>
-        </Box>
-
+        }
+      >
         <DataGrid
           rows={visibleRows}
           columns={transactionColumns}
@@ -182,7 +170,7 @@ export function ExpensesTransactionsTab() {
             },
           }}
         />
-      </Box>
+      </HcpSurfaceCard>
     </ExpensesTabPanel>
   );
 }

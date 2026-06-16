@@ -158,6 +158,7 @@ export const hcpLayout = {
 export const hcpModuleTabItemSx = {
   position: "relative" as const,
   display: "inline-flex",
+  flexDirection: "column" as const,
   flexShrink: 0,
   cursor: "pointer",
   bgcolor: "transparent",
@@ -222,6 +223,31 @@ export const hcpContentHeaderSx = {
   width: "100%",
   ...hcpContentMarginSx,
   boxSizing: "border-box" as const,
+} as const;
+
+/** Module page header — title row with optional top-right chrome; tabs use hcpModulePageHeaderTabsSx */
+export const hcpModulePageHeaderSx = {
+  position: "relative" as const,
+} as const;
+
+/** Period menu, balance metric, etc. — does not push the tab bar down */
+export const hcpModulePageHeaderChromeSx = {
+  position: "absolute" as const,
+  top: 0,
+  right: 0,
+} as const;
+
+/** Single-line title row — vertically centers page title with a chrome control (e.g. period menu) */
+export const hcpModulePageHeaderTitleRowSx = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 2,
+} as const;
+
+/** Tab bar — same inset below the page title as hcpPageHeaderZoneSx pt above it */
+export const hcpModulePageHeaderTabsSx = {
+  mt: `${hcpContentSpacing.zoneInset}px`,
 } as const;
 
 /** Core content page column — max width inside equal margins */

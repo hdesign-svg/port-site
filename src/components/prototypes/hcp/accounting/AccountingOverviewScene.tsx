@@ -58,11 +58,13 @@ export function AccountingScene() {
             period={selectedPeriod}
             transactions={transactions}
             onPeriodChange={setSelectedPeriod}
-          />
-          <AccountingTabBar
-            activeTab={activeTab}
-            showReviewDot={currentPeriodReviewCount > 0}
-            onTabChange={setActiveTab}
+            tabs={
+              <AccountingTabBar
+                activeTab={activeTab}
+                showReviewDot={currentPeriodReviewCount > 0}
+                onTabChange={setActiveTab}
+              />
+            }
           />
         </Box>
       </Box>
@@ -75,6 +77,7 @@ export function AccountingScene() {
           onTransactionsChange={setTransactions}
           readiness={readiness}
           onViewReports={() => setActiveTab("reports")}
+          onSwitchToTransactions={() => setActiveTab("all")}
         />
       ) : null}
       {activeTab === "reports" ? (
