@@ -1,14 +1,17 @@
 import type { AccountingPeriod } from "./accountingPeriods";
 import type { AccountingCategory, AccountingTransactionRow } from "./accountingTransactionData";
 
+/** Prototype business name — centered on the report title block */
+export const ACCOUNTING_REPORT_BUSINESS_NAME = "Summit Home Services";
+
 export type ProfitAndLossLine = {
   label: string;
   amount: number;
-  indent?: boolean;
 };
 
 export type ProfitAndLossReport = {
   periodLabel: string;
+  periodShortLabel: string;
   income: ProfitAndLossLine[];
   expenses: ProfitAndLossLine[];
   totalIncome: number;
@@ -30,9 +33,21 @@ export function buildProfitAndLossReport(
     (row) => row.date.startsWith(period.prefix) && row.category !== null,
   );
 
-  const incomeTotal = periodRows
-    .filter(isIncomeRow)
-    .reduce((sum, row) => sum + row.amount, 0);
+  const incomeTotals = new Map<string, number>();
+
+  for (const row of periodRows) {
+    if (!isIncomeRow(row) || !row.category) {
+      continue;
+    }
+
+    incomeTotals.set(row.category, (incomeTotals.get(row.category) ?? 0) + row.amount);
+  }
+
+  const income = [...incomeTotals.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .map(([label, amount]) => ({ label, amount }));
+
+  const incomeTotal = income.reduce((sum, line) => sum + line.amount, 0);
 
   const expenseTotals = new Map<AccountingCategory, number>();
 
@@ -46,13 +61,14 @@ export function buildProfitAndLossReport(
 
   const expenses = [...expenseTotals.entries()]
     .sort((left, right) => right[1] - left[1])
-    .map(([label, amount]) => ({ label, amount, indent: true }));
+    .map(([label, amount]) => ({ label, amount }));
 
   const totalExpenses = expenses.reduce((sum, line) => sum + line.amount, 0);
 
   return {
     periodLabel: period.label,
-    income: incomeTotal > 0 ? [{ label: "Income", amount: incomeTotal }] : [],
+    periodShortLabel: period.shortLabel,
+    income,
     expenses,
     totalIncome: incomeTotal,
     totalExpenses,
@@ -64,7 +80,7 @@ export function formatReportCurrency(amount: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 }

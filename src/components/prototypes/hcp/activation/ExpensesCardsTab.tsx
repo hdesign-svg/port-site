@@ -2,7 +2,6 @@
 
 import { DotsThree, DownloadSimple, FunnelSimple, PencilSimple, Plus } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -14,11 +13,11 @@ import { useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableStackedCell,
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
-  HCP_DATA_GRID_STACKED_ROW_HEIGHT,
-  hcpTableStackedCellSx,
+  HCP_STACKED_DATA_GRID_DEFAULTS,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
@@ -34,13 +33,7 @@ import {
   type CardTypeFilter,
   type ExpenseCardRow,
 } from "./expensesCardsData";
-import {
-  hcpColors,
-  hcpDataGridSx,
-  hcpIcon,
-  hcpMenuPaperSx,
-  hcpRadius,
-} from "../hcpTheme";
+import { hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
 
 function filterCards(rows: ExpenseCardRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -64,38 +57,33 @@ function filterCards(rows: ExpenseCardRow[], query: string) {
 
 function CardholderCell({ row }: { row: ExpenseCardRow }) {
   return (
-    <Box sx={hcpTableStackedCellSx}>
-      <HcpTableCellPrimary>{row.cardholder}</HcpTableCellPrimary>
-      <HcpTableCellSecondary tabularNums>{row.cardNumber}</HcpTableCellSecondary>
-    </Box>
+    <HcpTableStackedCell
+      primary={row.cardholder}
+      secondary={row.cardNumber}
+      secondaryTabularNums
+    />
   );
 }
 
 function CardActionsMenu({ row }: { row: ExpenseCardRow }) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(menuAnchor);
+  const actionsLabel = `Actions for ${row.cardholder}'s ${row.purpose} card`;
 
   return (
     <>
-      <IconButton
-        aria-label={`Actions for ${row.cardholder}'s ${row.purpose} card`}
+      <HcpTableToolbarIconButton
+        tooltip="More options"
+        aria-label={actionsLabel}
         aria-haspopup="menu"
         aria-expanded={menuOpen ? "true" : undefined}
         onClick={(event) => {
           event.stopPropagation();
           setMenuAnchor(event.currentTarget);
         }}
-        sx={{
-          width: hcpIcon.md,
-          height: hcpIcon.md,
-          p: 0,
-          color: hcpColors.chromeIcon,
-          borderRadius: hcpRadius.control,
-          "&:hover": { bgcolor: "rgba(33, 33, 33, 0.04)" },
-        }}
       >
-        <DotsThree size={hcpIcon.md} weight="regular" />
-      </IconButton>
+        <DotsThree size={hcpIcon.md} weight="bold" />
+      </HcpTableToolbarIconButton>
 
       <Menu
         anchorEl={menuAnchor}
@@ -252,9 +240,7 @@ export function ExpensesCardsTab() {
           showCellVerticalBorder={false}
           showColumnVerticalBorder={false}
           hideFooter
-          rowHeight={HCP_DATA_GRID_STACKED_ROW_HEIGHT}
-          columnHeaderHeight={48}
-          sx={hcpDataGridSx}
+          {...HCP_STACKED_DATA_GRID_DEFAULTS}
         />
       </HcpSurfaceCard>
     </ExpensesTabPanel>

@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { HCP_LINKED_ACCOUNTS } from "../hcpLinkedAccounts";
 import { hcpColors, hcpFontWeight, hcpIcon, hcpLayout, hcpPrimaryButtonSx, hcpRadius } from "../hcpTheme";
 
 type PlaidConnectPanelProps = {
@@ -14,9 +15,9 @@ type PlaidConnectPanelProps = {
 };
 
 const INSTITUTIONS = [
-  { name: "Chase Business Checking ···1233", detail: "Checking" },
-  { name: "Chase Ink Business ···8812", detail: "Credit card" },
-  { name: "Amex Business ···4401", detail: "Credit card" },
+  { name: HCP_LINKED_ACCOUNTS.checking, detail: "Checking" },
+  { name: HCP_LINKED_ACCOUNTS.card, detail: "Credit card" },
+  { name: HCP_LINKED_ACCOUNTS.amex, detail: "Credit card" },
 ] as const;
 
 export function PlaidConnectPanel({ onBack, onContinue }: PlaidConnectPanelProps) {

@@ -7,7 +7,7 @@ import Menu from "@mui/material/Menu";
 import Popover from "@mui/material/Popover";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { HcpSearchField } from "./HcpSearchField";
 import {
   hcpDataGridPaginationIconButtonSx,
@@ -18,19 +18,46 @@ import {
 } from "./hcpTheme";
 import { hcpTypographyRoles } from "./hcpTypography";
 
-/** Single-line rows — Transactions, Bills */
-export const HCP_DATA_GRID_ROW_HEIGHT = 56;
-
-/** Stacked primary + secondary cells — Cards, Transactions */
-export const HCP_DATA_GRID_STACKED_ROW_HEIGHT = 68;
+/** Row height tokens and stacked Data Grid preset — re-exported for table modules */
+export {
+  HCP_DATA_GRID_COLUMN_HEADER_HEIGHT,
+  HCP_DATA_GRID_ROW_HEIGHT,
+  HCP_DATA_GRID_STACKED_ROW_HEIGHT,
+  HCP_STACKED_DATA_GRID_DEFAULTS,
+  hcpDataGridStackedSx,
+} from "./hcpTheme";
 
 export const hcpTableStackedCellSx = {
   display: "flex",
   flexDirection: "column",
-  gap: 0.25,
+  justifyContent: "center",
+  gap: 0.5,
   minWidth: 0,
-  py: 0.25,
+  width: "100%",
+  lineHeight: 1,
 } as const;
+
+type HcpTableStackedCellProps = {
+  primary: ReactNode;
+  secondary?: ReactNode;
+  secondaryTabularNums?: boolean;
+};
+
+/** Two-line table cell — description + meta, cardholder + number, etc. */
+export function HcpTableStackedCell({
+  primary,
+  secondary,
+  secondaryTabularNums,
+}: HcpTableStackedCellProps) {
+  return (
+    <Box sx={hcpTableStackedCellSx}>
+      <HcpTableCellPrimary>{primary}</HcpTableCellPrimary>
+      {secondary != null && secondary !== "" ? (
+        <HcpTableCellSecondary tabularNums={secondaryTabularNums}>{secondary}</HcpTableCellSecondary>
+      ) : null}
+    </Box>
+  );
+}
 
 /** Left toolbar cluster — zone title */
 export const hcpTableToolbarLeadingSx = {
@@ -77,29 +104,38 @@ type HcpTableCellProps = {
   children: ReactNode;
   noWrap?: boolean;
   tabularNums?: boolean;
+  sx?: ComponentProps<typeof Typography>["sx"];
 };
 
-export function HcpTableCellPrimary({ children, noWrap = true, tabularNums }: HcpTableCellProps) {
+export function HcpTableCellPrimary({ children, noWrap = true, tabularNums, sx }: HcpTableCellProps) {
   return (
     <Typography
       variant={hcpTypographyRoles.tableCell}
       noWrap={noWrap}
       component="span"
-      sx={tabularNums ? { fontVariantNumeric: "tabular-nums" } : undefined}
+      sx={{
+        display: "block",
+        ...(tabularNums ? { fontVariantNumeric: "tabular-nums" } : undefined),
+        ...sx,
+      }}
     >
       {children}
     </Typography>
   );
 }
 
-export function HcpTableCellSecondary({ children, noWrap = true, tabularNums }: HcpTableCellProps) {
+export function HcpTableCellSecondary({ children, noWrap = true, tabularNums, sx }: HcpTableCellProps) {
   return (
     <Typography
       variant={hcpTypographyRoles.tableCellSecondary}
       color="text.secondary"
       noWrap={noWrap}
       component="span"
-      sx={tabularNums ? { fontVariantNumeric: "tabular-nums" } : undefined}
+      sx={{
+        display: "block",
+        ...(tabularNums ? { fontVariantNumeric: "tabular-nums" } : undefined),
+        ...sx,
+      }}
     >
       {children}
     </Typography>

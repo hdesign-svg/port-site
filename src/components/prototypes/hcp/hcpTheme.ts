@@ -461,6 +461,7 @@ export const hcpDataGridToolbarSx = {
   justifyContent: "space-between",
   gap: 2,
   flexWrap: "wrap",
+  minHeight: hcpLayout.chromeControlHeight + hcpContentSpacing.surfaceInsetY * 2,
   px: `${hcpContentSpacing.surfaceInsetX}px`,
   py: `${hcpContentSpacing.surfaceInsetY}px`,
   bgcolor: hcpColors.paper,
@@ -468,6 +469,14 @@ export const hcpDataGridToolbarSx = {
 } as const;
 
 /** MUI X Data Grid — card-embedded tables */
+export const HCP_DATA_GRID_ROW_HEIGHT = 56;
+
+/** Stacked primary + secondary cells — Cards, Expenses transactions, Accounting register */
+export const HCP_DATA_GRID_STACKED_ROW_HEIGHT = 68;
+
+/** Column header row — matches tableHeader tier (caption) */
+export const HCP_DATA_GRID_COLUMN_HEADER_HEIGHT = 48;
+
 export const hcpDataGridSx = {
   border: 0,
   bgcolor: hcpColors.paper,
@@ -491,8 +500,8 @@ export const hcpDataGridSx = {
     borderRight: "none",
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    fontSize: "0.875rem",
-    lineHeight: 1.43,
+    fontSize: "0.75rem",
+    lineHeight: 1.33,
     fontWeight: hcpFontWeight.regular,
     color: hcpColors.textSecondary,
   },
@@ -546,6 +555,36 @@ export const hcpDataGridSx = {
   "& .MuiDataGrid-overlay": {
     bgcolor: hcpColors.paper,
   },
+} as const;
+
+/** Stacked two-line rows — same rhythm across Expenses and Accounting tables */
+export const hcpDataGridStackedSx = {
+  ...hcpDataGridSx,
+  "--DataGrid-rowHeight": `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px`,
+  "& .MuiDataGrid-row": {
+    maxHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
+    minHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
+  },
+  "& .MuiDataGrid-cell": {
+    px: `${hcpContentSpacing.surfaceInsetX}px`,
+    display: "flex",
+    alignItems: "center",
+    whiteSpace: "normal",
+    // MUI defaults lineHeight to calc(var(--height) - 1px) for single-line rows — breaks stacked cells
+    lineHeight: "normal !important",
+    overflow: "hidden",
+    minHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
+    maxHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
+    "&:focus, &:focus-within": {
+      outline: "none",
+    },
+  },
+} as const;
+
+export const HCP_STACKED_DATA_GRID_DEFAULTS = {
+  rowHeight: HCP_DATA_GRID_STACKED_ROW_HEIGHT,
+  columnHeaderHeight: HCP_DATA_GRID_COLUMN_HEADER_HEIGHT,
+  sx: hcpDataGridStackedSx,
 } as const;
 
 /** Pagination prev/next — tertiary chrome icon buttons */

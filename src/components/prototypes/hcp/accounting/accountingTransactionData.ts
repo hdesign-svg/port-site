@@ -1,3 +1,5 @@
+import { HCP_LINKED_ACCOUNTS } from "../hcpLinkedAccounts";
+
 export const ACCOUNTING_CATEGORIES = [
   "Service Revenue",
   "Materials & Supplies",
@@ -23,11 +25,7 @@ export type AccountingTransactionRow = {
   category: AccountingCategory | null;
 };
 
-const ACCOUNTS = {
-  checking: "Chase Business Checking ···1233",
-  card: "Chase Ink Business ···8812",
-  amex: "Amex Business ···4401",
-} as const;
+const ACCOUNTS = HCP_LINKED_ACCOUNTS;
 
 const IMPORT_ANCHOR = new Date("2025-10-30T12:00:00");
 

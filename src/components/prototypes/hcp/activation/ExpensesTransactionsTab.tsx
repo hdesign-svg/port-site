@@ -12,11 +12,11 @@ import { useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableStackedCell,
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
-  HCP_DATA_GRID_STACKED_ROW_HEIGHT,
-  hcpTableStackedCellSx,
+  HCP_STACKED_DATA_GRID_DEFAULTS,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
@@ -30,7 +30,6 @@ import {
   type ExpensesTransactionRow,
 } from "./expensesTransactionsData";
 import {
-  hcpDataGridSx,
   hcpIcon,
 } from "../hcpTheme";
 
@@ -57,14 +56,7 @@ function filterRows(rows: ExpensesTransactionRow[], query: string) {
 }
 
 function DescriptionCell({ row }: { row: ExpensesTransactionRow }) {
-  return (
-    <Box sx={hcpTableStackedCellSx}>
-      <HcpTableCellPrimary>{row.description}</HcpTableCellPrimary>
-      {row.descriptionMeta ? (
-        <HcpTableCellSecondary>{row.descriptionMeta}</HcpTableCellSecondary>
-      ) : null}
-    </Box>
-  );
+  return <HcpTableStackedCell primary={row.description} secondary={row.descriptionMeta} />;
 }
 
 const transactionColumns: GridColDef<ExpensesTransactionRow>[] = [
@@ -158,9 +150,7 @@ export function ExpensesTransactionsTab() {
           sortModel={sortModel}
           onSortModelChange={setSortModel}
           pageSizeOptions={[10, 25, 50]}
-          rowHeight={HCP_DATA_GRID_STACKED_ROW_HEIGHT}
-          columnHeaderHeight={48}
-          sx={hcpDataGridSx}
+          {...HCP_STACKED_DATA_GRID_DEFAULTS}
           slotProps={{
             basePagination: {
               material: {

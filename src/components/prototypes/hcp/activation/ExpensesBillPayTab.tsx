@@ -16,6 +16,7 @@ import {
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
+  HCP_DATA_GRID_COLUMN_HEADER_HEIGHT,
   HCP_DATA_GRID_ROW_HEIGHT,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
@@ -220,7 +221,7 @@ export function ExpensesBillPayTab() {
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[15, 25, 50]}
           rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
-          columnHeaderHeight={48}
+          columnHeaderHeight={HCP_DATA_GRID_COLUMN_HEADER_HEIGHT}
           sx={hcpDataGridSx}
           slotProps={{
             basePagination: {

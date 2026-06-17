@@ -1,3 +1,5 @@
+import { formatMaskedLast4 } from "../hcpLinkedAccounts";
+
 export type ExpenseCardType = "physical" | "virtual";
 
 export type ExpenseCardStatus = "active" | "inactive";
@@ -27,7 +29,7 @@ export const expenseCards: ExpenseCardRow[] = [
     id: "card-1",
     cardholder: "April Ludgate",
     purpose: "Petty cash",
-    cardNumber: "•••• 4821",
+    cardNumber: formatMaskedLast4("4821"),
     cardType: "virtual",
     status: "active",
     spendingLimit: "$500/wk",
@@ -36,7 +38,7 @@ export const expenseCards: ExpenseCardRow[] = [
     id: "card-2",
     cardholder: "Ron Swanson",
     purpose: "Physical card",
-    cardNumber: "•••• 9134",
+    cardNumber: formatMaskedLast4("9134"),
     cardType: "physical",
     status: "inactive",
     spendingLimit: "No limit",
@@ -45,7 +47,7 @@ export const expenseCards: ExpenseCardRow[] = [
     id: "card-3",
     cardholder: "Leslie Knope",
     purpose: "Department spend",
-    cardNumber: "•••• 2208",
+    cardNumber: formatMaskedLast4("2208"),
     cardType: "physical",
     status: "active",
     spendingLimit: "$650/wk",
@@ -54,7 +56,7 @@ export const expenseCards: ExpenseCardRow[] = [
     id: "card-4",
     cardholder: "Tom Haverford",
     purpose: "Marketing",
-    cardNumber: "•••• 5516",
+    cardNumber: formatMaskedLast4("5516"),
     cardType: "virtual",
     status: "active",
     spendingLimit: "$750/wk",
@@ -63,7 +65,7 @@ export const expenseCards: ExpenseCardRow[] = [
     id: "card-5",
     cardholder: "Donna Meagle",
     purpose: "Operations",
-    cardNumber: "•••• 6673",
+    cardNumber: formatMaskedLast4("6673"),
     cardType: "physical",
     status: "inactive",
     spendingLimit: "$900/wk",

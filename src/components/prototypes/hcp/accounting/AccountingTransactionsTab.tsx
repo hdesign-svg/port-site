@@ -16,11 +16,12 @@ import { useEffect, useMemo, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
+  HcpTableStackedCell,
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
-  HCP_DATA_GRID_ROW_HEIGHT,
-  hcpTableStackedCellSx,
+  HCP_STACKED_DATA_GRID_DEFAULTS,
+  hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
@@ -41,7 +42,6 @@ import {
 } from "./accountingTransactionData";
 import {
   hcpColors,
-  hcpDataGridSx,
   hcpFontWeight,
   hcpIcon,
   hcpMenuPaperSx,
@@ -65,12 +65,7 @@ function filterBySearch(rows: AccountingTransactionRow[], query: string) {
 }
 
 function TransactionCell({ row }: { row: AccountingTransactionRow }) {
-  return (
-    <Box sx={hcpTableStackedCellSx}>
-      <HcpTableCellPrimary>{row.description}</HcpTableCellPrimary>
-      <HcpTableCellSecondary>{row.account}</HcpTableCellSecondary>
-    </Box>
-  );
+  return <HcpTableStackedCell primary={row.description} secondary={row.account} />;
 }
 
 function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilter) {
@@ -180,17 +175,14 @@ export function AccountingTransactionsTab({
         align: "right",
         headerAlign: "right",
         renderCell: ({ row }) => (
-          <Typography
-            variant="body1"
-            component="span"
-            noWrap
+          <HcpTableCellPrimary
+            tabularNums
             sx={{
-              fontVariantNumeric: "tabular-nums",
               color: row.isDeposit ? hcpColors.successMain : hcpColors.spending,
             }}
           >
             {formatAccountingAmount(row.amount, row.isDeposit)}
-          </Typography>
+          </HcpTableCellPrimary>
         ),
       },
       {
@@ -202,14 +194,9 @@ export function AccountingTransactionsTab({
         renderCell: ({ row }) => {
           if (row.category === null) {
             return (
-              <Typography
-                variant="body2"
-                component="span"
-                noWrap
-                sx={{ color: hcpColors.textMuted, fontStyle: "italic" }}
-              >
+              <HcpTableCellSecondary sx={{ color: hcpColors.textMuted, fontStyle: "italic" }}>
                 Uncategorized
-              </Typography>
+              </HcpTableCellSecondary>
             );
           }
 
@@ -310,7 +297,7 @@ export function AccountingTransactionsTab({
         flush
         toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.register} />}
         toolbarActions={
-          <>
+          <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton
               value={searchQuery}
               onChange={handleSearchChange}
@@ -330,7 +317,7 @@ export function AccountingTransactionsTab({
             <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
               <DownloadSimple size={hcpIcon.md} weight="regular" />
             </HcpTableToolbarIconButton>
-          </>
+          </Box>
         }
       >
         <Menu
@@ -370,9 +357,7 @@ export function AccountingTransactionsTab({
           sortModel={sortModel}
           onSortModelChange={setSortModel}
           pageSizeOptions={[10, 25, 50]}
-          rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
-          columnHeaderHeight={48}
-          sx={hcpDataGridSx}
+          {...HCP_STACKED_DATA_GRID_DEFAULTS}
           slotProps={{
             basePagination: {
               material: {

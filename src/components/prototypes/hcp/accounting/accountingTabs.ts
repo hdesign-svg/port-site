@@ -20,7 +20,11 @@ export const ACCOUNTING_TAB_LABELS: Record<AccountingTab, string> = {
 export const ACCOUNTING_ZONE_TITLES = {
   review: "Review",
   register: "Register",
+  summary: "Summary",
   profitAndLoss: "Profit & loss",
+  netProfit: "Net profit",
+  moneyIn: "Money in",
+  moneyOut: "Money out",
 } as const;
 
 export function isAccountingTab(value: string): value is AccountingTab {
