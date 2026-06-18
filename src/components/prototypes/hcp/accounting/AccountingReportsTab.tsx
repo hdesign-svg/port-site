@@ -1,10 +1,11 @@
 "use client";
 
-import { DownloadSimple } from "@phosphor-icons/react";
+import { CaretDown, CaretRight, DownloadSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { type ReactNode, useMemo } from "react";
-import { HcpTableToolbarIconButton, hcpTableToolbarActionsSx } from "../HcpTableChrome";
+import { type ReactNode, useMemo, useState } from "react";
+import { HcpTableToolbarIconButton, HcpTableZoneHeader, hcpTableToolbarActionsSx } from "../HcpTableChrome";
+import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingPeriod } from "./accountingPeriods";
 import { getAccountingReadiness } from "./accountingReadiness";
@@ -17,12 +18,11 @@ import {
 import type { AccountingTransactionRow } from "./accountingTransactionData";
 import { ACCOUNTING_ZONE_TITLES } from "./accountingTabs";
 import {
+  HCP_DATA_GRID_COLUMN_HEADER_HEIGHT,
   hcpColors,
   hcpContentSpacing,
-  hcpDataGridToolbarSx,
   hcpFontWeight,
   hcpIcon,
-  hcpRadius,
 } from "../hcpTheme";
 import { hcpTypographyRoles } from "../hcpTypography";
 
@@ -33,17 +33,24 @@ type AccountingReportsTabProps = {
 
 const REPORT_DOCUMENT_MAX_WIDTH = 704;
 
-const REPORT_ROW_HEIGHT = 36;
+/** QB-style zebra — muted section bands */
+const reportRowMuted = "#f4f5f8";
 
-const tableRowSx = {
+const reportDividerSx = `1px solid ${hcpColors.borderSubtle}` as const;
+
+const reportInsetX = hcpContentSpacing.surfaceInsetX;
+
+/** Nested line items align under section title (chevron + gap) */
+const reportLineIndent = 3;
+
+const reportRowSx = {
   display: "grid",
   gridTemplateColumns: "minmax(0, 1fr) minmax(6.5rem, auto)",
   alignItems: "center",
-  minHeight: REPORT_ROW_HEIGHT,
+  minHeight: HCP_DATA_GRID_COLUMN_HEADER_HEIGHT,
   width: "100%",
-  px: 2.5,
+  px: `${reportInsetX}px`,
   boxSizing: "border-box",
-  borderBottom: `1px solid ${hcpColors.borderSubtle}`,
 } as const;
 
 const amountCellSx = {
@@ -51,24 +58,71 @@ const amountCellSx = {
   fontVariantNumeric: "tabular-nums",
 } as const;
 
+const reportCellSx = {
+  variant: hcpTypographyRoles.tableCellSecondary,
+  component: "span" as const,
+  sx: { display: "block", lineHeight: 1.43 },
+};
+
+type ReportRowTone = "muted" | "white";
+
+function reportRowSurface(
+  tone: ReportRowTone,
+  { showDivider = true, doubleDividerTop = false }: { showDivider?: boolean; doubleDividerTop?: boolean } = {},
+) {
+  return {
+    bgcolor: tone === "muted" ? reportRowMuted : hcpColors.paper,
+    borderBottom: showDivider ? reportDividerSx : undefined,
+    borderTop: doubleDividerTop ? reportDividerSx : undefined,
+  };
+}
+
 function ReportRow({
-  borderTopStrong = false,
+  tone = "white",
+  showDivider = true,
+  doubleDividerTop = false,
   children,
 }: {
-  borderTopStrong?: boolean;
+  tone?: ReportRowTone;
+  showDivider?: boolean;
+  doubleDividerTop?: boolean;
   children: ReactNode;
 }) {
   return (
     <Box
       sx={{
-        ...tableRowSx,
-        ...(borderTopStrong
-          ? { borderTop: `1px solid ${hcpColors.border}`, borderBottom: `1px solid ${hcpColors.border}` }
-          : undefined),
+        ...reportRowSx,
+        ...reportRowSurface(tone, { showDivider, doubleDividerTop }),
       }}
     >
       {children}
     </Box>
+  );
+}
+
+function ReportLabel({
+  children,
+  indent = false,
+  emphasis = false,
+  muted = false,
+}: {
+  children: ReactNode;
+  indent?: boolean;
+  emphasis?: boolean;
+  muted?: boolean;
+}) {
+  return (
+    <Typography
+      {...reportCellSx}
+      color={muted ? "text.secondary" : "text.primary"}
+      sx={{
+        ...reportCellSx.sx,
+        fontWeight: emphasis ? hcpFontWeight.semibold : hcpFontWeight.regular,
+        pl: indent ? reportLineIndent : undefined,
+      }}
+    >
+      {children}
+    </Typography>
   );
 }
 
@@ -85,9 +139,9 @@ function TableAmount({
 
   return (
     <Typography
-      variant={emphasis ? hcpTypographyRoles.body : hcpTypographyRoles.bodySecondary}
-      component="span"
+      {...reportCellSx}
       sx={{
+        ...reportCellSx.sx,
         ...amountCellSx,
         fontWeight: emphasis ? hcpFontWeight.semibold : hcpFontWeight.regular,
         color:
@@ -101,50 +155,86 @@ function TableAmount({
 
 function TableLineRow({ label, amount }: ProfitAndLossLine) {
   return (
-    <ReportRow>
-      <Typography variant={hcpTypographyRoles.bodySecondary} color="text.secondary" sx={{ pl: 2 }}>
+    <ReportRow tone="white">
+      <ReportLabel indent muted>
         {label}
-      </Typography>
+      </ReportLabel>
       <TableAmount amount={amount} />
     </ReportRow>
   );
 }
 
 type TableSectionProps = {
+  sectionId: string;
   title: string;
   lines: ProfitAndLossLine[];
   emptyLabel: string;
   subtotalAmount: number;
+  expanded: boolean;
+  onToggle: () => void;
 };
 
-function TableSection({ title, lines, emptyLabel, subtotalAmount }: TableSectionProps) {
+function CollapsibleTableSection({
+  sectionId,
+  title,
+  lines,
+  emptyLabel,
+  subtotalAmount,
+  expanded,
+  onToggle,
+}: TableSectionProps) {
+  const detailsId = `${sectionId}-details`;
+  const totalLabel = `Total for ${title.toLowerCase()}`;
+
   return (
     <>
-      <ReportRow>
-        <Typography
-          variant={hcpTypographyRoles.bodySecondary}
-          sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textPrimary }}
-        >
-          {title}
-        </Typography>
-        <Box />
-      </ReportRow>
+      <Box
+        component="button"
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        aria-controls={detailsId}
+        sx={{
+          ...reportRowSx,
+          ...reportRowSurface("muted"),
+          border: "none",
+          margin: 0,
+          cursor: "pointer",
+          textAlign: "left",
+          font: "inherit",
+          color: "inherit",
+          "&:hover": {
+            bgcolor: "#eceef2",
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 0 }}>
+          {expanded ? (
+            <CaretDown size={hcpIcon.sm} weight="bold" color={hcpColors.textSecondary} aria-hidden />
+          ) : (
+            <CaretRight size={hcpIcon.sm} weight="bold" color={hcpColors.textSecondary} aria-hidden />
+          )}
+          <ReportLabel emphasis>{title}</ReportLabel>
+        </Box>
+        {expanded ? <Box /> : <TableAmount amount={subtotalAmount} emphasis />}
+      </Box>
 
-      {lines.length > 0 ? (
-        lines.map((line) => <TableLineRow key={line.label} {...line} />)
-      ) : (
-        <TableLineRow label={emptyLabel} amount={0} />
-      )}
+      {expanded ? (
+        <Box id={detailsId}>
+          {lines.length > 0 ? (
+            lines.map((line) => <TableLineRow key={line.label} {...line} />)
+          ) : (
+            <TableLineRow label={emptyLabel} amount={0} />
+          )}
 
-      <ReportRow>
-        <Typography
-          variant={hcpTypographyRoles.bodySecondary}
-          sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textPrimary }}
-        >
-          Total
-        </Typography>
-        <TableAmount amount={subtotalAmount} emphasis />
-      </ReportRow>
+          <ReportRow tone="white" doubleDividerTop>
+            <ReportLabel indent emphasis>
+              {totalLabel}
+            </ReportLabel>
+            <TableAmount amount={subtotalAmount} emphasis />
+          </ReportRow>
+        </Box>
+      ) : null}
     </>
   );
 }
@@ -157,8 +247,22 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
 
   const footerCaption = useMemo(() => {
     const readiness = getAccountingReadiness(transactions, period);
-    return `Cash basis · ${readiness.sortedCount} categorized transactions`;
+    const count = readiness.sortedCount;
+    const transactionLabel = count === 1 ? "transaction" : "transactions";
+    return `${count} ${transactionLabel} included in this report`;
   }, [transactions, period]);
+
+  const [expandedSections, setExpandedSections] = useState({
+    income: true,
+    expenses: true,
+  });
+
+  const toggleSection = (section: "income" | "expenses") => {
+    setExpandedSections((current) => ({
+      ...current,
+      [section]: !current[section],
+    }));
+  };
 
   return (
     <AccountingTabPanel>
@@ -172,107 +276,117 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
         <Box
           component="article"
           aria-label={`${ACCOUNTING_ZONE_TITLES.profitAndLoss}, ${report.periodLabel}`}
-          sx={{
-            width: "100%",
-            maxWidth: REPORT_DOCUMENT_MAX_WIDTH,
-            bgcolor: hcpColors.paper,
-            border: `1px solid ${hcpColors.border}`,
-            borderRadius: `${hcpRadius.control}px`,
-            overflow: "hidden",
-            boxShadow: "0 1px 2px rgba(33, 33, 33, 0.06)",
-          }}
+          sx={{ width: "100%", maxWidth: REPORT_DOCUMENT_MAX_WIDTH }}
         >
-          <Box
-            sx={{
-              ...hcpDataGridToolbarSx,
-              justifyContent: "flex-end",
-              borderBottom: `1px solid ${hcpColors.borderSubtle}`,
-            }}
+          <HcpSurfaceCard
+            flush
+            toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.profitAndLoss} />}
+            toolbarActions={
+              <Box sx={hcpTableToolbarActionsSx}>
+                <HcpTableToolbarIconButton tooltip="Export PDF" aria-label="Export PDF">
+                  <DownloadSimple size={hcpIcon.md} weight="regular" />
+                </HcpTableToolbarIconButton>
+              </Box>
+            }
           >
-            <Box sx={hcpTableToolbarActionsSx}>
-              <HcpTableToolbarIconButton tooltip="Export PDF" aria-label="Export PDF">
-                <DownloadSimple size={hcpIcon.md} weight="regular" />
-              </HcpTableToolbarIconButton>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              textAlign: "center",
-              px: 2.5,
-              pt: 3,
-              pb: 2.5,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textPrimary }}
+            <Box
+              sx={{
+                textAlign: "center",
+                px: `${reportInsetX}px`,
+                py: `${hcpContentSpacing.surfaceInsetY}px`,
+                borderBottom: reportDividerSx,
+              }}
             >
-              {ACCOUNTING_ZONE_TITLES.profitAndLoss}
-            </Typography>
-            <Typography variant={hcpTypographyRoles.bodySecondary} color="text.secondary" sx={{ mt: 0.5 }}>
-              {ACCOUNTING_REPORT_BUSINESS_NAME}
-            </Typography>
-            <Typography variant={hcpTypographyRoles.bodySecondary} color="text.secondary">
-              {report.periodLabel}
-            </Typography>
-          </Box>
-
-          <Box sx={{ borderTop: `1px solid ${hcpColors.borderSubtle}` }}>
-            <ReportRow>
               <Typography
-                variant={hcpTypographyRoles.captionBold}
+                variant={hcpTypographyRoles.labelSecondary}
+                sx={{
+                  fontWeight: hcpFontWeight.regular,
+                  color: hcpColors.textSecondary,
+                  lineHeight: 1.43,
+                }}
+              >
+                {ACCOUNTING_REPORT_BUSINESS_NAME}
+              </Typography>
+              <Typography
+                variant={hcpTypographyRoles.caption}
+                sx={{
+                  mt: 0.5,
+                  lineHeight: 1.33,
+                  color: hcpColors.textMuted,
+                }}
+              >
+                {report.periodLabel}
+              </Typography>
+            </Box>
+
+            <Box>
+              <ReportRow tone="white">
+                <Typography
+                  variant={hcpTypographyRoles.tableHeader}
+                  color="text.secondary"
+                  component="span"
+                  sx={{ display: "block", lineHeight: 1.33, textTransform: "none" }}
+                >
+                  Account
+                </Typography>
+                <Typography
+                  variant={hcpTypographyRoles.tableHeader}
+                  color="text.secondary"
+                  component="span"
+                  sx={{
+                    display: "block",
+                    lineHeight: 1.33,
+                    textTransform: "none",
+                    ...amountCellSx,
+                  }}
+                >
+                  Total
+                </Typography>
+              </ReportRow>
+
+              <CollapsibleTableSection
+                sectionId="report-income"
+                title={ACCOUNTING_ZONE_TITLES.moneyIn}
+                lines={report.income}
+                emptyLabel="No income recorded"
+                subtotalAmount={report.totalIncome}
+                expanded={expandedSections.income}
+                onToggle={() => toggleSection("income")}
+              />
+
+              <CollapsibleTableSection
+                sectionId="report-expenses"
+                title={ACCOUNTING_ZONE_TITLES.moneyOut}
+                lines={report.expenses}
+                emptyLabel="No expenses recorded"
+                subtotalAmount={report.totalExpenses}
+                expanded={expandedSections.expenses}
+                onToggle={() => toggleSection("expenses")}
+              />
+
+              <ReportRow tone="muted" showDivider={false}>
+                <ReportLabel emphasis>{ACCOUNTING_ZONE_TITLES.netProfit}</ReportLabel>
+                <TableAmount amount={report.netProfit} emphasis positiveAccent />
+              </ReportRow>
+            </Box>
+
+            <Box
+              sx={{
+                ...reportRowSx,
+                justifyContent: "center",
+                borderTop: reportDividerSx,
+                bgcolor: hcpColors.paper,
+              }}
+            >
+              <Typography
+                {...reportCellSx}
                 color="text.secondary"
-                sx={{ textTransform: "none" }}
+                sx={{ ...reportCellSx.sx, gridColumn: "1 / -1", textAlign: "center" }}
               >
-                Account
+                {footerCaption}
               </Typography>
-              <Typography
-                variant={hcpTypographyRoles.captionBold}
-                color="text.secondary"
-                sx={{ ...amountCellSx, textTransform: "none" }}
-              >
-                Total
-              </Typography>
-            </ReportRow>
-
-            <TableSection
-              title={ACCOUNTING_ZONE_TITLES.moneyIn}
-              lines={report.income}
-              emptyLabel="No income recorded"
-              subtotalAmount={report.totalIncome}
-            />
-
-            <TableSection
-              title={ACCOUNTING_ZONE_TITLES.moneyOut}
-              lines={report.expenses}
-              emptyLabel="No expenses recorded"
-              subtotalAmount={report.totalExpenses}
-            />
-
-            <ReportRow borderTopStrong>
-              <Typography
-                variant={hcpTypographyRoles.body}
-                sx={{ fontWeight: hcpFontWeight.semibold, color: hcpColors.textPrimary }}
-              >
-                {ACCOUNTING_ZONE_TITLES.netProfit}
-              </Typography>
-              <TableAmount amount={report.netProfit} emphasis positiveAccent />
-            </ReportRow>
-          </Box>
-
-          <Box
-            sx={{
-              px: 2.5,
-              py: 2,
-              borderTop: `1px solid ${hcpColors.borderSubtle}`,
-              textAlign: "center",
-            }}
-          >
-            <Typography variant={hcpTypographyRoles.caption} color="text.secondary">
-              {footerCaption}
-            </Typography>
-          </Box>
+            </Box>
+          </HcpSurfaceCard>
         </Box>
       </Box>
     </AccountingTabPanel>
