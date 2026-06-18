@@ -1,15 +1,6 @@
 import Image from "next/image";
-import { Suspense } from "react";
 import { site } from "@/data/site";
 import { ThemeToggle } from "@/components/lab/ThemeToggle";
-
-function ThemeToggleSlot() {
-  return (
-    <Suspense fallback={null}>
-      <ThemeToggle />
-    </Suspense>
-  );
-}
 
 function IdentityBlock() {
   return (
@@ -75,7 +66,7 @@ export function LabHero() {
       <div className="flex items-start justify-between gap-[1rlh] border-b border-border p-[1.5rlh] lg:hidden">
         <IdentityBlock />
         <div className="hero-copy-toggle flex shrink-0 items-center lg:hidden">
-          <ThemeToggleSlot />
+          <ThemeToggle />
         </div>
       </div>
 
@@ -91,7 +82,7 @@ export function LabHero() {
         <div className="flex items-start justify-between gap-[1rlh]">
           <HeroBody />
           <div className="hero-copy-toggle max-lg:hidden flex shrink-0 items-center">
-            <ThemeToggleSlot />
+            <ThemeToggle />
           </div>
         </div>
       </div>

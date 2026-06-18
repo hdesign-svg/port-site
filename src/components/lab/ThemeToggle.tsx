@@ -2,7 +2,7 @@
 
 import { Moon, Sun } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   applyThemeWithTransition,
   DEFAULT_THEME,
@@ -18,7 +18,6 @@ function readThemeFromDom(): Theme {
 export function ThemeToggle() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
@@ -35,7 +34,7 @@ export function ThemeToggle() {
       () => setTheme(nextTheme),
     );
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     params.set("theme", nextTheme);
     const query = params.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
