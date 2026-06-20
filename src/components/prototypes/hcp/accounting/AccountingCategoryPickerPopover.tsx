@@ -3,7 +3,6 @@
 import { CaretLeft } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
@@ -11,7 +10,7 @@ import Popover from "@mui/material/Popover";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   findCategoryRule,
   getSimilarReviewTransactionIds,
@@ -66,6 +65,196 @@ function formatRuleMatchLabel(ruleMatch: string) {
   return `${ruleMatch.slice(0, 24)}…`;
 }
 
+const CATEGORY_SECTION_LABEL_SX = {
+  px: 1,
+  pb: 0.75,
+  display: "block",
+  fontSize: "0.75rem",
+  fontWeight: hcpFontWeight.regular,
+  color: hcpColors.textMuted,
+} as const;
+
+const CATEGORY_ROW_HEIGHT = 38;
+const CATEGORY_LIST_VISIBLE_ROWS = 5.5;
+
+type ScrollEdgeFade = {
+  top: boolean;
+  bottom: boolean;
+};
+
+function CategoryScrollList({
+  children,
+  clipAfterRows,
+}: {
+  children: ReactNode;
+  clipAfterRows?: number;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [edgeFade, setEdgeFade] = useState<ScrollEdgeFade>({ top: false, bottom: false });
+
+  const maxHeight =
+    clipAfterRows != null ? `${Math.ceil(CATEGORY_ROW_HEIGHT * clipAfterRows)}px` : undefined;
+
+  const updateEdgeFade = useCallback(() => {
+    const node = scrollRef.current;
+    if (!node) {
+      return;
+    }
+
+    const overflow = node.scrollHeight - node.clientHeight > 1;
+
+    setEdgeFade({
+      top: overflow && node.scrollTop > 1,
+      bottom: overflow && node.scrollTop + node.clientHeight < node.scrollHeight - 1,
+    });
+  }, []);
+
+  useEffect(() => {
+    updateEdgeFade();
+  }, [children, clipAfterRows, updateEdgeFade]);
+
+  useEffect(() => {
+    const node = scrollRef.current;
+    if (!node) {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver(updateEdgeFade);
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [updateEdgeFade]);
+
+  const fadeBandSx = {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: 28,
+    pointerEvents: "none",
+    zIndex: 1,
+  } as const;
+
+  return (
+    <Box sx={{ position: "relative", flex: 1, minHeight: 0, mx: -0.5 }}>
+      <Box
+        ref={scrollRef}
+        onScroll={updateEdgeFade}
+        sx={{
+          overflow: "auto",
+          minHeight: 0,
+          maxHeight: maxHeight ?? "100%",
+        }}
+      >
+        {children}
+      </Box>
+      {edgeFade.top ? (
+        <Box
+          aria-hidden
+          sx={{
+            ...fadeBandSx,
+            top: 0,
+            background: `linear-gradient(to bottom, ${hcpColors.paper} 0%, transparent 100%)`,
+          }}
+        />
+      ) : null}
+      {edgeFade.bottom ? (
+        <Box
+          aria-hidden
+          sx={{
+            ...fadeBandSx,
+            bottom: 0,
+            background: `linear-gradient(to top, ${hcpColors.paper} 0%, transparent 100%)`,
+          }}
+        />
+      ) : null}
+    </Box>
+  );
+}
+
+function CategorySection({
+  label,
+  children,
+  sx,
+}: {
+  label: string;
+  children: ReactNode;
+  sx?: { pt?: number };
+}) {
+  return (
+    <Box sx={sx}>
+      <Typography component="span" variant="caption" sx={CATEGORY_SECTION_LABEL_SX}>
+        {label}
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>{children}</Box>
+    </Box>
+  );
+}
+
+function CategoryPickerRow({
+  category,
+  onPick,
+}: {
+  category: AccountingCategory;
+  onPick: (category: AccountingCategory) => void;
+}) {
+  return (
+    <Button
+      variant="text"
+      onClick={() => onPick(category)}
+      sx={{
+        width: "100%",
+        justifyContent: "flex-start",
+        textTransform: "none",
+        fontWeight: hcpFontWeight.regular,
+        fontSize: "0.875rem",
+        color: hcpColors.textPrimary,
+        px: 1,
+        py: 0.75,
+        minHeight: 0,
+        borderRadius: 1,
+        transition: "background-color 150ms ease",
+        "&:hover": {
+          bgcolor: hcpColors.borderSubtle,
+        },
+      }}
+    >
+      <Typography component="span" variant="body2" noWrap sx={{ minWidth: 0, textAlign: "left" }}>
+        {category}
+      </Typography>
+    </Button>
+  );
+}
+
+function TransactionContextHeader({
+  description,
+  amount,
+  isDeposit,
+}: {
+  description: string;
+  amount: number;
+  isDeposit: boolean;
+}) {
+  return (
+    <>
+      <Box sx={{ pb: 1.5 }}>
+        <Typography variant="body2" noWrap sx={{ mb: 0.25 }}>
+          {description}
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            fontVariantNumeric: "tabular-nums",
+            color: isDeposit ? hcpColors.successMain : hcpColors.spending,
+          }}
+        >
+          {formatAccountingAmount(amount, isDeposit)}
+        </Typography>
+      </Box>
+      <Divider sx={{ mx: -2, mb: 1.5 }} />
+    </>
+  );
+}
+
 export function AccountingCategoryPickerPopover({
   anchorEl,
   open,
@@ -109,13 +298,17 @@ export function AccountingCategoryPickerPopover({
     return suggestions;
   }, [existingRule, meta.suggestedCategories, row.category]);
 
-  const otherCategories = useMemo(() => {
-    const excluded = new Set(suggestedCategories);
-    if (row.category) {
-      excluded.add(row.category);
-    }
-    return ACCOUNTING_CATEGORIES.filter((category) => !excluded.has(category));
-  }, [row.category, suggestedCategories]);
+  const restCategories = useMemo(() => {
+    const suggestedSet = new Set(suggestedCategories);
+    return ACCOUNTING_CATEGORIES.filter((category) => !suggestedSet.has(category));
+  }, [suggestedCategories]);
+
+  const categoryCount = suggestedCategories.length + restCategories.length;
+
+  const categoryListClipAfterRows = useMemo(
+    () => (categoryCount > 5 ? CATEGORY_LIST_VISIBLE_ROWS : undefined),
+    [categoryCount],
+  );
 
   const showSimilarScope = isReviewContext && inReviewQueue && similarIds.length > 1;
   const showAlwaysScope = meta.id !== `misc-${row.id}`;
@@ -147,6 +340,11 @@ export function AccountingCategoryPickerPopover({
       disableScrollLock
       slotProps={{
         paper: {
+          role: "dialog",
+          "aria-label":
+            step === "pick"
+              ? `Choose category for ${row.description}`
+              : `Apply category for ${row.description}`,
           sx: {
             p: 2,
             width: placement?.width ?? 340,
@@ -161,16 +359,17 @@ export function AccountingCategoryPickerPopover({
         },
       }}
     >
-      <Box sx={{ mb: 1.5 }}>
-        <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 0.5 }}>
-          {step === "pick" ? "Choose category" : "Apply category"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" noWrap>
-          {row.description}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ fontVariantNumeric: "tabular-nums" }}>
-          {formatAccountingAmount(row.amount, row.isDeposit)}
-        </Typography>
+      <Box>
+        {step === "scope" ? (
+          <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 1.5 }}>
+            Apply category
+          </Typography>
+        ) : null}
+        <TransactionContextHeader
+          description={row.description}
+          amount={row.amount}
+          isDeposit={row.isDeposit}
+        />
       </Box>
 
       {existingRule ? (
@@ -204,83 +403,25 @@ export function AccountingCategoryPickerPopover({
       ) : null}
 
       {step === "pick" ? (
-        <Box sx={{ overflow: "auto", minHeight: 0, flex: 1 }}>
-          {suggestedCategories.length > 0 ? (
-            <>
-              <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-                Suggested
-              </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mb: 1.5 }}>
+        <CategoryScrollList clipAfterRows={categoryListClipAfterRows}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            {suggestedCategories.length > 0 ? (
+              <CategorySection label="Suggested">
                 {suggestedCategories.map((category) => (
-                  <Chip
-                    key={category}
-                    label={category}
-                    size="small"
-                    clickable
-                    onClick={() => handlePickCategory(category)}
-                    sx={{
-                      height: 28,
-                      fontSize: "0.8125rem",
-                      borderRadius: 9999,
-                      bgcolor: hcpColors.paper,
-                      border: `1px solid ${hcpColors.borderControl}`,
-                      "& .MuiChip-label": {
-                        px: 1.25,
-                      },
-                      "&:hover": {
-                        bgcolor: "rgba(33, 33, 33, 0.04)",
-                      },
-                    }}
-                  />
+                  <CategoryPickerRow key={category} category={category} onPick={handlePickCategory} />
                 ))}
-              </Box>
-              <Divider sx={{ mb: 1.5 }} />
-            </>
-          ) : null}
-
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-            All categories
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
-            {otherCategories.map((category) => (
-              <Button
-                key={category}
-                variant="text"
-                onClick={() => handlePickCategory(category)}
-                sx={{
-                  justifyContent: "flex-start",
-                  textTransform: "none",
-                  fontWeight: 400,
-                  fontSize: "0.875rem",
-                  color: hcpColors.textPrimary,
-                  px: 1,
-                  py: 0.75,
-                  minHeight: 0,
-                }}
-              >
-                {category}
-              </Button>
-            ))}
-            {row.category && !suggestedCategories.includes(row.category) ? (
-              <Button
-                variant="text"
-                onClick={() => handlePickCategory(row.category!)}
-                sx={{
-                  justifyContent: "flex-start",
-                  textTransform: "none",
-                  fontWeight: 400,
-                  fontSize: "0.875rem",
-                  color: hcpColors.textPrimary,
-                  px: 1,
-                  py: 0.75,
-                  minHeight: 0,
-                }}
-              >
-                {row.category}
-              </Button>
+              </CategorySection>
             ) : null}
+            <CategorySection
+              label="All categories"
+              sx={suggestedCategories.length > 0 ? { pt: 2.5 } : undefined}
+            >
+              {restCategories.map((category) => (
+                <CategoryPickerRow key={category} category={category} onPick={handlePickCategory} />
+              ))}
+            </CategorySection>
           </Box>
-        </Box>
+        </CategoryScrollList>
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1.5 }}>
@@ -297,7 +438,7 @@ export function AccountingCategoryPickerPopover({
             </Typography>
           </Box>
 
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 1.5 }}>
             Apply to
           </Typography>
 
@@ -305,11 +446,7 @@ export function AccountingCategoryPickerPopover({
             <FormControlLabel
               value="this"
               control={<Radio size="small" />}
-              label={
-                <Typography variant="body2">
-                  {existingRule ? "This transaction only" : "This transaction only"}
-                </Typography>
-              }
+              label={<Typography variant="body2">This transaction only</Typography>}
               sx={{ alignItems: "flex-start", mx: 0, mb: 0.5 }}
             />
             {showSimilarScope ? (

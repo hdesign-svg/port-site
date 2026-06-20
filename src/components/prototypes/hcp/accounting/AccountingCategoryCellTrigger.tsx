@@ -7,7 +7,7 @@ import type { MouseEvent } from "react";
 import type { AccountingCategory } from "./accountingTransactionData";
 import { hcpColors } from "../hcpTheme";
 
-const PLACEHOLDER = "Select category";
+const EMPTY_CATEGORY_LABEL = "Uncategorized";
 
 const chipSx = {
   maxWidth: "100%",
@@ -55,7 +55,7 @@ export function AccountingCategoryCellTrigger({
     <Box
       component="button"
       type="button"
-      aria-label={category ? `Category, ${category}` : PLACEHOLDER}
+      aria-label={category ? `Category, ${category}` : `Choose category, ${EMPTY_CATEGORY_LABEL.toLowerCase()}`}
       aria-haspopup="dialog"
       onClick={onClick}
       onMouseDown={onMouseDown}
@@ -81,7 +81,7 @@ export function AccountingCategoryCellTrigger({
       <Chip
         component="span"
         className="category-chip"
-        label={category ?? PLACEHOLDER}
+        label={category ?? EMPTY_CATEGORY_LABEL}
         size="small"
         sx={{
           ...chipSx,

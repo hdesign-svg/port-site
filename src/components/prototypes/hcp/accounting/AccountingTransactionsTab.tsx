@@ -376,6 +376,7 @@ export function AccountingTransactionsTab({
           sortModel={sortModel}
           onSortModelChange={setSortModel}
           pageSizeOptions={[10, 25, 50]}
+          hideFooter={isReviewView}
           {...HCP_STACKED_DATA_GRID_DEFAULTS}
           slotProps={{
             basePagination: {

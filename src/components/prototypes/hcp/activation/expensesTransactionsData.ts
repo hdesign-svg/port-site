@@ -203,7 +203,8 @@ export function formatTransactionAmount(amount: number, isDeposit?: boolean) {
     currency: "USD",
     minimumFractionDigits: 2,
   });
-  return isDeposit ? formatted : formatted;
+
+  return isDeposit ? `+${formatted}` : formatted;
 }
 
 export function formatTransactionDate(isoDate: string) {

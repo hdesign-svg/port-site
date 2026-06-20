@@ -30,6 +30,7 @@ import {
   type ExpensesTransactionRow,
 } from "./expensesTransactionsData";
 import {
+  hcpColors,
   hcpIcon,
 } from "../hcpTheme";
 
@@ -94,7 +95,12 @@ const transactionColumns: GridColDef<ExpensesTransactionRow>[] = [
     align: "right",
     headerAlign: "right",
     renderCell: ({ row }) => (
-      <HcpTableCellPrimary tabularNums>
+      <HcpTableCellPrimary
+        tabularNums
+        sx={{
+          color: row.isDeposit ? hcpColors.successMain : hcpColors.spending,
+        }}
+      >
         {formatTransactionAmount(row.amount, row.isDeposit)}
       </HcpTableCellPrimary>
     ),
