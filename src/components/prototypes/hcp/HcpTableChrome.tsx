@@ -13,8 +13,7 @@ import {
   hcpDataGridPaginationIconButtonSx,
   hcpFontWeight,
   hcpIcon,
-  hcpLayout,
-  hcpMenuPaperSx,
+  hcpSearchPopoverPaperSx,
 } from "./hcpTheme";
 import { hcpTypographyRoles } from "./hcpTypography";
 
@@ -228,11 +227,7 @@ export function HcpTableToolbarSearchButton({
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: {
-              ...hcpMenuPaperSx,
-              p: 1.5,
-              width: hcpLayout.searchFieldWidth,
-            },
+            sx: hcpSearchPopoverPaperSx,
           },
         }}
       >
@@ -242,6 +237,7 @@ export function HcpTableToolbarSearchButton({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           fullWidth
+          sx={{ width: "100%" }}
         />
       </Popover>
     </>

@@ -398,6 +398,14 @@ export const hcpPopoverPaperSx = {
   width: 280,
 } as const;
 
+/** Toolbar search popover — menu inset with field width preserved inside padding */
+export const hcpSearchPopoverPaperSx = {
+  ...hcpMenuPaperSx,
+  p: 1,
+  boxSizing: "border-box",
+  width: hcpLayout.searchFieldWidth + 16,
+} as const;
+
 /** Tab workspace create actions — New card, New bill */
 export const hcpWorkspaceCreateButtonSx = {
   borderColor: hcpColors.borderControl,
