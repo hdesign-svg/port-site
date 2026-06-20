@@ -19,13 +19,14 @@ import {
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
   hcpTableToolbarLeadingSx,
-  HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   HCP_STACKED_DATA_GRID_DEFAULTS,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpSegmentControl } from "../HcpSegmentControl";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
+import { getStragglerUncategorizedCount, type AccountingCategoryRule } from "./accountingCategoryRules";
+import { AccountingExportDialog } from "./AccountingExportDialog";
 import { ReviewCategoryCell } from "./AccountingReviewCategoryCell";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import {
@@ -33,7 +34,6 @@ import {
   type AccountingFlowFilter,
 } from "./accountingTabs";
 import type { AccountingPeriod } from "./accountingPeriods";
-import { getReviewMetaForRow } from "./accountingReviewGroups";
 import { getReviewQueueTransactions } from "./accountingReadiness";
 import {
   formatAccountingAmount,
@@ -120,18 +120,23 @@ function RegisterViewSegments({ value, reviewCount, onChange }: RegisterViewSegm
 type AccountingTransactionsTabProps = {
   period: AccountingPeriod;
   transactions: AccountingTransactionRow[];
+  categoryRules: AccountingCategoryRule[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
+  onCategoryRulesChange: (rules: AccountingCategoryRule[]) => void;
 };
 
 export function AccountingTransactionsTab({
   period,
   transactions,
+  categoryRules,
   onTransactionsChange,
+  onCategoryRulesChange,
 }: AccountingTransactionsTabProps) {
   const [registerView, setRegisterView] = useState<RegisterView>("all");
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
@@ -169,6 +174,12 @@ export function AccountingTransactionsTab({
     setPaginationModel((current) => ({ ...current, page: 0 }));
   }, [registerView]);
 
+  useEffect(() => {
+    if (isReviewView) {
+      setSearchQuery("");
+    }
+  }, [isReviewView]);
+
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setPaginationModel((current) => ({ ...current, page: 0 }));
@@ -192,15 +203,17 @@ export function AccountingTransactionsTab({
     return rows;
   }, [flowFilter, periodTransactions, searchQuery]);
 
-  const reviewRows = useMemo(
-    () => filterBySearch(reviewQueue, searchQuery),
-    [reviewQueue, searchQuery],
-  );
+  const reviewRows = reviewQueue;
 
   const gridRows = isReviewView ? reviewRows : registerRows;
 
-  const columns: GridColDef<AccountingTransactionRow>[] = useMemo(() => {
-    const shared: GridColDef<AccountingTransactionRow>[] = [
+  const stragglerCount = useMemo(
+    () => getStragglerUncategorizedCount(transactions, period),
+    [period, transactions],
+  );
+
+  const columns: GridColDef<AccountingTransactionRow>[] = useMemo(
+    () => [
       {
         field: "date",
         headerName: "Date",
@@ -214,8 +227,8 @@ export function AccountingTransactionsTab({
       {
         field: "description",
         headerName: "Transaction",
-        flex: isReviewView ? 1.6 : 1.8,
-        minWidth: 220,
+        flex: 1.8,
+        minWidth: 240,
         sortable: false,
         renderCell: ({ row }) => <TransactionCell row={row} />,
       },
@@ -238,61 +251,34 @@ export function AccountingTransactionsTab({
           </HcpTableCellPrimary>
         ),
       },
-    ];
-
-    if (isReviewView) {
-      return [
-        ...shared,
-        {
-          field: "group",
-          headerName: "Group",
-          flex: 1,
-          minWidth: 160,
-          sortable: false,
-          valueGetter: (_value, row) => getReviewMetaForRow(row).label,
-          renderCell: ({ row }) => (
-            <HcpTableCellSecondary noWrap>{getReviewMetaForRow(row).label}</HcpTableCellSecondary>
-          ),
-        },
-        {
-          field: "category",
-          headerName: "Category",
-          flex: 1.35,
-          minWidth: 240,
-          sortable: false,
-          renderCell: ({ row }) => (
-            <ReviewCategoryCell
-              row={row}
-              transactions={transactions}
-              onTransactionsChange={onTransactionsChange}
-            />
-          ),
-        },
-      ];
-    }
-
-    return [
-      ...shared,
       {
         field: "category",
         headerName: "Category",
         flex: 1.1,
         minWidth: 168,
         sortable: false,
-        renderCell: ({ row }) => {
-          if (row.category === null) {
-            return (
-              <HcpTableCellSecondary sx={{ color: hcpColors.textMuted, fontStyle: "italic" }}>
-                Uncategorized
-              </HcpTableCellSecondary>
-            );
-          }
-
-          return <HcpTableCellSecondary>{row.category}</HcpTableCellSecondary>;
-        },
+        renderCell: ({ row }) => (
+          <ReviewCategoryCell
+            row={row}
+            transactions={transactions}
+            period={period}
+            categoryRules={categoryRules}
+            isReviewContext={isReviewView}
+            onTransactionsChange={onTransactionsChange}
+            onCategoryRulesChange={onCategoryRulesChange}
+          />
+        ),
       },
-    ];
-  }, [isReviewView, onTransactionsChange, transactions]);
+    ],
+    [
+      categoryRules,
+      isReviewView,
+      onCategoryRulesChange,
+      onTransactionsChange,
+      period,
+      transactions,
+    ],
+  );
 
   return (
     <AccountingTabPanel>
@@ -309,13 +295,13 @@ export function AccountingTransactionsTab({
         }
         toolbarActions={
           <Box sx={hcpTableToolbarActionsSx}>
-            <HcpTableToolbarSearchButton
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Search transactions"
-            />
             {!isReviewView ? (
               <>
+                <HcpTableToolbarSearchButton
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  placeholder="Search transactions"
+                />
                 <HcpTableToolbarIconButton
                   tooltip={filterAriaLabel}
                   aria-label={filterAriaLabel}
@@ -327,7 +313,11 @@ export function AccountingTransactionsTab({
                 >
                   <FunnelSimple size={hcpIcon.md} weight="regular" />
                 </HcpTableToolbarIconButton>
-                <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+                <HcpTableToolbarIconButton
+                  tooltip="Export"
+                  aria-label="Export"
+                  onClick={() => setExportDialogOpen(true)}
+                >
                   <DownloadSimple size={hcpIcon.md} weight="regular" />
                 </HcpTableToolbarIconButton>
               </>
@@ -357,6 +347,18 @@ export function AccountingTransactionsTab({
             ))}
           </Menu>
         ) : null}
+
+        <AccountingExportDialog
+          open={exportDialogOpen}
+          onClose={() => setExportDialogOpen(false)}
+          reviewCount={reviewQueue.length}
+          stragglerCount={stragglerCount}
+          onReviewNow={() => {
+            setExportDialogOpen(false);
+            setRegisterView("toReview");
+          }}
+          onExport={() => setExportDialogOpen(false)}
+        />
 
         <DataGrid
           rows={gridRows}
@@ -388,23 +390,7 @@ export function AccountingTransactionsTab({
               ? "Nothing left to review."
               : "No transactions match your filters.",
           }}
-          getRowHeight={isReviewView ? () => "auto" : undefined}
-          sx={
-            isReviewView
-              ? {
-                  ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
-                  "& .MuiDataGrid-row": {
-                    maxHeight: "none !important",
-                    minHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
-                  },
-                  "& .MuiDataGrid-cell": {
-                    maxHeight: "none !important",
-                    alignItems: "flex-start",
-                    py: 1,
-                  },
-                }
-              : HCP_STACKED_DATA_GRID_DEFAULTS.sx
-          }
+          sx={HCP_STACKED_DATA_GRID_DEFAULTS.sx}
         />
       </HcpSurfaceCard>
     </AccountingTabPanel>

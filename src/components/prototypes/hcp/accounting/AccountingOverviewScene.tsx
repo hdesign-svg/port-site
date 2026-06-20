@@ -10,6 +10,7 @@ import type { AccountingTab } from "./accountingTabs";
 import { isTransactionsTab } from "./accountingTabs";
 import { DEFAULT_ACCOUNTING_PERIOD, type AccountingPeriod } from "./accountingPeriods";
 import { getReviewQueueTransactions } from "./accountingReadiness";
+import type { AccountingCategoryRule } from "./accountingCategoryRules";
 import { accountingTransactions as initialTransactions } from "./accountingTransactionData";
 import {
   hcpColors,
@@ -22,6 +23,7 @@ export function AccountingScene() {
   const [activeTab, setActiveTab] = useState<AccountingTab>("all");
   const [selectedPeriod, setSelectedPeriod] = useState<AccountingPeriod>(DEFAULT_ACCOUNTING_PERIOD);
   const [transactions, setTransactions] = useState(initialTransactions);
+  const [categoryRules, setCategoryRules] = useState<AccountingCategoryRule[]>([]);
 
   const currentPeriodReviewCount = useMemo(
     () => getReviewQueueTransactions(transactions, DEFAULT_ACCOUNTING_PERIOD).length,
@@ -71,7 +73,9 @@ export function AccountingScene() {
         <AccountingTransactionsTab
           period={selectedPeriod}
           transactions={transactions}
+          categoryRules={categoryRules}
           onTransactionsChange={setTransactions}
+          onCategoryRulesChange={setCategoryRules}
         />
       ) : null}
       {activeTab === "reports" ? (

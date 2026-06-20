@@ -20,6 +20,7 @@ export function PrototypeFrame({ children }: PrototypeFrameProps) {
       }}
     >
       <Box
+        data-hcp-prototype-frame
         sx={{
           width: hcpLayout.prototypeWidth,
           height: hcpLayout.prototypeHeight,
@@ -27,6 +28,7 @@ export function PrototypeFrame({ children }: PrototypeFrameProps) {
           overflow: "hidden",
           borderRadius: 0,
           bgcolor: hcpColors.paper,
+          position: "relative",
         }}
       >
         <Box sx={{ width: "100%", height: "100%" }}>{children}</Box>

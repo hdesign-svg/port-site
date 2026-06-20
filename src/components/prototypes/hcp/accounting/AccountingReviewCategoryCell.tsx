@@ -1,72 +1,198 @@
 "use client";
 
+import { CaretDown } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import {
-  applyReviewGroup,
-  getReviewMetaForRow,
-} from "./accountingReviewGroups";
-import { AccountingCategorySelect } from "./AccountingCategorySelect";
+  getSimilarReviewTransactionIds,
+  upsertCategoryRule,
+  type AccountingCategoryRule,
+} from "./accountingCategoryRules";
 import {
-  type AccountingCategory,
-  type AccountingTransactionRow,
-} from "./accountingTransactionData";
-import { hcpColors, hcpFontWeight } from "../hcpTheme";
+  AccountingCategoryPickerPopover,
+  type CategoryPickerApplyInput,
+} from "./AccountingCategoryPickerPopover";
+import { applyReviewGroup, getReviewMetaForRow } from "./accountingReviewGroups";
+import type { AccountingPeriod } from "./accountingPeriods";
+import { getReviewQueueTransactions } from "./accountingReadiness";
+import type { AccountingTransactionRow } from "./accountingTransactionData";
+import { getHcpContextPanelPlacement, type HcpAnchoredPlacement } from "../hcpPopoverPlacement";
+import { hcpColors, hcpLayout } from "../hcpTheme";
+
+const categoryTriggerSx = {
+  width: "100%",
+  pointerEvents: "auto",
+  "& .MuiOutlinedInput-root": {
+    minHeight: hcpLayout.chromeControlHeight,
+    cursor: "pointer",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: hcpColors.borderControl,
+  },
+  "& .MuiSelect-select": {
+    display: "flex",
+    alignItems: "center",
+    minHeight: hcpLayout.chromeControlHeight - 2,
+    py: 0,
+    fontSize: "0.875rem",
+    lineHeight: 1.43,
+    color: hcpColors.textPrimary,
+    cursor: "pointer",
+  },
+  "& .MuiSelect-select.MuiSelect-displayEmpty": {
+    color: hcpColors.textMuted,
+  },
+};
 
 type ReviewCategoryCellProps = {
   row: AccountingTransactionRow;
   transactions: AccountingTransactionRow[];
+  period: AccountingPeriod;
+  categoryRules: AccountingCategoryRule[];
+  isReviewContext: boolean;
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
+  onCategoryRulesChange: (rules: AccountingCategoryRule[]) => void;
 };
 
-export function ReviewCategoryCell({ row, transactions, onTransactionsChange }: ReviewCategoryCellProps) {
-  const meta = getReviewMetaForRow(row);
+export function ReviewCategoryCell({
+  row,
+  transactions,
+  period,
+  categoryRules,
+  isReviewContext,
+  onTransactionsChange,
+  onCategoryRulesChange,
+}: ReviewCategoryCellProps) {
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState<HcpAnchoredPlacement | null>(null);
+  const placeholder = "Choose category";
 
-  const applyCategory = (category: AccountingCategory) => {
+  const updatePlacement = useCallback(() => {
+    if (!triggerRef.current) {
+      return;
+    }
+
+    setPlacement(getHcpContextPanelPlacement(triggerRef.current));
+  }, []);
+
+  const handleOpen = (event: MouseEvent) => {
+    event.stopPropagation();
+    updatePlacement();
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    updatePlacement();
+    window.addEventListener("resize", updatePlacement);
+    window.addEventListener("scroll", updatePlacement, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePlacement);
+      window.removeEventListener("scroll", updatePlacement, true);
+    };
+  }, [open, updatePlacement]);
+
+  const resolveTransactionIds = (scope: CategoryPickerApplyInput["scope"]) => {
+    if (scope === "similar") {
+      return getSimilarReviewTransactionIds(transactions, period, row);
+    }
+
+    if (scope === "always") {
+      const inQueue = getReviewQueueTransactions(transactions, period).some(
+        (queued) => queued.id === row.id,
+      );
+      if (isReviewContext && inQueue) {
+        return getSimilarReviewTransactionIds(transactions, period, row);
+      }
+    }
+
+    return [row.id];
+  };
+
+  const handleApply = ({ category, scope }: CategoryPickerApplyInput) => {
+    const meta = getReviewMetaForRow(row);
+    const transactionIds = resolveTransactionIds(scope);
+    const applyToFuture = scope === "always";
+
     onTransactionsChange(
       applyReviewGroup(transactions, {
-        transactionIds: [row.id],
+        transactionIds,
         category,
-        applyToFuture: false,
+        applyToFuture,
         ruleMatch: meta.ruleMatch,
       }),
+    );
+
+    if (applyToFuture) {
+      onCategoryRulesChange(
+        upsertCategoryRule(categoryRules, {
+          ruleMatch: meta.ruleMatch,
+          category,
+          label: meta.label,
+        }),
+      );
+    }
+  };
+
+  const handleRemoveRule = (ruleMatch: string) => {
+    onCategoryRulesChange(
+      categoryRules.filter((rule) => rule.ruleMatch.toUpperCase() !== ruleMatch.toUpperCase()),
     );
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        py: 0.75,
-        display: "flex",
-        flexDirection: "column",
-        gap: 0.75,
-      }}
-      onClick={(event) => event.stopPropagation()}
-    >
-      <AccountingCategorySelect value={null} onChange={applyCategory} placeholder="Choose category" />
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-        {meta.suggestedCategories.map((category) => (
-          <Button
-            key={category}
-            variant="text"
-            size="small"
-            onClick={() => applyCategory(category)}
-            sx={{
-              minWidth: 0,
-              minHeight: 0,
-              px: 0.5,
-              py: 0,
-              fontSize: "0.75rem",
-              fontWeight: hcpFontWeight.semibold,
-              color: hcpColors.primary,
-              "&:hover": { bgcolor: "transparent", textDecoration: "underline" },
+    <>
+      <Box
+        ref={triggerRef}
+        sx={{ width: "100%" }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <FormControl size="small" fullWidth sx={categoryTriggerSx}>
+          <Select
+            open={false}
+            value={row.category ?? ""}
+            displayEmpty
+            onMouseDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
             }}
-          >
-            {category}
-          </Button>
-        ))}
+            onClick={handleOpen}
+            IconComponent={(props) => <CaretDown {...props} size={16} weight="bold" />}
+            renderValue={(selected) => {
+              if (!selected) {
+                return placeholder;
+              }
+
+              return selected;
+            }}
+          />
+        </FormControl>
       </Box>
-    </Box>
+
+      <AccountingCategoryPickerPopover
+        anchorEl={triggerRef.current}
+        open={open}
+        placement={placement}
+        onClose={handleClose}
+        row={row}
+        transactions={transactions}
+        period={period}
+        categoryRules={categoryRules}
+        isReviewContext={isReviewContext}
+        onApply={handleApply}
+        onRemoveRule={handleRemoveRule}
+      />
+    </>
   );
 }
