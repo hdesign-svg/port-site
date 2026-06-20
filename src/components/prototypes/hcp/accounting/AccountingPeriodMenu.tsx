@@ -12,7 +12,7 @@ import {
   type AccountingPeriodStatus,
 } from "./accountingReadiness";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
-import { hcpChromeActionButtonSx, hcpColors, hcpIcon, hcpMenuItemInsetSx, hcpMenuListInsetSx, hcpMenuPaperSx } from "../hcpTheme";
+import { hcpChromeActionButtonSx, hcpColors, hcpIcon, hcpAnchoredMenuSlotProps, hcpMenuItemInsetSx, hcpMenuItemLabelSx, hcpMenuPaperSx } from "../hcpTheme";
 
 type AccountingPeriodMenuProps = {
   period: AccountingPeriod;
@@ -80,14 +80,17 @@ export function AccountingPeriodMenu({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
+          ...hcpAnchoredMenuSlotProps,
           paper: { sx: { ...hcpMenuPaperSx, minWidth: 280 } },
-          list: { sx: hcpMenuListInsetSx },
         }}
       >
-        {periodStatuses.map(({ period: option, status }) => (
+        {periodStatuses.map(({ period: option, status }) => {
+          const isSelected = option.prefix === period.prefix;
+
+          return (
           <MenuItem
             key={option.prefix}
-            selected={option.prefix === period.prefix}
+            selected={isSelected}
             onClick={() => {
               onPeriodChange(option);
               setAnchorEl(null);
@@ -100,12 +103,17 @@ export function AccountingPeriodMenu({
               gap: 2,
             }}
           >
-            <Typography component="span" variant="body2">
+            <Typography
+              component="span"
+              variant="body2"
+              sx={hcpMenuItemLabelSx}
+            >
               {option.label}
             </Typography>
             <PeriodStatusSignifier status={status} />
           </MenuItem>
-        ))}
+          );
+        })}
       </Menu>
     </>
   );

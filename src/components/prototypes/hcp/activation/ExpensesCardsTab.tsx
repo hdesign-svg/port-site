@@ -34,7 +34,7 @@ import {
   type CardTypeFilter,
   type ExpenseCardRow,
 } from "./expensesCardsData";
-import { hcpColors, hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
+import { hcpAnchoredMenuSlotProps, hcpColors, hcpIcon, hcpMenuItemInsetSx, hcpMenuItemLabelSx } from "../hcpTheme";
 
 function filterCards(rows: ExpenseCardRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -92,9 +92,12 @@ function CardActionsMenu({ row }: { row: ExpenseCardRow }) {
         onClose={() => setMenuAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+        slotProps={hcpAnchoredMenuSlotProps}
       >
-        <MenuItem onClick={() => setMenuAnchor(null)} sx={{ gap: 1 }}>
+        <MenuItem
+          onClick={() => setMenuAnchor(null)}
+          sx={{ ...hcpMenuItemInsetSx, display: "flex", alignItems: "center", gap: 1 }}
+        >
           <PencilSimple size={hcpIcon.sm} weight="regular" />
           Edit card
         </MenuItem>
@@ -216,16 +219,18 @@ export function ExpensesCardsTab() {
           onClose={() => setFilterMenuAnchor(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+          slotProps={hcpAnchoredMenuSlotProps}
         >
           {CARD_TYPE_FILTERS.map((filter) => (
             <MenuItem
               key={filter}
               selected={typeFilter === filter}
               onClick={() => handleTypeFilterChange(filter)}
-              sx={{ py: 1 }}
+              sx={hcpMenuItemInsetSx}
             >
-              <Typography variant="body2">{CARD_TYPE_FILTER_LABELS[filter]}</Typography>
+              <Typography variant="body2" sx={hcpMenuItemLabelSx}>
+                {CARD_TYPE_FILTER_LABELS[filter]}
+              </Typography>
             </MenuItem>
           ))}
         </Menu>

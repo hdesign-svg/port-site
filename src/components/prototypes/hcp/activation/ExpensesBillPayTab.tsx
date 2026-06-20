@@ -35,10 +35,12 @@ import {
   type BillPayRow,
 } from "./expensesBillPayData";
 import {
+  hcpAnchoredMenuSlotProps,
   hcpColors,
   hcpDataGridSx,
   hcpIcon,
-  hcpMenuPaperSx,
+  hcpMenuItemInsetSx,
+  hcpMenuItemLabelSx,
   hcpRadius,
 } from "../hcpTheme";
 
@@ -192,16 +194,18 @@ export function ExpensesBillPayTab() {
           onClose={() => setFilterMenuAnchor(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+          slotProps={hcpAnchoredMenuSlotProps}
         >
           {BILL_PAY_FILTER_OPTIONS.map((option) => (
             <MenuItem
               key={option.id}
               selected={billFilter === option.id}
               onClick={() => handleFilterChange(option.id)}
-              sx={{ py: 1 }}
+              sx={hcpMenuItemInsetSx}
             >
-              <Typography variant="body2">{option.label}</Typography>
+              <Typography variant="body2" sx={hcpMenuItemLabelSx}>
+                {option.label}
+              </Typography>
             </MenuItem>
           ))}
         </Menu>

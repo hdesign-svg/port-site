@@ -27,8 +27,12 @@ import {
   hcpFontWeight,
   hcpIcon,
   hcpLayout,
-  hcpMenuPaperSx,
+  hcpAnchoredMenuSlotProps,
+  hcpMenuItemInsetSx,
+  hcpMenuItemLabelSx,
   hcpPopoverPaperSx,
+  hcpPrimaryButtonSx,
+  hcpSelectMenuProps,
 } from "../hcpTheme";
 
 export function ActivityTimeRangeMenu({
@@ -65,6 +69,20 @@ export function ActivityTimeRangeMenu({
     setCustomOpen(false);
   };
 
+  const renderMonthOptions = (disableBefore?: number) =>
+    months.map((month, index) => (
+      <MenuItem
+        key={month}
+        value={index}
+        disabled={disableBefore != null && index < disableBefore}
+        sx={hcpMenuItemInsetSx}
+      >
+        <Typography variant="body2" sx={hcpMenuItemLabelSx}>
+          {month}
+        </Typography>
+      </MenuItem>
+    ));
+
   return (
     <>
       <Button
@@ -90,7 +108,7 @@ export function ActivityTimeRangeMenu({
         onClose={() => setMenuAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+        slotProps={hcpAnchoredMenuSlotProps}
       >
         {ACTIVITY_TIME_PRESETS.map((preset) => (
           <MenuItem
@@ -100,18 +118,22 @@ export function ActivityTimeRangeMenu({
               onTimeRangeChange({ kind: "preset", preset });
               setMenuAnchor(null);
             }}
-            sx={{ py: 1 }}
+            sx={hcpMenuItemInsetSx}
           >
-            <Typography variant="body2">{preset}</Typography>
+            <Typography variant="body2" sx={hcpMenuItemLabelSx}>
+              {preset}
+            </Typography>
           </MenuItem>
         ))}
         <Divider sx={{ my: 0.5 }} />
         <MenuItem
           selected={isCustomSelected(timeRange)}
           onClick={() => openCustomRange()}
-          sx={{ py: 1 }}
+          sx={hcpMenuItemInsetSx}
         >
-          <Typography variant="body2">Custom range…</Typography>
+          <Typography variant="body2" sx={hcpMenuItemLabelSx}>
+            Custom range…
+          </Typography>
         </MenuItem>
       </Menu>
 
@@ -123,61 +145,57 @@ export function ActivityTimeRangeMenu({
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{ paper: { sx: hcpPopoverPaperSx } }}
       >
-        <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 1.5 }}>
-          Custom range
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2 }}>
-          Demo data available Apr–Sep.
-        </Typography>
+        <Box sx={{ px: 0.25, py: 0.25 }}>
+          <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold, mb: 1.5, px: 0.25 }}>
+            Custom range
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2, px: 0.25 }}>
+            Demo data available Apr–Sep.
+          </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormControl size="small" fullWidth>
-            <InputLabel id="custom-range-start-label">From</InputLabel>
-            <Select
-              labelId="custom-range-start-label"
-              label="From"
-              value={customStart}
-              onChange={(event) => {
-                const nextStart = Number(event.target.value);
-                setCustomStart(nextStart);
-                if (customEnd < nextStart) {
-                  setCustomEnd(nextStart);
-                }
-              }}
-              sx={{ borderRadius: `${hcpLayout.controlRadius}px` }}
-            >
-              {months.map((month, index) => (
-                <MenuItem key={month} value={index}>
-                  {month}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <FormControl size="small" fullWidth>
+              <InputLabel id="custom-range-start-label">From</InputLabel>
+              <Select
+                labelId="custom-range-start-label"
+                label="From"
+                value={customStart}
+                MenuProps={hcpSelectMenuProps}
+                onChange={(event) => {
+                  const nextStart = Number(event.target.value);
+                  setCustomStart(nextStart);
+                  if (customEnd < nextStart) {
+                    setCustomEnd(nextStart);
+                  }
+                }}
+                sx={{ borderRadius: `${hcpLayout.controlRadius}px` }}
+              >
+                {renderMonthOptions()}
+              </Select>
+            </FormControl>
 
-          <FormControl size="small" fullWidth>
-            <InputLabel id="custom-range-end-label">To</InputLabel>
-            <Select
-              labelId="custom-range-end-label"
-              label="To"
-              value={customEnd}
-              onChange={(event) => setCustomEnd(Number(event.target.value))}
-              sx={{ borderRadius: `${hcpLayout.controlRadius}px` }}
-            >
-              {months.map((month, index) => (
-                <MenuItem key={month} value={index} disabled={index < customStart}>
-                  {month}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl size="small" fullWidth>
+              <InputLabel id="custom-range-end-label">To</InputLabel>
+              <Select
+                labelId="custom-range-end-label"
+                label="To"
+                value={customEnd}
+                MenuProps={hcpSelectMenuProps}
+                onChange={(event) => setCustomEnd(Number(event.target.value))}
+                sx={{ borderRadius: `${hcpLayout.controlRadius}px` }}
+              >
+                {renderMonthOptions(customStart)}
+              </Select>
+            </FormControl>
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pt: 0.5 }}>
-            <Button size="small" onClick={() => setCustomOpen(false)}>
-              Cancel
-            </Button>
-            <Button size="small" variant="contained" onClick={applyCustomRange}>
-              Apply
-            </Button>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pt: 0.5, px: 0.25 }}>
+              <Button size="small" onClick={() => setCustomOpen(false)}>
+                Cancel
+              </Button>
+              <Button size="small" variant="contained" onClick={applyCustomRange} sx={hcpPrimaryButtonSx}>
+                Apply
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Popover>

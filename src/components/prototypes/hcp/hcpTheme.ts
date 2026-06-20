@@ -43,6 +43,8 @@ export const hcpColors = {
   textDisabled: "#9e9e9e",
   textMuted: "#757575",
   surfaceMuted: "#eeeeee",
+  /** Segment control track — lighter than surfaceMuted */
+  segmentTrack: "#f3f3f3",
   /** Top-bar search — low-contrast outline, no fill */
   searchBorder: "#ececec",
   searchPlaceholder: "#9e9e9e",
@@ -348,17 +350,38 @@ export const hcpMenuListInsetSx = {
   p: 1,
 } as const;
 
-/** Menu rows — hover/selected fill inset from menu edges */
+/** Anchored Menu — inset list + shared paper */
+export const hcpAnchoredMenuSlotProps = {
+  paper: { sx: hcpMenuPaperSx },
+  list: { sx: hcpMenuListInsetSx },
+} as const;
+
+/** Select dropdown — same inset menu chrome as anchored menus */
+export const hcpSelectMenuProps = {
+  slotProps: hcpAnchoredMenuSlotProps,
+} as const;
+
+/** Menu row label — inherits active/hover typography from MenuItem */
+export const hcpMenuItemLabelSx = {
+  color: "inherit",
+  fontWeight: "inherit",
+} as const;
+
+/** Menu rows — muted default; semibold primary when selected; hover fill only on hover */
 export const hcpMenuItemInsetSx = {
   px: 1.25,
-  py: 1,
+  py: 0.75,
   borderRadius: `${hcpLayout.controlRadius}px`,
   minHeight: 0,
+  color: hcpColors.textMuted,
+  fontWeight: hcpFontWeight.regular,
   "& + &": {
-    mt: 1,
+    mt: 0.5,
   },
   "&.Mui-selected": {
     bgcolor: hcpColors.borderSubtle,
+    color: hcpColors.textPrimary,
+    fontWeight: hcpFontWeight.semibold,
     "&:hover": {
       bgcolor: hcpColors.borderSubtle,
     },
@@ -371,7 +394,7 @@ export const hcpMenuItemInsetSx = {
 /** Anchored popovers — time range custom picker, etc. */
 export const hcpPopoverPaperSx = {
   ...hcpMenuPaperSx,
-  p: 2,
+  p: 1,
   width: 280,
 } as const;
 
@@ -415,6 +438,7 @@ export const hcpSecondaryButtonSx = {
 /** Contained primary — enrollment, add funds, continue */
 export const hcpPrimaryButtonSx = {
   bgcolor: hcpColors.primary,
+  color: hcpColors.paper,
   boxShadow: "none",
   minHeight: hcpLayout.actionControlHeight,
   px: 2,
@@ -423,6 +447,7 @@ export const hcpPrimaryButtonSx = {
   fontWeight: hcpFontWeight.semibold,
   "&:hover": {
     bgcolor: hcpColors.primaryDark,
+    color: hcpColors.paper,
     boxShadow: "none",
   },
 } as const;

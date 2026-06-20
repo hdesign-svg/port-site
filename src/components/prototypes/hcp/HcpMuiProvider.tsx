@@ -10,7 +10,7 @@ const chromeFontSize = `${hcpHtmlFontSize / 16}rem`;
 const hcpTheme = createTheme({
   palette: {
     mode: "light",
-    primary: { main: hcpColors.primary, dark: hcpColors.primaryDark },
+    primary: { main: hcpColors.primary, dark: hcpColors.primaryDark, contrastText: "#ffffff" },
     background: { default: hcpColors.background, paper: hcpColors.paper },
     text: {
       primary: hcpColors.textPrimary,
@@ -30,25 +30,37 @@ const hcpTheme = createTheme({
     MuiButton: {
       defaultProps: {
         size: "small",
+        disableElevation: true,
       },
       styleOverrides: {
         root: {
           textTransform: "none",
           borderRadius: `${hcpLayout.controlRadius}px`,
           fontWeight: 600,
-          color: hcpColors.textPrimary,
         },
         text: {
           fontSize: chromeFontSize,
           lineHeight: 1.43,
+          color: hcpColors.textPrimary,
         },
         outlined: {
           fontSize: chromeFontSize,
           lineHeight: 1.43,
+          color: hcpColors.textPrimary,
         },
         contained: {
           fontSize: chromeFontSize,
           lineHeight: 1.43,
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "none",
+          },
+          "&:active": {
+            boxShadow: "none",
+          },
+          "&.Mui-focusVisible": {
+            boxShadow: "none",
+          },
         },
         sizeSmall: {
           minHeight: hcpLayout.chromeControlHeight,

@@ -22,7 +22,7 @@ type HcpSegmentControlProps<T extends string> = {
 /** In-card mode switch — muted track, white selected segment (Mobbin-style) */
 export const hcpSegmentControlGroupSx = {
   borderRadius: hcpRadius.control,
-  bgcolor: hcpColors.surfaceMuted,
+  bgcolor: hcpColors.segmentTrack,
   p: 0.25,
   gap: 0.25,
   "& .MuiToggleButtonGroup-grouped": {
