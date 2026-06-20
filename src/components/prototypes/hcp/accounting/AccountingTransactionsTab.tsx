@@ -390,7 +390,12 @@ export function AccountingTransactionsTab({
               ? "Nothing left to review."
               : "No transactions match your filters.",
           }}
-          sx={HCP_STACKED_DATA_GRID_DEFAULTS.sx}
+          sx={{
+            ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
+            "& .MuiDataGrid-row:hover": {
+              bgcolor: hcpColors.paper,
+            },
+          }}
         />
       </HcpSurfaceCard>
     </AccountingTabPanel>

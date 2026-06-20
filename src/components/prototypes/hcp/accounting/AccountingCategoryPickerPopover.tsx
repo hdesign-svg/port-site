@@ -221,8 +221,12 @@ export function AccountingCategoryPickerPopover({
                     sx={{
                       height: 28,
                       fontSize: "0.8125rem",
+                      borderRadius: 9999,
                       bgcolor: hcpColors.paper,
                       border: `1px solid ${hcpColors.borderControl}`,
+                      "& .MuiChip-label": {
+                        px: 1.25,
+                      },
                       "&:hover": {
                         bgcolor: "rgba(33, 33, 33, 0.04)",
                       },

@@ -1,19 +1,36 @@
 "use client";
 
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
 import { ExpensesBillPayTab } from "./ExpensesBillPayTab";
 import { ExpensesCardsTab } from "./ExpensesCardsTab";
 import { ExpensesPageHeader } from "./ExpensesPageHeader";
 import { ExpensesTabBar } from "./ExpensesTabBar";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import { ExpensesTransactionsTab } from "./ExpensesTransactionsTab";
-import { OverviewChartsSection } from "./OverviewChartsSection";
 import type { ExpensesTab } from "./expensesTabs";
 import {
   hcpColors,
   hcpContentHeaderSx,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
+
+const OverviewChartsSection = dynamic(
+  () => import("./OverviewChartsSection").then((mod) => mod.OverviewChartsSection),
+  {
+    ssr: false,
+    loading: () => (
+      <ExpensesTabPanel>
+        <Box sx={{ py: 10, textAlign: "center" }}>
+          <Typography variant="body2" color="text.secondary">
+            Loading charts…
+          </Typography>
+        </Box>
+      </ExpensesTabPanel>
+    ),
+  },
+);
 
 function ExpensesOverviewTab() {
   return (

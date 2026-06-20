@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ExpensesScene } from "@/components/prototypes/hcp/activation/ExpensesScene";
 import type { ExpensesTab } from "@/components/prototypes/hcp/activation/expensesTabs";
@@ -12,6 +13,7 @@ import type { MoneySubNavLabel } from "@/components/prototypes/hcp/HcpGlobalNav"
 import { HcpFramedShell } from "@/components/prototypes/hcp/HcpFramedShell";
 
 export default function HcpActivationPrototypePage() {
+  const router = useRouter();
   const [unlockTarget, setUnlockTarget] = useState<UnlockTarget | null>(null);
   const [expensesTab, setExpensesTab] = useState<ExpensesTab>("Overview");
 
@@ -22,7 +24,12 @@ export default function HcpActivationPrototypePage() {
   };
 
   const handleUnlockComplete = () => {
+    const target = unlockTarget;
     setUnlockTarget(null);
+
+    if (target === "accounting") {
+      router.push("/prototypes/hcp/accounting");
+    }
   };
 
   return (

@@ -5,12 +5,12 @@ import Typography from "@mui/material/Typography";
 
 const flows = [
   {
-    href: "/prototypes/hcp/activation/expenses",
+    href: "/prototypes/hcp/activation",
     title: "Activation · Expenses",
-    shots: "Unlock modal → business info → done",
+    shots: "Unlock modal → business info → done → enrolled Expenses UI",
   },
   {
-    href: "/prototypes/hcp/activation",
+    href: "/prototypes/hcp/activation/expenses",
     title: "Activation · Accounting",
     shots: "Unlock modal → business info → Plaid connect → done",
   },
