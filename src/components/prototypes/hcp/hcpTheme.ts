@@ -343,6 +343,31 @@ export const hcpMenuPaperSx = {
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
 } as const;
 
+/** Menu list — even inset from paper on all sides */
+export const hcpMenuListInsetSx = {
+  p: 1,
+} as const;
+
+/** Menu rows — hover/selected fill inset from menu edges */
+export const hcpMenuItemInsetSx = {
+  px: 1.25,
+  py: 1,
+  borderRadius: `${hcpLayout.controlRadius}px`,
+  minHeight: 0,
+  "& + &": {
+    mt: 1,
+  },
+  "&.Mui-selected": {
+    bgcolor: hcpColors.borderSubtle,
+    "&:hover": {
+      bgcolor: hcpColors.borderSubtle,
+    },
+  },
+  "&:hover": {
+    bgcolor: hcpColors.borderSubtle,
+  },
+} as const;
+
 /** Anchored popovers — time range custom picker, etc. */
 export const hcpPopoverPaperSx = {
   ...hcpMenuPaperSx,

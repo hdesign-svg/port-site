@@ -17,6 +17,7 @@ import {
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_STACKED_DATA_GRID_DEFAULTS,
+  hcpDataGridStackedSx,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
@@ -157,6 +158,12 @@ export function ExpensesTransactionsTab() {
           onSortModelChange={setSortModel}
           pageSizeOptions={[10, 25, 50]}
           {...HCP_STACKED_DATA_GRID_DEFAULTS}
+          sx={{
+            ...hcpDataGridStackedSx,
+            "& .MuiDataGrid-row:hover": {
+              bgcolor: hcpColors.paper,
+            },
+          }}
           slotProps={{
             basePagination: {
               material: {

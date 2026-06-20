@@ -18,6 +18,7 @@ import {
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   HCP_STACKED_DATA_GRID_DEFAULTS,
+  hcpDataGridStackedSx,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
@@ -33,7 +34,7 @@ import {
   type CardTypeFilter,
   type ExpenseCardRow,
 } from "./expensesCardsData";
-import { hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
+import { hcpColors, hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
 
 function filterCards(rows: ExpenseCardRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -241,6 +242,12 @@ export function ExpensesCardsTab() {
           showColumnVerticalBorder={false}
           hideFooter
           {...HCP_STACKED_DATA_GRID_DEFAULTS}
+          sx={{
+            ...hcpDataGridStackedSx,
+            "& .MuiDataGrid-row:hover": {
+              bgcolor: hcpColors.paper,
+            },
+          }}
         />
       </HcpSurfaceCard>
     </ExpensesTabPanel>

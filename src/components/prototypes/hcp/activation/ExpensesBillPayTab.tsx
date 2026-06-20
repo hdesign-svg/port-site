@@ -222,7 +222,12 @@ export function ExpensesBillPayTab() {
           pageSizeOptions={[15, 25, 50]}
           rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
           columnHeaderHeight={HCP_DATA_GRID_COLUMN_HEADER_HEIGHT}
-          sx={hcpDataGridSx}
+          sx={{
+            ...hcpDataGridSx,
+            "& .MuiDataGrid-row:hover": {
+              bgcolor: hcpColors.paper,
+            },
+          }}
           slotProps={{
             basePagination: {
               material: {
