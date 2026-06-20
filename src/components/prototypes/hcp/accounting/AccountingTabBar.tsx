@@ -18,13 +18,13 @@ import {
 
 type AccountingTabBarProps = {
   activeTab: AccountingTab;
-  showReviewDot: boolean;
+  reviewCount: number;
   onTabChange: (tab: AccountingTab) => void;
 };
 
 export function AccountingTabBar({
   activeTab,
-  showReviewDot,
+  reviewCount,
   onTabChange,
 }: AccountingTabBarProps) {
   return (
@@ -42,7 +42,7 @@ export function AccountingTabBar({
         {ACCOUNTING_TABS.map((tab) => {
           const label = ACCOUNTING_TAB_LABELS[tab];
           const isActive = tab === activeTab;
-          const showDot = tab === "toReview" && showReviewDot && !isActive;
+          const showReviewCount = tab === "all" && reviewCount > 0;
 
           return (
             <Box
@@ -71,18 +71,18 @@ export function AccountingTabBar({
                 <Typography variant="tabLabel" sx={hcpModuleTabLabelSx(isActive)}>
                   {label}
                 </Typography>
-                {showDot ? (
-                  <Box
+                {showReviewCount ? (
+                  <Typography
                     component="span"
-                    aria-hidden
+                    variant="tabLabel"
                     sx={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      bgcolor: hcpColors.primary,
-                      flexShrink: 0,
+                      ...hcpModuleTabLabelSx(isActive),
+                      color: isActive ? hcpColors.textSecondary : hcpColors.textMuted,
+                      fontVariantNumeric: "tabular-nums",
                     }}
-                  />
+                  >
+                    ({reviewCount})
+                  </Typography>
                 ) : null}
               </Box>
               {isActive ? (

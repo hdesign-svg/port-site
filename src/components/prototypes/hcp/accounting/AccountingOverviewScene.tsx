@@ -7,30 +7,28 @@ import { AccountingReportsTab } from "./AccountingReportsTab";
 import { AccountingTabBar } from "./AccountingTabBar";
 import { AccountingTransactionsTab } from "./AccountingTransactionsTab";
 import type { AccountingTab } from "./accountingTabs";
-import { isAccountingTransactionTab } from "./accountingTabs";
+import { isTransactionsTab } from "./accountingTabs";
 import { DEFAULT_ACCOUNTING_PERIOD, type AccountingPeriod } from "./accountingPeriods";
-import { getAccountingReadiness, getReviewQueueTransactions } from "./accountingReadiness";
+import { getReviewQueueTransactions } from "./accountingReadiness";
 import { accountingTransactions as initialTransactions } from "./accountingTransactionData";
 import {
   hcpColors,
   hcpContentHeaderSx,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
+import { useHcpAccountingReviewCount } from "../HcpAppShell";
 
 export function AccountingScene() {
-  const [activeTab, setActiveTab] = useState<AccountingTab>("toReview");
+  const [activeTab, setActiveTab] = useState<AccountingTab>("all");
   const [selectedPeriod, setSelectedPeriod] = useState<AccountingPeriod>(DEFAULT_ACCOUNTING_PERIOD);
   const [transactions, setTransactions] = useState(initialTransactions);
-
-  const readiness = useMemo(
-    () => getAccountingReadiness(transactions, selectedPeriod),
-    [transactions, selectedPeriod],
-  );
 
   const currentPeriodReviewCount = useMemo(
     () => getReviewQueueTransactions(transactions, DEFAULT_ACCOUNTING_PERIOD).length,
     [transactions],
   );
+
+  useHcpAccountingReviewCount(currentPeriodReviewCount);
 
   return (
     <Box
@@ -61,7 +59,7 @@ export function AccountingScene() {
             tabs={
               <AccountingTabBar
                 activeTab={activeTab}
-                showReviewDot={currentPeriodReviewCount > 0}
+                reviewCount={currentPeriodReviewCount}
                 onTabChange={setActiveTab}
               />
             }
@@ -69,15 +67,11 @@ export function AccountingScene() {
         </Box>
       </Box>
 
-      {isAccountingTransactionTab(activeTab) ? (
+      {isTransactionsTab(activeTab) ? (
         <AccountingTransactionsTab
-          activeView={activeTab}
           period={selectedPeriod}
           transactions={transactions}
           onTransactionsChange={setTransactions}
-          readiness={readiness}
-          onViewReports={() => setActiveTab("reports")}
-          onSwitchToTransactions={() => setActiveTab("all")}
         />
       ) : null}
       {activeTab === "reports" ? (

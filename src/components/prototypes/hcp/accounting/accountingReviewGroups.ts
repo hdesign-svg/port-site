@@ -17,7 +17,7 @@ type GroupMeta = {
   suggestedCategories: AccountingCategory[];
 };
 
-function getGroupMeta(row: AccountingTransactionRow): GroupMeta {
+export function getReviewMetaForRow(row: AccountingTransactionRow): GroupMeta {
   const description = row.description.toUpperCase();
 
   if (description.includes("AMAZON")) {
@@ -72,7 +72,7 @@ export function buildReviewGroups(
   const groups = new Map<string, ReviewGroup>();
 
   for (const row of queue) {
-    const meta = getGroupMeta(row);
+    const meta = getReviewMetaForRow(row);
     const existing = groups.get(meta.id);
 
     if (existing) {

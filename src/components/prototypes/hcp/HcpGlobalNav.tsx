@@ -177,12 +177,41 @@ function NavRow({
   );
 }
 
+function NavCountBadge({ count }: { count: number }) {
+  const label = count > 99 ? "99+" : String(count);
+
+  return (
+    <Box
+      component="span"
+      aria-label={`${count} to review`}
+      sx={{
+        minWidth: 16,
+        height: 16,
+        px: count > 9 ? 0.375 : 0,
+        borderRadius: 999,
+        bgcolor: "rgba(14, 111, 190, 0.12)",
+        color: hcpColors.primary,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "0.625rem",
+        fontWeight: hcpFontWeight.semibold,
+        fontVariantNumeric: "tabular-nums",
+        lineHeight: 1,
+      }}
+    >
+      {label}
+    </Box>
+  );
+}
+
 export type MoneySubNavLabel = "Payments" | "Expenses" | "Financing" | "Accounting";
 
 export type HcpGlobalNavProps = {
   activeMoneySubNav?: MoneySubNavLabel;
   lockedMoneySubNav?: readonly MoneySubNavLabel[];
   onMoneySubNavClick?: (label: MoneySubNavLabel) => void;
+  accountingReviewCount?: number;
 };
 
 function MoneySubNavGroup({ children }: { children: React.ReactNode }) {
@@ -214,13 +243,17 @@ function SubNavItem({
   label,
   active,
   locked,
+  badgeCount,
   onClick,
 }: {
   label: MoneySubNavLabel;
   active?: boolean;
   locked?: boolean;
+  badgeCount?: number;
   onClick?: () => void;
 }) {
+  const showBadge = !locked && badgeCount != null && badgeCount > 0;
+
   const row = (
     <Box
       sx={{
@@ -265,6 +298,8 @@ function SubNavItem({
               weight="regular"
               aria-hidden
             />
+          ) : showBadge ? (
+            <NavCountBadge count={badgeCount} />
           ) : null}
         </TrailingSlot>
       </Box>
@@ -370,6 +405,7 @@ export function HcpGlobalNav({
   activeMoneySubNav = "Expenses",
   lockedMoneySubNav = [],
   onMoneySubNavClick,
+  accountingReviewCount = 0,
 }: HcpGlobalNavProps = {}) {
   const moneySubNavItems: MoneySubNavLabel[] = [
     "Payments",
@@ -460,6 +496,7 @@ export function HcpGlobalNav({
                   label={label}
                   active={label === activeMoneySubNav}
                   locked={lockedMoneySubNav.includes(label)}
+                  badgeCount={label === "Accounting" ? accountingReviewCount : undefined}
                   onClick={
                     onMoneySubNavClick
                       ? () => onMoneySubNavClick(label)

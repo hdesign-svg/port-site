@@ -17,7 +17,7 @@ const flows = [
   {
     href: "/prototypes/hcp/accounting",
     title: "Basic Accounting",
-    shots: "To review · All · Reports (post-activation)",
+    shots: "Transactions · Reports (post-activation)",
   },
 ];
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { CheckCircle, DownloadSimple, FunnelSimple } from "@phosphor-icons/react";
+import { DownloadSimple, FunnelSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -19,35 +18,31 @@ import {
   HcpTableStackedCell,
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
-  HcpTableZoneHeader,
+  hcpTableToolbarLeadingSx,
+  HCP_DATA_GRID_STACKED_ROW_HEIGHT,
   HCP_STACKED_DATA_GRID_DEFAULTS,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
+import { HcpSegmentControl } from "../HcpSegmentControl";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
-import { AccountingReviewFocus } from "./AccountingReviewFocus";
+import { ReviewCategoryCell } from "./AccountingReviewCategoryCell";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import {
   ACCOUNTING_FLOW_FILTERS,
-  ACCOUNTING_ZONE_TITLES,
   type AccountingFlowFilter,
 } from "./accountingTabs";
 import type { AccountingPeriod } from "./accountingPeriods";
-import type { AccountingReadiness } from "./accountingReadiness";
+import { getReviewMetaForRow } from "./accountingReviewGroups";
 import { getReviewQueueTransactions } from "./accountingReadiness";
 import {
   formatAccountingAmount,
   formatAccountingDate,
   type AccountingTransactionRow,
 } from "./accountingTransactionData";
-import {
-  hcpColors,
-  hcpFontWeight,
-  hcpIcon,
-  hcpMenuPaperSx,
-  hcpPrimaryButtonSx,
-  hcpRadius,
-} from "../hcpTheme";
+import { hcpColors, hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
+
+type RegisterView = "toReview" | "all";
 
 function filterBySearch(rows: AccountingTransactionRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -80,25 +75,60 @@ function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilt
   return rows.filter((row) => !row.isDeposit);
 }
 
+type RegisterViewSegmentsProps = {
+  value: RegisterView;
+  reviewCount: number;
+  onChange: (view: RegisterView) => void;
+};
+
+function RegisterViewSegments({ value, reviewCount, onChange }: RegisterViewSegmentsProps) {
+  return (
+    <HcpSegmentControl
+      value={value}
+      onChange={onChange}
+      aria-label="Register view"
+      options={[
+        {
+          value: "toReview",
+          label: (
+            <>
+              To review
+              {reviewCount > 0 ? (
+                <Box
+                  component="span"
+                  sx={{ ml: 0.5, fontVariantNumeric: "tabular-nums" }}
+                >
+                  ({reviewCount})
+                </Box>
+              ) : null}
+            </>
+          ),
+          disabled: reviewCount === 0,
+          "aria-label":
+            reviewCount > 0 ? `To review, ${reviewCount} transactions` : "To review",
+        },
+        {
+          value: "all",
+          label: "All transactions",
+          "aria-label": "All transactions",
+        },
+      ]}
+    />
+  );
+}
+
 type AccountingTransactionsTabProps = {
-  activeView: "toReview" | "all";
   period: AccountingPeriod;
   transactions: AccountingTransactionRow[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
-  readiness: AccountingReadiness;
-  onViewReports?: () => void;
-  onSwitchToTransactions?: () => void;
 };
 
 export function AccountingTransactionsTab({
-  activeView,
   period,
   transactions,
   onTransactionsChange,
-  readiness,
-  onViewReports,
-  onSwitchToTransactions,
 }: AccountingTransactionsTabProps) {
+  const [registerView, setRegisterView] = useState<RegisterView>("all");
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
@@ -119,9 +149,25 @@ export function AccountingTransactionsTab({
     [transactions, period],
   );
 
+  const isReviewView = registerView === "toReview" && reviewQueue.length > 0;
+
   useEffect(() => {
     setPaginationModel((current) => ({ ...current, page: 0 }));
   }, [period.prefix]);
+
+  useEffect(() => {
+    setRegisterView(reviewQueue.length > 0 ? "toReview" : "all");
+  }, [period.prefix]);
+
+  useEffect(() => {
+    if (reviewQueue.length === 0) {
+      setRegisterView("all");
+    }
+  }, [reviewQueue.length]);
+
+  useEffect(() => {
+    setPaginationModel((current) => ({ ...current, page: 0 }));
+  }, [registerView]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -139,15 +185,22 @@ export function AccountingTransactionsTab({
     [transactions, period.prefix],
   );
 
-  const allRows = useMemo(() => {
+  const registerRows = useMemo(() => {
     let rows = periodTransactions;
     rows = filterByFlow(rows, flowFilter);
     rows = filterBySearch(rows, searchQuery);
     return rows;
   }, [flowFilter, periodTransactions, searchQuery]);
 
-  const columns: GridColDef<AccountingTransactionRow>[] = useMemo(
-    () => [
+  const reviewRows = useMemo(
+    () => filterBySearch(reviewQueue, searchQuery),
+    [reviewQueue, searchQuery],
+  );
+
+  const gridRows = isReviewView ? reviewRows : registerRows;
+
+  const columns: GridColDef<AccountingTransactionRow>[] = useMemo(() => {
+    const shared: GridColDef<AccountingTransactionRow>[] = [
       {
         field: "date",
         headerName: "Date",
@@ -161,8 +214,8 @@ export function AccountingTransactionsTab({
       {
         field: "description",
         headerName: "Transaction",
-        flex: 1.8,
-        minWidth: 240,
+        flex: isReviewView ? 1.6 : 1.8,
+        minWidth: 220,
         sortable: false,
         renderCell: ({ row }) => <TransactionCell row={row} />,
       },
@@ -185,6 +238,41 @@ export function AccountingTransactionsTab({
           </HcpTableCellPrimary>
         ),
       },
+    ];
+
+    if (isReviewView) {
+      return [
+        ...shared,
+        {
+          field: "group",
+          headerName: "Group",
+          flex: 1,
+          minWidth: 160,
+          sortable: false,
+          valueGetter: (_value, row) => getReviewMetaForRow(row).label,
+          renderCell: ({ row }) => (
+            <HcpTableCellSecondary noWrap>{getReviewMetaForRow(row).label}</HcpTableCellSecondary>
+          ),
+        },
+        {
+          field: "category",
+          headerName: "Category",
+          flex: 1.35,
+          minWidth: 240,
+          sortable: false,
+          renderCell: ({ row }) => (
+            <ReviewCategoryCell
+              row={row}
+              transactions={transactions}
+              onTransactionsChange={onTransactionsChange}
+            />
+          ),
+        },
+      ];
+    }
+
+    return [
+      ...shared,
       {
         field: "category",
         headerName: "Category",
@@ -203,99 +291,22 @@ export function AccountingTransactionsTab({
           return <HcpTableCellSecondary>{row.category}</HcpTableCellSecondary>;
         },
       },
-    ],
-    [],
-  );
-
-  if (activeView === "toReview") {
-    if (reviewQueue.length === 0) {
-      return (
-        <AccountingTabPanel>
-          <HcpSurfaceCard toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.review} />}>
-            <Box sx={{ py: 4, textAlign: "center" }}>
-              {period.isCurrent ? (
-                <>
-                  <CheckCircle
-                    size={40}
-                    weight="fill"
-                    color={hcpColors.successMain}
-                    style={{ marginBottom: 12 }}
-                  />
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
-                    {readiness.periodLabel} is ready for your CPA
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ maxWidth: 360, mx: "auto", mb: 3 }}
-                  >
-                    Every recent transaction is categorized. View your profit & loss or switch to
-                    Transactions to audit anytime.
-                  </Typography>
-                  {onViewReports ? (
-                    <Button
-                      variant="contained"
-                      onClick={onViewReports}
-                      sx={{
-                        borderRadius: hcpRadius.control,
-                        ...hcpPrimaryButtonSx,
-                        px: 3,
-                      }}
-                    >
-                      View profit & loss
-                    </Button>
-                  ) : null}
-                </>
-              ) : (
-                <>
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: hcpFontWeight.semibold }}>
-                    Nothing to review for {period.label}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ maxWidth: 360, mx: "auto", mb: 3 }}
-                  >
-                    Review is only for recent activity in the current month. Open the register to
-                    audit {period.label} anytime.
-                  </Typography>
-                  {onSwitchToTransactions ? (
-                    <Button
-                      variant="contained"
-                      onClick={onSwitchToTransactions}
-                      sx={{
-                        borderRadius: hcpRadius.control,
-                        ...hcpPrimaryButtonSx,
-                        px: 3,
-                      }}
-                    >
-                      View register
-                    </Button>
-                  ) : null}
-                </>
-              )}
-            </Box>
-          </HcpSurfaceCard>
-        </AccountingTabPanel>
-      );
-    }
-
-    return (
-      <AccountingTabPanel>
-        <AccountingReviewFocus
-          period={period}
-          transactions={transactions}
-          onTransactionsChange={onTransactionsChange}
-        />
-      </AccountingTabPanel>
-    );
-  }
+    ];
+  }, [isReviewView, onTransactionsChange, transactions]);
 
   return (
     <AccountingTabPanel>
       <HcpSurfaceCard
         flush
-        toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.register} />}
+        toolbarLeading={
+          <Box sx={hcpTableToolbarLeadingSx}>
+            <RegisterViewSegments
+              value={isReviewView ? "toReview" : registerView}
+              reviewCount={reviewQueue.length}
+              onChange={setRegisterView}
+            />
+          </Box>
+        }
         toolbarActions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton
@@ -303,46 +314,52 @@ export function AccountingTransactionsTab({
               onChange={handleSearchChange}
               placeholder="Search transactions"
             />
-            <HcpTableToolbarIconButton
-              tooltip={filterAriaLabel}
-              aria-label={filterAriaLabel}
-              aria-haspopup="menu"
-              aria-expanded={filterMenuOpen ? "true" : undefined}
-              aria-controls={filterMenuOpen ? "accounting-flow-filter-menu" : undefined}
-              active={flowFilter !== "all"}
-              onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
-            >
-              <FunnelSimple size={hcpIcon.md} weight="regular" />
-            </HcpTableToolbarIconButton>
-            <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
-              <DownloadSimple size={hcpIcon.md} weight="regular" />
-            </HcpTableToolbarIconButton>
+            {!isReviewView ? (
+              <>
+                <HcpTableToolbarIconButton
+                  tooltip={filterAriaLabel}
+                  aria-label={filterAriaLabel}
+                  aria-haspopup="menu"
+                  aria-expanded={filterMenuOpen ? "true" : undefined}
+                  aria-controls={filterMenuOpen ? "accounting-flow-filter-menu" : undefined}
+                  active={flowFilter !== "all"}
+                  onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
+                >
+                  <FunnelSimple size={hcpIcon.md} weight="regular" />
+                </HcpTableToolbarIconButton>
+                <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
+                  <DownloadSimple size={hcpIcon.md} weight="regular" />
+                </HcpTableToolbarIconButton>
+              </>
+            ) : null}
           </Box>
         }
       >
-        <Menu
-          id="accounting-flow-filter-menu"
-          anchorEl={filterMenuAnchor}
-          open={filterMenuOpen}
-          onClose={() => setFilterMenuAnchor(null)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: hcpMenuPaperSx } }}
-        >
-          {ACCOUNTING_FLOW_FILTERS.map((option) => (
-            <MenuItem
-              key={option.id}
-              selected={flowFilter === option.id}
-              onClick={() => handleFlowFilterChange(option.id)}
-              sx={{ py: 1 }}
-            >
-              <Typography variant="body2">{option.label}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
+        {!isReviewView ? (
+          <Menu
+            id="accounting-flow-filter-menu"
+            anchorEl={filterMenuAnchor}
+            open={filterMenuOpen}
+            onClose={() => setFilterMenuAnchor(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            slotProps={{ paper: { sx: hcpMenuPaperSx } }}
+          >
+            {ACCOUNTING_FLOW_FILTERS.map((option) => (
+              <MenuItem
+                key={option.id}
+                selected={flowFilter === option.id}
+                onClick={() => handleFlowFilterChange(option.id)}
+                sx={{ py: 1 }}
+              >
+                <Typography variant="body2">{option.label}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        ) : null}
 
         <DataGrid
-          rows={allRows}
+          rows={gridRows}
           columns={columns}
           autoHeight
           disableRowSelectionOnClick
@@ -367,8 +384,27 @@ export function AccountingTransactionsTab({
             },
           }}
           localeText={{
-            noRowsLabel: "No transactions match your filters.",
+            noRowsLabel: isReviewView
+              ? "Nothing left to review."
+              : "No transactions match your filters.",
           }}
+          getRowHeight={isReviewView ? () => "auto" : undefined}
+          sx={
+            isReviewView
+              ? {
+                  ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
+                  "& .MuiDataGrid-row": {
+                    maxHeight: "none !important",
+                    minHeight: `${HCP_DATA_GRID_STACKED_ROW_HEIGHT}px !important`,
+                  },
+                  "& .MuiDataGrid-cell": {
+                    maxHeight: "none !important",
+                    alignItems: "flex-start",
+                    py: 1,
+                  },
+                }
+              : HCP_STACKED_DATA_GRID_DEFAULTS.sx
+          }
         />
       </HcpSurfaceCard>
     </AccountingTabPanel>
