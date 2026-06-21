@@ -4,18 +4,13 @@ import Box from "@mui/material/Box";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { AccountingCategoryCellTrigger } from "./AccountingCategoryCellTrigger";
 import {
-  findCategoryRule,
-  getSimilarReviewTransactionIds,
-  upsertCategoryRule,
-  type AccountingCategoryRule,
-} from "./accountingCategoryRules";
-import {
   AccountingCategoryPickerPopover,
+  getCategoryPickerPopoverHeight,
   type CategoryPickerApplyInput,
 } from "./AccountingCategoryPickerPopover";
+import { findCategoryRule, upsertCategoryRule, type AccountingCategoryRule } from "./accountingCategoryRules";
 import { applyReviewGroup, getReviewMetaForRow } from "./accountingReviewGroups";
 import type { AccountingPeriod } from "./accountingPeriods";
-import { getReviewQueueTransactions } from "./accountingReadiness";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
 import { getHcpContextPanelPlacement, type HcpAnchoredPlacement } from "../hcpPopoverPlacement";
 
@@ -24,17 +19,16 @@ type ReviewCategoryCellProps = {
   transactions: AccountingTransactionRow[];
   period: AccountingPeriod;
   categoryRules: AccountingCategoryRule[];
-  isReviewContext: boolean;
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   onCategoryRulesChange: (rules: AccountingCategoryRule[]) => void;
 };
 
+/** Category cell for the full register — uses a simple single-step popover. */
 export function ReviewCategoryCell({
   row,
   transactions,
   period,
   categoryRules,
-  isReviewContext,
   onTransactionsChange,
   onCategoryRulesChange,
 }: ReviewCategoryCellProps) {
@@ -49,21 +43,17 @@ export function ReviewCategoryCell({
       return;
     }
 
-    setPlacement(getHcpContextPanelPlacement(triggerRef.current));
-  }, []);
+    setPlacement(
+      getHcpContextPanelPlacement(triggerRef.current, {
+        estimatedHeight: getCategoryPickerPopoverHeight(Boolean(hasRule)),
+      }),
+    );
+  }, [hasRule]);
 
   const handleOpen = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     updatePlacement();
     setOpen(true);
-  };
-
-  const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   useEffect(() => {
@@ -81,25 +71,8 @@ export function ReviewCategoryCell({
     };
   }, [open, updatePlacement]);
 
-  const resolveTransactionIds = (scope: CategoryPickerApplyInput["scope"]) => {
-    if (scope === "similar") {
-      return getSimilarReviewTransactionIds(transactions, period, row);
-    }
-
-    if (scope === "always") {
-      const inQueue = getReviewQueueTransactions(transactions, period).some(
-        (queued) => queued.id === row.id,
-      );
-      if (isReviewContext && inQueue) {
-        return getSimilarReviewTransactionIds(transactions, period, row);
-      }
-    }
-
-    return [row.id];
-  };
-
   const handleApply = ({ category, scope }: CategoryPickerApplyInput) => {
-    const transactionIds = resolveTransactionIds(scope);
+    const transactionIds = scope === "this" ? [row.id] : [row.id];
     const applyToFuture = scope === "always";
 
     onTransactionsChange(
@@ -122,12 +95,6 @@ export function ReviewCategoryCell({
     }
   };
 
-  const handleRemoveRule = (ruleMatch: string) => {
-    onCategoryRulesChange(
-      categoryRules.filter((rule) => rule.ruleMatch.toUpperCase() !== ruleMatch.toUpperCase()),
-    );
-  };
-
   return (
     <>
       <Box ref={triggerRef} sx={{ width: "100%" }} onClick={(event) => event.stopPropagation()}>
@@ -135,7 +102,7 @@ export function ReviewCategoryCell({
           category={row.category}
           hasRule={hasRule}
           onClick={handleOpen}
-          onMouseDown={handleMouseDown}
+          onMouseDown={(event) => event.stopPropagation()}
         />
       </Box>
 
@@ -143,14 +110,18 @@ export function ReviewCategoryCell({
         anchorEl={triggerRef.current}
         open={open}
         placement={placement}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         row={row}
         transactions={transactions}
         period={period}
         categoryRules={categoryRules}
-        isReviewContext={isReviewContext}
+        isReviewContext={false}
         onApply={handleApply}
-        onRemoveRule={handleRemoveRule}
+        onRemoveRule={(ruleMatch) =>
+          onCategoryRulesChange(
+            categoryRules.filter((rule) => rule.ruleMatch.toUpperCase() !== ruleMatch.toUpperCase()),
+          )
+        }
       />
     </>
   );

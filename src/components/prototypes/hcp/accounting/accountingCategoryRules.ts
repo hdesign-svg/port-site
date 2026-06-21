@@ -52,10 +52,23 @@ export function getSimilarReviewTransactionIds(
   period: AccountingPeriod,
   row: AccountingTransactionRow,
 ): string[] {
+  return getSimilarReviewTransactions(transactions, period, row).map((candidate) => candidate.id);
+}
+
+export function getSimilarReviewTransactions(
+  transactions: AccountingTransactionRow[],
+  period: AccountingPeriod,
+  row: AccountingTransactionRow,
+): AccountingTransactionRow[] {
   const groupId = getReviewMetaForRow(row).id;
+
   return getReviewQueueTransactions(transactions, period)
     .filter((candidate) => getReviewMetaForRow(candidate).id === groupId)
-    .map((candidate) => candidate.id);
+    .sort((left, right) => {
+      const leftTime = new Date(`${left.date}T12:00:00`).getTime();
+      const rightTime = new Date(`${right.date}T12:00:00`).getTime();
+      return rightTime - leftTime;
+    });
 }
 
 export function getStragglerUncategorizedCount(

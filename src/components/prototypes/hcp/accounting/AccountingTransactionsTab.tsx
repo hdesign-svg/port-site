@@ -28,6 +28,7 @@ import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { getStragglerUncategorizedCount, type AccountingCategoryRule } from "./accountingCategoryRules";
 import { AccountingExportDialog } from "./AccountingExportDialog";
 import { ReviewCategoryCell } from "./AccountingReviewCategoryCell";
+import { AccountingReviewGroupedTableView } from "./AccountingReviewGroupedTableView";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import {
   ACCOUNTING_FLOW_FILTERS,
@@ -263,7 +264,6 @@ export function AccountingTransactionsTab({
             transactions={transactions}
             period={period}
             categoryRules={categoryRules}
-            isReviewContext={isReviewView}
             onTransactionsChange={onTransactionsChange}
             onCategoryRulesChange={onCategoryRulesChange}
           />
@@ -272,7 +272,6 @@ export function AccountingTransactionsTab({
     ],
     [
       categoryRules,
-      isReviewView,
       onCategoryRulesChange,
       onTransactionsChange,
       period,
@@ -294,35 +293,33 @@ export function AccountingTransactionsTab({
           </Box>
         }
         toolbarActions={
-          <Box sx={hcpTableToolbarActionsSx}>
-            {!isReviewView ? (
-              <>
-                <HcpTableToolbarSearchButton
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search transactions"
-                />
-                <HcpTableToolbarIconButton
-                  tooltip={filterAriaLabel}
-                  aria-label={filterAriaLabel}
-                  aria-haspopup="menu"
-                  aria-expanded={filterMenuOpen ? "true" : undefined}
-                  aria-controls={filterMenuOpen ? "accounting-flow-filter-menu" : undefined}
-                  active={flowFilter !== "all"}
-                  onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
-                >
-                  <FunnelSimple size={hcpIcon.md} weight="regular" />
-                </HcpTableToolbarIconButton>
-                <HcpTableToolbarIconButton
-                  tooltip="Export"
-                  aria-label="Export"
-                  onClick={() => setExportDialogOpen(true)}
-                >
-                  <DownloadSimple size={hcpIcon.md} weight="regular" />
-                </HcpTableToolbarIconButton>
-              </>
-            ) : null}
-          </Box>
+          !isReviewView ? (
+            <Box sx={hcpTableToolbarActionsSx}>
+              <HcpTableToolbarSearchButton
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search transactions"
+              />
+              <HcpTableToolbarIconButton
+                tooltip={filterAriaLabel}
+                aria-label={filterAriaLabel}
+                aria-haspopup="menu"
+                aria-expanded={filterMenuOpen ? "true" : undefined}
+                aria-controls={filterMenuOpen ? "accounting-flow-filter-menu" : undefined}
+                active={flowFilter !== "all"}
+                onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
+              >
+                <FunnelSimple size={hcpIcon.md} weight="regular" />
+              </HcpTableToolbarIconButton>
+              <HcpTableToolbarIconButton
+                tooltip="Export"
+                aria-label="Export"
+                onClick={() => setExportDialogOpen(true)}
+              >
+                <DownloadSimple size={hcpIcon.md} weight="regular" />
+              </HcpTableToolbarIconButton>
+            </Box>
+          ) : undefined
         }
       >
         {!isReviewView ? (
@@ -360,44 +357,51 @@ export function AccountingTransactionsTab({
           onExport={() => setExportDialogOpen(false)}
         />
 
-        <DataGrid
-          rows={gridRows}
-          columns={columns}
-          autoHeight
-          disableRowSelectionOnClick
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          showCellVerticalBorder={false}
-          showColumnVerticalBorder={false}
-          paginationMode="client"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          pageSizeOptions={[10, 25, 50]}
-          hideFooter={isReviewView}
-          {...HCP_STACKED_DATA_GRID_DEFAULTS}
-          slotProps={{
-            basePagination: {
-              material: {
-                ActionsComponent: HcpTablePaginationActions,
-                labelRowsPerPage: "Rows per page:",
+        {isReviewView ? (
+          <AccountingReviewGroupedTableView
+            transactions={transactions}
+            period={period}
+            categoryRules={categoryRules}
+            onTransactionsChange={onTransactionsChange}
+            onCategoryRulesChange={onCategoryRulesChange}
+          />
+        ) : (
+          <DataGrid
+            rows={gridRows}
+            columns={columns}
+            autoHeight
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            paginationMode="client"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+            pageSizeOptions={[10, 25, 50]}
+            {...HCP_STACKED_DATA_GRID_DEFAULTS}
+            slotProps={{
+              basePagination: {
+                material: {
+                  ActionsComponent: HcpTablePaginationActions,
+                  labelRowsPerPage: "Rows per page:",
+                },
               },
-            },
-          }}
-          localeText={{
-            noRowsLabel: isReviewView
-              ? "Nothing left to review."
-              : "No transactions match your filters.",
-          }}
-          sx={{
-            ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: hcpColors.paper,
-            },
-          }}
-        />
+            }}
+            localeText={{
+              noRowsLabel: "No transactions match your filters.",
+            }}
+            sx={{
+              ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
+              "& .MuiDataGrid-row:hover": {
+                bgcolor: hcpColors.paper,
+              },
+            }}
+          />
+        )}
       </HcpSurfaceCard>
     </AccountingTabPanel>
   );

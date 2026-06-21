@@ -17,50 +17,60 @@ type GroupMeta = {
   suggestedCategories: AccountingCategory[];
 };
 
+function normalizeVendorKey(description: string) {
+  const upper = description.toUpperCase();
+
+  if (upper.includes("AMAZON")) {
+    return "AMAZON";
+  }
+
+  if (upper.includes("COSTCO")) {
+    return "COSTCO";
+  }
+
+  return upper.replace(/[^A-Z0-9]+/g, " ").trim().slice(0, 24) || upper.slice(0, 24);
+}
+
+function vendorLabelForKey(vendorKey: string) {
+  if (vendorKey === "AMAZON") {
+    return "Amazon purchases";
+  }
+
+  if (vendorKey === "COSTCO") {
+    return "Costco purchases";
+  }
+
+  return vendorKey;
+}
+
+function suggestedCategoriesForVendor(vendorKey: string): AccountingCategory[] {
+  if (vendorKey === "AMAZON") {
+    return ["Materials & Supplies", "Equipment & Tools", "Software & Subscriptions"];
+  }
+
+  if (vendorKey === "COSTCO") {
+    return ["Materials & Supplies", "Meals & Entertainment"];
+  }
+
+  if (vendorKey.includes("ZELLE") || vendorKey.includes("VENMO")) {
+    return ["Contractors & Subcontractors", "Payroll & Benefits"];
+  }
+
+  if (vendorKey.includes("DEPOSIT")) {
+    return ["Service Revenue"];
+  }
+
+  return ["Materials & Supplies", "Contractors & Subcontractors", "Equipment & Tools"];
+}
+
 export function getReviewMetaForRow(row: AccountingTransactionRow): GroupMeta {
-  const description = row.description.toUpperCase();
-
-  if (description.includes("AMAZON")) {
-    return {
-      id: "amazon",
-      label: "Amazon purchases",
-      ruleMatch: "AMAZON",
-      suggestedCategories: ["Materials & Supplies", "Equipment & Tools", "Software & Subscriptions"],
-    };
-  }
-
-  if (description.includes("COSTCO")) {
-    return {
-      id: "costco",
-      label: "Costco purchases",
-      ruleMatch: "COSTCO",
-      suggestedCategories: ["Materials & Supplies", "Meals & Entertainment"],
-    };
-  }
-
-  if (description.includes("ZELLE") || description.includes("VENMO")) {
-    return {
-      id: "peer-payment",
-      label: "Payments to people",
-      ruleMatch: "ZELLE",
-      suggestedCategories: ["Contractors & Subcontractors", "Payroll & Benefits"],
-    };
-  }
-
-  if (description.includes("DEPOSIT") || row.isDeposit) {
-    return {
-      id: "deposit",
-      label: "Unmatched deposits",
-      ruleMatch: "DEPOSIT",
-      suggestedCategories: ["Service Revenue"],
-    };
-  }
+  const vendorKey = normalizeVendorKey(row.description);
 
   return {
-    id: `misc-${row.id}`,
-    label: "Uncategorized activity",
-    ruleMatch: row.description.slice(0, 16).toUpperCase(),
-    suggestedCategories: ["Materials & Supplies", "Contractors & Subcontractors", "Equipment & Tools"],
+    id: `vendor-${vendorKey.toLowerCase().replace(/\s+/g, "-")}`,
+    label: vendorLabelForKey(vendorKey),
+    ruleMatch: vendorKey,
+    suggestedCategories: suggestedCategoriesForVendor(vendorKey),
   };
 }
 
