@@ -11,27 +11,27 @@ import {
   type GridPaginationModel,
   type GridSortModel,
 } from "@mui/x-data-grid";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
   HcpTableStackedCell,
   HcpTableToolbarIconButton,
   HcpTableToolbarSearchButton,
-  hcpTableToolbarLeadingSx,
+  HcpTableZoneHeader,
   HCP_STACKED_DATA_GRID_DEFAULTS,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
-import { HcpSegmentControl } from "../HcpSegmentControl";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { getStragglerUncategorizedCount, type AccountingCategoryRule } from "./accountingCategoryRules";
 import { AccountingExportDialog } from "./AccountingExportDialog";
 import { ReviewCategoryCell } from "./AccountingReviewCategoryCell";
-import { AccountingReviewGroupedTableView } from "./AccountingReviewGroupedTableView";
+import { AccountingReviewCategorizer } from "./AccountingReviewCategorizer";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import {
   ACCOUNTING_FLOW_FILTERS,
+  ACCOUNTING_ZONE_TITLES,
   type AccountingFlowFilter,
 } from "./accountingTabs";
 import type { AccountingPeriod } from "./accountingPeriods";
@@ -42,8 +42,6 @@ import {
   type AccountingTransactionRow,
 } from "./accountingTransactionData";
 import { hcpColors, hcpIcon, hcpMenuPaperSx } from "../hcpTheme";
-
-type RegisterView = "toReview" | "all";
 
 function filterBySearch(rows: AccountingTransactionRow[], query: string) {
   const normalized = query.trim().toLowerCase();
@@ -76,48 +74,6 @@ function filterByFlow(rows: AccountingTransactionRow[], flow: AccountingFlowFilt
   return rows.filter((row) => !row.isDeposit);
 }
 
-type RegisterViewSegmentsProps = {
-  value: RegisterView;
-  reviewCount: number;
-  onChange: (view: RegisterView) => void;
-};
-
-function RegisterViewSegments({ value, reviewCount, onChange }: RegisterViewSegmentsProps) {
-  return (
-    <HcpSegmentControl
-      value={value}
-      onChange={onChange}
-      aria-label="Register view"
-      options={[
-        {
-          value: "toReview",
-          label: (
-            <>
-              To review
-              {reviewCount > 0 ? (
-                <Box
-                  component="span"
-                  sx={{ ml: 0.5, fontVariantNumeric: "tabular-nums" }}
-                >
-                  ({reviewCount})
-                </Box>
-              ) : null}
-            </>
-          ),
-          disabled: reviewCount === 0,
-          "aria-label":
-            reviewCount > 0 ? `To review, ${reviewCount} transactions` : "To review",
-        },
-        {
-          value: "all",
-          label: "All transactions",
-          "aria-label": "All transactions",
-        },
-      ]}
-    />
-  );
-}
-
 type AccountingTransactionsTabProps = {
   period: AccountingPeriod;
   transactions: AccountingTransactionRow[];
@@ -133,7 +89,7 @@ export function AccountingTransactionsTab({
   onTransactionsChange,
   onCategoryRulesChange,
 }: AccountingTransactionsTabProps) {
-  const [registerView, setRegisterView] = useState<RegisterView>("all");
+  const categorizerRef = useRef<HTMLDivElement>(null);
   const [flowFilter, setFlowFilter] = useState<AccountingFlowFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
@@ -155,31 +111,11 @@ export function AccountingTransactionsTab({
     [transactions, period],
   );
 
-  const isReviewView = registerView === "toReview" && reviewQueue.length > 0;
+  const showCategorizer = reviewQueue.length > 0;
 
   useEffect(() => {
     setPaginationModel((current) => ({ ...current, page: 0 }));
   }, [period.prefix]);
-
-  useEffect(() => {
-    setRegisterView(reviewQueue.length > 0 ? "toReview" : "all");
-  }, [period.prefix]);
-
-  useEffect(() => {
-    if (reviewQueue.length === 0) {
-      setRegisterView("all");
-    }
-  }, [reviewQueue.length]);
-
-  useEffect(() => {
-    setPaginationModel((current) => ({ ...current, page: 0 }));
-  }, [registerView]);
-
-  useEffect(() => {
-    if (isReviewView) {
-      setSearchQuery("");
-    }
-  }, [isReviewView]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -203,10 +139,6 @@ export function AccountingTransactionsTab({
     rows = filterBySearch(rows, searchQuery);
     return rows;
   }, [flowFilter, periodTransactions, searchQuery]);
-
-  const reviewRows = reviewQueue;
-
-  const gridRows = isReviewView ? reviewRows : registerRows;
 
   const stragglerCount = useMemo(
     () => getStragglerUncategorizedCount(transactions, period),
@@ -281,19 +213,23 @@ export function AccountingTransactionsTab({
 
   return (
     <AccountingTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={
-          <Box sx={hcpTableToolbarLeadingSx}>
-            <RegisterViewSegments
-              value={isReviewView ? "toReview" : registerView}
-              reviewCount={reviewQueue.length}
-              onChange={setRegisterView}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {showCategorizer ? (
+          <Box ref={categorizerRef}>
+            <AccountingReviewCategorizer
+              transactions={transactions}
+              period={period}
+              categoryRules={categoryRules}
+              onTransactionsChange={onTransactionsChange}
+              onCategoryRulesChange={onCategoryRulesChange}
             />
           </Box>
-        }
-        toolbarActions={
-          !isReviewView ? (
+        ) : null}
+
+        <HcpSurfaceCard
+          flush
+          toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.register} />}
+          toolbarActions={
             <Box sx={hcpTableToolbarActionsSx}>
               <HcpTableToolbarSearchButton
                 value={searchQuery}
@@ -319,10 +255,8 @@ export function AccountingTransactionsTab({
                 <DownloadSimple size={hcpIcon.md} weight="regular" />
               </HcpTableToolbarIconButton>
             </Box>
-          ) : undefined
-        }
-      >
-        {!isReviewView ? (
+          }
+        >
           <Menu
             id="accounting-flow-filter-menu"
             anchorEl={filterMenuAnchor}
@@ -343,31 +277,21 @@ export function AccountingTransactionsTab({
               </MenuItem>
             ))}
           </Menu>
-        ) : null}
 
-        <AccountingExportDialog
-          open={exportDialogOpen}
-          onClose={() => setExportDialogOpen(false)}
-          reviewCount={reviewQueue.length}
-          stragglerCount={stragglerCount}
-          onReviewNow={() => {
-            setExportDialogOpen(false);
-            setRegisterView("toReview");
-          }}
-          onExport={() => setExportDialogOpen(false)}
-        />
-
-        {isReviewView ? (
-          <AccountingReviewGroupedTableView
-            transactions={transactions}
-            period={period}
-            categoryRules={categoryRules}
-            onTransactionsChange={onTransactionsChange}
-            onCategoryRulesChange={onCategoryRulesChange}
+          <AccountingExportDialog
+            open={exportDialogOpen}
+            onClose={() => setExportDialogOpen(false)}
+            reviewCount={reviewQueue.length}
+            stragglerCount={stragglerCount}
+            onReviewNow={() => {
+              setExportDialogOpen(false);
+              categorizerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            onExport={() => setExportDialogOpen(false)}
           />
-        ) : (
+
           <DataGrid
-            rows={gridRows}
+            rows={registerRows}
             columns={columns}
             autoHeight
             disableRowSelectionOnClick
@@ -401,8 +325,8 @@ export function AccountingTransactionsTab({
               },
             }}
           />
-        )}
-      </HcpSurfaceCard>
+        </HcpSurfaceCard>
+      </Box>
     </AccountingTabPanel>
   );
 }

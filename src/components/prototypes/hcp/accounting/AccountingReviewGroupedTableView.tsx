@@ -293,6 +293,7 @@ type AccountingReviewGroupedTableViewProps = {
   categoryRules: AccountingCategoryRule[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   onCategoryRulesChange: (rules: AccountingCategoryRule[]) => void;
+  compact?: boolean;
 };
 
 export function AccountingReviewGroupedTableView({
@@ -301,6 +302,7 @@ export function AccountingReviewGroupedTableView({
   categoryRules,
   onTransactionsChange,
   onCategoryRulesChange,
+  compact = false,
 }: AccountingReviewGroupedTableViewProps) {
   const groups = useMemo(() => buildReviewGroups(transactions, period), [period, transactions]);
   const { applyToRow } = useReviewCategoryApply({
@@ -322,13 +324,7 @@ export function AccountingReviewGroupedTableView({
   };
 
   if (groups.length === 0) {
-    return (
-      <Box sx={{ px: CELL_PX, py: 4 }}>
-        <Typography variant="body2" color="text.secondary">
-          Nothing left to review.
-        </Typography>
-      </Box>
-    );
+    return null;
   }
 
   return (
@@ -337,9 +333,9 @@ export function AccountingReviewGroupedTableView({
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
-        px: 2,
-        py: 2,
+        gap: compact ? 1.5 : 2,
+        px: compact ? 1.5 : 2,
+        py: compact ? 1.5 : 2,
         fontSize: "0.875rem",
       }}
     >
