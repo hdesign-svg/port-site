@@ -12,6 +12,7 @@ import {
   type GridSortModel,
 } from "@mui/x-data-grid";
 import { useEffect, useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
@@ -20,10 +21,8 @@ import {
   HcpTableToolbarSearchButton,
   HcpTableZoneHeader,
   hcpTableToolbarActionsSx,
-  hcpTableToolbarLeadingSx,
   HCP_STACKED_DATA_GRID_DEFAULTS,
 } from "../HcpTableChrome";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { getStragglerUncategorizedCount, type AccountingCategoryRule } from "./accountingCategoryRules";
 import { AccountingExportDialog } from "./AccountingExportDialog";
@@ -188,14 +187,9 @@ export function AccountingLedgerTab({
 
   return (
     <AccountingTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={
-          <Box sx={hcpTableToolbarLeadingSx}>
-            <HcpTableZoneHeader label="Ledger" />
-          </Box>
-        }
-        toolbarActions={
+      <HcpAnalyticsView
+        leading={<HcpTableZoneHeader label="Ledger" />}
+        actions={
           <Box sx={hcpTableToolbarActionsSx}>
             <AccountingPeriodMenu
               period={period}
@@ -261,42 +255,39 @@ export function AccountingLedgerTab({
           onExport={() => setExportDialogOpen(false)}
         />
 
-        <DataGrid
-          rows={gridRows}
-          columns={columns}
-          autoHeight
-          disableRowSelectionOnClick
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          showCellVerticalBorder={false}
-          showColumnVerticalBorder={false}
-          paginationMode="client"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          pageSizeOptions={[10, 25, 50]}
-          {...HCP_STACKED_DATA_GRID_DEFAULTS}
-          slotProps={{
-            basePagination: {
-              material: {
-                ActionsComponent: HcpTablePaginationActions,
-                labelRowsPerPage: "Rows per page:",
+        <HcpDataContainer>
+          <DataGrid
+            rows={gridRows}
+            columns={columns}
+            autoHeight
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            paginationMode="client"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+            pageSizeOptions={[10, 25, 50]}
+            {...HCP_STACKED_DATA_GRID_DEFAULTS}
+            slotProps={{
+              basePagination: {
+                material: {
+                  ActionsComponent: HcpTablePaginationActions,
+                  labelRowsPerPage: "Rows per page:",
+                },
               },
-            },
-          }}
-          localeText={{
-            noRowsLabel: "No transactions match your filters.",
-          }}
-          sx={{
-            ...HCP_STACKED_DATA_GRID_DEFAULTS.sx,
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: hcpColors.paper,
-            },
-          }}
-        />
-      </HcpSurfaceCard>
+            }}
+            localeText={{
+              noRowsLabel: "No transactions match your filters.",
+            }}
+            sx={HCP_STACKED_DATA_GRID_DEFAULTS.sx}
+          />
+        </HcpDataContainer>
+      </HcpAnalyticsView>
     </AccountingTabPanel>
   );
 }

@@ -7,8 +7,8 @@ import { type ReactNode, useMemo, useState } from "react";
 import { AccountingExportDialog } from "./AccountingExportDialog";
 import { AccountingPeriodMenu } from "./AccountingPeriodMenu";
 import { getStragglerUncategorizedCount } from "./accountingCategoryRules";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import { HcpTableToolbarIconButton, HcpTableZoneHeader, hcpTableToolbarActionsSx } from "../HcpTableChrome";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingPeriod } from "./accountingPeriods";
 import {
@@ -339,10 +339,9 @@ export function AccountingReportsTab({
           aria-label={`${ACCOUNTING_ZONE_TITLES.profitAndLoss}, ${report.periodLabel}`}
           sx={{ width: "100%", maxWidth: REPORT_DOCUMENT_MAX_WIDTH }}
         >
-          <HcpSurfaceCard
-            flush
-            toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.profitAndLoss} />}
-            toolbarActions={
+          <HcpAnalyticsView
+            leading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.profitAndLoss} />}
+            actions={
               <Box sx={hcpTableToolbarActionsSx}>
                 <AccountingPeriodMenu
                   period={period}
@@ -359,6 +358,7 @@ export function AccountingReportsTab({
               </Box>
             }
           >
+            <HcpDataContainer>
             <Box
               sx={{
                 textAlign: "center",
@@ -456,7 +456,8 @@ export function AccountingReportsTab({
                 {footerCaption}
               </Typography>
             </Box>
-          </HcpSurfaceCard>
+            </HcpDataContainer>
+          </HcpAnalyticsView>
         </Box>
         </Box>
       </Box>

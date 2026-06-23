@@ -9,6 +9,7 @@ import {
   type GridSortModel,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
@@ -21,7 +22,6 @@ import {
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
 import {
@@ -128,10 +128,9 @@ export function ExpensesTransactionsTab() {
 
   return (
     <ExpensesTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.transactions} />}
-        toolbarActions={
+      <HcpAnalyticsView
+        leading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.transactions} />}
+        actions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
             <HcpTableToolbarIconButton tooltip="Export" aria-label="Export">
@@ -140,40 +139,37 @@ export function ExpensesTransactionsTab() {
           </Box>
         }
       >
-        <DataGrid
-          rows={visibleRows}
-          columns={transactionColumns}
-          autoHeight
-          disableRowSelectionOnClick
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          showCellVerticalBorder={false}
-          showColumnVerticalBorder={false}
-          sortingMode="client"
-          paginationMode="client"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          pageSizeOptions={[10, 25, 50]}
-          {...HCP_STACKED_DATA_GRID_DEFAULTS}
-          sx={{
-            ...hcpDataGridStackedSx,
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: hcpColors.paper,
-            },
-          }}
-          slotProps={{
-            basePagination: {
-              material: {
-                ActionsComponent: HcpTablePaginationActions,
-                labelRowsPerPage: "Rows per page:",
+        <HcpDataContainer>
+          <DataGrid
+            rows={visibleRows}
+            columns={transactionColumns}
+            autoHeight
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            sortingMode="client"
+            paginationMode="client"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+            pageSizeOptions={[10, 25, 50]}
+            {...HCP_STACKED_DATA_GRID_DEFAULTS}
+            sx={hcpDataGridStackedSx}
+            slotProps={{
+              basePagination: {
+                material: {
+                  ActionsComponent: HcpTablePaginationActions,
+                  labelRowsPerPage: "Rows per page:",
+                },
               },
-            },
-          }}
-        />
-      </HcpSurfaceCard>
+            }}
+          />
+        </HcpDataContainer>
+      </HcpAnalyticsView>
     </ExpensesTabPanel>
   );
 }

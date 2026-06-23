@@ -10,6 +10,7 @@ import {
   type GridColDef,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import {
   HcpTableCellPrimary,
   HcpTableCellSecondary,
@@ -21,7 +22,6 @@ import {
   hcpDataGridStackedSx,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { cardStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
 import { EXPENSES_ZONE_TITLES } from "./expensesTabs";
@@ -186,10 +186,9 @@ export function ExpensesCardsTab() {
 
   return (
     <ExpensesTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.cards} />}
-        toolbarActions={
+      <HcpAnalyticsView
+        leading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.cards} />}
+        actions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={setSearchQuery} />
             <HcpTableToolbarIconButton
@@ -235,26 +234,23 @@ export function ExpensesCardsTab() {
           ))}
         </Menu>
 
-        <DataGrid
-          rows={visibleRows}
-          columns={cardColumns}
-          autoHeight
-          disableRowSelectionOnClick
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          showCellVerticalBorder={false}
-          showColumnVerticalBorder={false}
-          hideFooter
-          {...HCP_STACKED_DATA_GRID_DEFAULTS}
-          sx={{
-            ...hcpDataGridStackedSx,
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: hcpColors.paper,
-            },
-          }}
-        />
-      </HcpSurfaceCard>
+        <HcpDataContainer>
+          <DataGrid
+            rows={visibleRows}
+            columns={cardColumns}
+            autoHeight
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            hideFooter
+            {...HCP_STACKED_DATA_GRID_DEFAULTS}
+            sx={hcpDataGridStackedSx}
+          />
+        </HcpDataContainer>
+      </HcpAnalyticsView>
     </ExpensesTabPanel>
   );
 }

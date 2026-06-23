@@ -3,9 +3,9 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import { HcpSegmentControl } from "../HcpSegmentControl";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
-import { HcpTableZoneHeader, hcpTableToolbarActionsSx, hcpTableToolbarLeadingSx } from "../HcpTableChrome";
+import { HcpTableZoneHeader, hcpTableToolbarActionsSx } from "../HcpTableChrome";
 import type { AccountingCategoryRule } from "./accountingCategoryRules";
 import { AccountingPeriodMenu } from "./AccountingPeriodMenu";
 import { AccountingReviewFocusView } from "./AccountingReviewFocusView";
@@ -54,10 +54,9 @@ export function AccountingToReviewTab({
 
   return (
     <AccountingTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={
-          <Box sx={{ ...hcpTableToolbarLeadingSx, flexWrap: "wrap", rowGap: 1 }}>
+      <HcpAnalyticsView
+        leading={
+          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.5 }}>
             <HcpTableZoneHeader label="To review" />
             {reviewQueue.length > 0 ? (
               <HcpSegmentControl
@@ -72,7 +71,7 @@ export function AccountingToReviewTab({
             ) : null}
           </Box>
         }
-        toolbarActions={
+        actions={
           <Box sx={hcpTableToolbarActionsSx}>
             <AccountingPeriodMenu
               period={period}
@@ -82,33 +81,35 @@ export function AccountingToReviewTab({
           </Box>
         }
       >
-        {reviewQueue.length === 0 ? (
-          <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 6, textAlign: "center" }}>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              Nothing to review in {period.shortLabel}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              New uncategorized transactions in the review window will show up here.
-            </Typography>
-          </Box>
-        ) : reviewLayout === "focus" ? (
-          <AccountingReviewFocusView
-            transactions={transactions}
-            period={period}
-            categoryRules={categoryRules}
-            onTransactionsChange={onTransactionsChange}
-            onCategoryRulesChange={onCategoryRulesChange}
-          />
-        ) : (
-          <AccountingReviewGroupedTableView
-            transactions={transactions}
-            period={period}
-            categoryRules={categoryRules}
-            onTransactionsChange={onTransactionsChange}
-            onCategoryRulesChange={onCategoryRulesChange}
-          />
-        )}
-      </HcpSurfaceCard>
+        <HcpDataContainer>
+          {reviewQueue.length === 0 ? (
+            <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 6, textAlign: "center" }}>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                Nothing to review in {period.shortLabel}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                New uncategorized transactions in the review window will show up here.
+              </Typography>
+            </Box>
+          ) : reviewLayout === "focus" ? (
+            <AccountingReviewFocusView
+              transactions={transactions}
+              period={period}
+              categoryRules={categoryRules}
+              onTransactionsChange={onTransactionsChange}
+              onCategoryRulesChange={onCategoryRulesChange}
+            />
+          ) : (
+            <AccountingReviewGroupedTableView
+              transactions={transactions}
+              period={period}
+              categoryRules={categoryRules}
+              onTransactionsChange={onTransactionsChange}
+              onCategoryRulesChange={onCategoryRulesChange}
+            />
+          )}
+        </HcpDataContainer>
+      </HcpAnalyticsView>
     </AccountingTabPanel>
   );
 }

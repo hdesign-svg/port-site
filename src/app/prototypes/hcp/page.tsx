@@ -7,22 +7,26 @@ const flows = [
   {
     href: "/prototypes/hcp/activation",
     title: "Activation · Expenses",
-    shots: "Unlock modal → business info → done → enrolled Expenses UI",
+    shots: "X Analytics UI — Overview charts + Transactions · Cards · Bills",
+    branch: "explore/x-analytics-ui",
   },
   {
     href: "/prototypes/hcp/activation/expenses",
     title: "Activation · Accounting",
     shots: "Unlock modal → business info → Plaid connect → done",
+    branch: null,
   },
   {
     href: "/prototypes/hcp/accounting",
     title: "Basic Accounting",
-    shots: "Transactions · Reports (post-activation)",
+    shots: "X Analytics UI — Readiness · To review · Ledger · Reports",
+    branch: "explore/x-analytics-ui",
   },
   {
     href: "/prototypes/close",
     title: "Close · Self-serve accounting (explore)",
     shots: "Independent UX vision — Plaid → resolve → ledger → tax-ready → P&L",
+    branch: null,
   },
 ];
 
@@ -32,8 +36,11 @@ export default function HcpPrototypesIndexPage() {
       <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
         HCP prototypes
       </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+        Branch: <strong>explore/x-analytics-ui</strong> — detached toolbar + data container pattern.
+      </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Not linked from the portfolio — bookmark a flow URL for interviews and GIF recording.
+        Run <code>git checkout explore/x-analytics-ui</code> then <code>npm run dev</code>.
       </Typography>
       <Stack spacing={2}>
         {flows.map((flow) => (

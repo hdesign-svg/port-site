@@ -6,9 +6,9 @@ import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import { useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer, HcpDetachedToolbar } from "../analytics";
 import { HcpSegmentControl } from "../HcpSegmentControl";
 import { HcpStatusTag } from "../HcpStatusTag";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { HcpTableZoneHeader } from "../HcpTableChrome";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import { buildReviewGroups } from "./accountingReviewGroups";
@@ -267,46 +267,40 @@ export function AccountingReadinessTab({
     setScope("month");
   };
 
-  const dashboardGridSx = {
-    display: "grid",
-    gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr)" },
-    gap: `${hcpContentSpacing.blockGap}px`,
-    alignItems: "start",
-  } as const;
-
   return (
     <AccountingTabPanel>
       <Box sx={{ display: "flex", flexDirection: "column", gap: `${hcpContentSpacing.blockGap}px` }}>
-        <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold }}>
-              {scope === "year" ? taxYear.label : focusedPeriod.label}
-            </Typography>
-            <Typography variant="caption" sx={{ color: hcpColors.textMuted }}>
-              {scope === "year"
-                ? "Your books health across the year — pick a month or jump to work."
-                : "Month detail — categorize and close, then check the report."}
-            </Typography>
-          </Box>
-          <HcpSegmentControl
-            value={scope}
-            onChange={handleScopeChange}
-            aria-label="Readiness scope"
-            options={[
-              { value: "year", label: "Tax year" },
-              { value: "month", label: focusedPeriod.shortLabel },
-            ]}
-          />
-        </Box>
+        <HcpDetachedToolbar
+          leading={
+            <Box>
+              <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold }}>
+                {scope === "year" ? taxYear.label : focusedPeriod.label}
+              </Typography>
+              <Typography variant="caption" sx={{ color: hcpColors.textMuted }}>
+                {scope === "year"
+                  ? "Your books health across the year — pick a month or jump to work."
+                  : "Month detail — categorize and close, then check the report."}
+              </Typography>
+            </Box>
+          }
+          actions={
+            <HcpSegmentControl
+              value={scope}
+              onChange={handleScopeChange}
+              aria-label="Readiness scope"
+              options={[
+                { value: "year", label: "Tax year" },
+                { value: "month", label: focusedPeriod.shortLabel },
+              ]}
+            />
+          }
+        />
 
         {scope === "year" ? (
-          <Box sx={dashboardGridSx}>
-            <HcpSurfaceCard flush>
-              <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
-                <HcpTableZoneHeader label="Year health" />
-                <Box sx={{ mt: 2 }}>
-                  <ReadinessMeter percent={taxYear.readyPercent} taxReady={taxYearReady} label="Categorized" />
-                </Box>
+          <>
+            <HcpAnalyticsView leading={<HcpTableZoneHeader label="Year health" />}>
+              <HcpDataContainer sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
+                <ReadinessMeter percent={taxYear.readyPercent} taxReady={taxYearReady} label="Categorized" />
                 <Box
                   sx={{
                     display: "grid",
@@ -329,18 +323,16 @@ export function AccountingReadinessTab({
                     />
                   </Box>
                 ) : null}
-              </Box>
-            </HcpSurfaceCard>
+              </HcpDataContainer>
+            </HcpAnalyticsView>
 
-            <HcpSurfaceCard flush>
-              <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
-                <HcpTableZoneHeader label="By month" />
+            <HcpAnalyticsView leading={<HcpTableZoneHeader label="By month" />}>
+              <HcpDataContainer sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(0, 1fr))" },
+                    gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(0, 1fr))", md: "repeat(3, minmax(0, 1fr))" },
                     gap: 1.5,
-                    mt: 2,
                   }}
                 >
                   {taxYear.periodSummaries.map((summary) => (
@@ -352,13 +344,12 @@ export function AccountingReadinessTab({
                     />
                   ))}
                 </Box>
-              </Box>
-            </HcpSurfaceCard>
+              </HcpDataContainer>
+            </HcpAnalyticsView>
 
-            <HcpSurfaceCard flush>
-              <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
-                <HcpTableZoneHeader label="What needs you" />
-                <Box sx={{ mt: 1 }}>
+            <HcpAnalyticsView leading={<HcpTableZoneHeader label="What needs you" />}>
+              <HcpDataContainer sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
+                <Box>
                   {attentionMonths.length === 0 ? (
                     <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
                       Every month is tax ready. View reports or browse transactions anytime.
@@ -404,28 +395,18 @@ export function AccountingReadinessTab({
                     View profit & loss
                   </Button>
                 </Box>
-              </Box>
-            </HcpSurfaceCard>
-          </Box>
+              </HcpDataContainer>
+            </HcpAnalyticsView>
+          </>
         ) : (
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 1fr) minmax(0, 1fr)" },
-              gap: `${hcpContentSpacing.blockGap}px`,
-              alignItems: "start",
-            }}
-          >
-            <HcpSurfaceCard flush>
-              <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
-                <HcpTableZoneHeader label={focusedPeriod.label} />
-                <Box sx={{ mt: 2 }}>
-                  <ReadinessMeter
-                    percent={monthReadiness.readyPercent}
-                    taxReady={monthTaxReady}
-                    label="Month categorized"
-                  />
-                </Box>
+          <>
+            <HcpAnalyticsView leading={<HcpTableZoneHeader label={focusedPeriod.label} />}>
+              <HcpDataContainer sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
+                <ReadinessMeter
+                  percent={monthReadiness.readyPercent}
+                  taxReady={monthTaxReady}
+                  label="Month categorized"
+                />
                 <Box
                   sx={{
                     display: "grid",
@@ -448,51 +429,48 @@ export function AccountingReadinessTab({
                     />
                   </Box>
                 ) : null}
-              </Box>
-            </HcpSurfaceCard>
+              </HcpDataContainer>
+            </HcpAnalyticsView>
 
-            <HcpSurfaceCard flush>
-              <Box sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
-                <HcpTableZoneHeader label="This month" />
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="caption" sx={{ color: hcpColors.textMuted }}>
-                    Net profit preview
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      fontWeight: hcpFontWeight.semibold,
-                      fontVariantNumeric: "tabular-nums",
-                      color: monthReport.netProfit >= 0 ? hcpColors.successMain : hcpColors.spending,
-                      mt: 0.5,
-                    }}
-                  >
-                    {formatReportCurrency(monthReport.netProfit)}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: hcpColors.textMuted, display: "block", mt: 2, mb: 1 }}>
-                    Next steps
-                  </Typography>
-                  {monthReadiness.needsYouCount > 0 ? (
-                    <ActionRow
-                      title={`${monthGroups.length} vendor group${monthGroups.length === 1 ? "" : "s"} to categorize`}
-                      detail={`${monthReadiness.needsYouCount} transactions in the review window`}
-                      actionLabel="Start review"
-                      onAction={() => onOpenToReview(focusedPeriod, true)}
-                    />
-                  ) : null}
+            <HcpAnalyticsView leading={<HcpTableZoneHeader label="This month" />}>
+              <HcpDataContainer sx={{ px: `${hcpContentSpacing.surfaceInsetX}px`, py: 2.5 }}>
+                <Typography variant="caption" sx={{ color: hcpColors.textMuted }}>
+                  Net profit preview
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: hcpFontWeight.semibold,
+                    fontVariantNumeric: "tabular-nums",
+                    color: monthReport.netProfit >= 0 ? hcpColors.successMain : hcpColors.spending,
+                    mt: 0.5,
+                  }}
+                >
+                  {formatReportCurrency(monthReport.netProfit)}
+                </Typography>
+                <Typography variant="caption" sx={{ color: hcpColors.textMuted, display: "block", mt: 2, mb: 1 }}>
+                  Next steps
+                </Typography>
+                {monthReadiness.needsYouCount > 0 ? (
                   <ActionRow
-                    title="Ledger"
-                    detail={`${monthReadiness.periodTotal} in ${focusedPeriod.shortLabel}`}
-                    actionLabel="Open ledger"
-                    onAction={() => onOpenLedger(focusedPeriod)}
+                    title={`${monthGroups.length} vendor group${monthGroups.length === 1 ? "" : "s"} to categorize`}
+                    detail={`${monthReadiness.needsYouCount} transactions in the review window`}
+                    actionLabel="Start review"
+                    onAction={() => onOpenToReview(focusedPeriod, true)}
                   />
-                  <ActionRow
-                    title="Profit & loss"
-                    detail={monthTaxReady ? "Ready to export" : "Finish categorizing to export"}
-                    actionLabel="View report"
-                    onAction={() => onOpenReports(focusedPeriod)}
-                  />
-                </Box>
+                ) : null}
+                <ActionRow
+                  title="Ledger"
+                  detail={`${monthReadiness.periodTotal} in ${focusedPeriod.shortLabel}`}
+                  actionLabel="Open ledger"
+                  onAction={() => onOpenLedger(focusedPeriod)}
+                />
+                <ActionRow
+                  title="Profit & loss"
+                  detail={monthTaxReady ? "Ready to export" : "Finish categorizing to export"}
+                  actionLabel="View report"
+                  onAction={() => onOpenReports(focusedPeriod)}
+                />
                 {monthReadiness.needsYouCount > 0 ? (
                   <Button
                     variant="contained"
@@ -503,9 +481,9 @@ export function AccountingReadinessTab({
                     Resolve {monthGroups.length} group{monthGroups.length === 1 ? "" : "s"}
                   </Button>
                 ) : null}
-              </Box>
-            </HcpSurfaceCard>
-          </Box>
+              </HcpDataContainer>
+            </HcpAnalyticsView>
+          </>
         )}
       </Box>
     </AccountingTabPanel>

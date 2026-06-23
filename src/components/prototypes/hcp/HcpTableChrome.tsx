@@ -13,6 +13,7 @@ import {
   hcpDataGridPaginationIconButtonSx,
   hcpFontWeight,
   hcpIcon,
+  hcpMenuPaperSx,
   hcpSearchPopoverPaperSx,
 } from "./hcpTheme";
 import { hcpTypographyRoles } from "./hcpTypography";

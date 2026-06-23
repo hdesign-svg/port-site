@@ -11,6 +11,7 @@ import {
   type GridPaginationModel,
 } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
+import { HcpAnalyticsView, HcpDataContainer } from "../analytics";
 import {
   HcpTableCellPrimary,
   HcpTableToolbarIconButton,
@@ -20,7 +21,6 @@ import {
   HCP_DATA_GRID_ROW_HEIGHT,
   hcpTableToolbarActionsSx,
 } from "../HcpTableChrome";
-import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { billPayStatusTone, HcpStatusTag } from "../HcpStatusTag";
 import { HcpTablePaginationActions } from "../HcpTablePaginationActions";
 import { ExpensesTabPanel } from "./ExpensesTabPanel";
@@ -161,10 +161,9 @@ export function ExpensesBillPayTab() {
 
   return (
     <ExpensesTabPanel>
-      <HcpSurfaceCard
-        flush
-        toolbarLeading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.bills} />}
-        toolbarActions={
+      <HcpAnalyticsView
+        leading={<HcpTableZoneHeader label={EXPENSES_ZONE_TITLES.bills} />}
+        actions={
           <Box sx={hcpTableToolbarActionsSx}>
             <HcpTableToolbarSearchButton value={searchQuery} onChange={handleSearchChange} />
             <HcpTableToolbarIconButton
@@ -210,38 +209,35 @@ export function ExpensesBillPayTab() {
           ))}
         </Menu>
 
-        <DataGrid
-          rows={visibleRows}
-          columns={billColumns}
-          autoHeight
-          disableRowSelectionOnClick
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          showCellVerticalBorder={false}
-          showColumnVerticalBorder={false}
-          paginationMode="client"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[15, 25, 50]}
-          rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
-          columnHeaderHeight={HCP_DATA_GRID_COLUMN_HEADER_HEIGHT}
-          sx={{
-            ...hcpDataGridSx,
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: hcpColors.paper,
-            },
-          }}
-          slotProps={{
-            basePagination: {
-              material: {
-                ActionsComponent: HcpTablePaginationActions,
-                labelRowsPerPage: "Rows per page:",
+        <HcpDataContainer>
+          <DataGrid
+            rows={visibleRows}
+            columns={billColumns}
+            autoHeight
+            disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            paginationMode="client"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[15, 25, 50]}
+            rowHeight={HCP_DATA_GRID_ROW_HEIGHT}
+            columnHeaderHeight={HCP_DATA_GRID_COLUMN_HEADER_HEIGHT}
+            sx={hcpDataGridSx}
+            slotProps={{
+              basePagination: {
+                material: {
+                  ActionsComponent: HcpTablePaginationActions,
+                  labelRowsPerPage: "Rows per page:",
+                },
               },
-            },
-          }}
-        />
-      </HcpSurfaceCard>
+            }}
+          />
+        </HcpDataContainer>
+      </HcpAnalyticsView>
     </ExpensesTabPanel>
   );
 }
