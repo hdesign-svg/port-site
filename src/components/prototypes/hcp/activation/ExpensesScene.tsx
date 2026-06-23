@@ -13,6 +13,7 @@ import type { ExpensesTab } from "./expensesTabs";
 import {
   hcpColors,
   hcpContentHeaderSx,
+  hcpModuleScrollRootSx,
   hcpPageHeaderZoneSx,
 } from "../hcpTheme";
 
@@ -49,11 +50,7 @@ export function ExpensesScene({ activeTab, onTabChange }: ExpensesSceneProps) {
   return (
     <Box
       sx={{
-        flex: 1,
-        minHeight: 0,
-        overflow: "auto",
-        display: "flex",
-        flexDirection: "column",
+        ...hcpModuleScrollRootSx,
         bgcolor: hcpColors.background,
       }}
     >

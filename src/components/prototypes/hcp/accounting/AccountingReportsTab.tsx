@@ -4,11 +4,18 @@ import { CaretDown, CaretRight, DownloadSimple } from "@phosphor-icons/react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { type ReactNode, useMemo, useState } from "react";
+import { AccountingExportDialog } from "./AccountingExportDialog";
+import { AccountingPeriodMenu } from "./AccountingPeriodMenu";
+import { getStragglerUncategorizedCount } from "./accountingCategoryRules";
 import { HcpTableToolbarIconButton, HcpTableZoneHeader, hcpTableToolbarActionsSx } from "../HcpTableChrome";
 import { HcpSurfaceCard } from "../HcpSurfaceCard";
 import { AccountingTabPanel } from "./AccountingTabPanel";
 import type { AccountingPeriod } from "./accountingPeriods";
-import { getAccountingReadiness } from "./accountingReadiness";
+import {
+  getAccountingPeriodReviewCount,
+  getAccountingPeriodStatus,
+  getAccountingReadiness,
+} from "./accountingReadiness";
 import {
   ACCOUNTING_REPORT_BUSINESS_NAME,
   buildProfitAndLossReport,
@@ -23,12 +30,15 @@ import {
   hcpContentSpacing,
   hcpFontWeight,
   hcpIcon,
+  hcpLayout,
 } from "../hcpTheme";
 import { hcpTypographyRoles } from "../hcpTypography";
 
 type AccountingReportsTabProps = {
   transactions: AccountingTransactionRow[];
   period: AccountingPeriod;
+  onPeriodChange: (period: AccountingPeriod) => void;
+  onReviewNow?: () => void;
 };
 
 const REPORT_DOCUMENT_MAX_WIDTH = 704;
@@ -239,7 +249,14 @@ function CollapsibleTableSection({
   );
 }
 
-export function AccountingReportsTab({ transactions, period }: AccountingReportsTabProps) {
+export function AccountingReportsTab({
+  transactions,
+  period,
+  onPeriodChange,
+  onReviewNow,
+}: AccountingReportsTabProps) {
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+
   const report = useMemo(
     () => buildProfitAndLossReport(transactions, period),
     [transactions, period],
@@ -251,6 +268,18 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
     const transactionLabel = count === 1 ? "transaction" : "transactions";
     return `${count} ${transactionLabel} included in this report`;
   }, [transactions, period]);
+
+  const reviewCount = useMemo(
+    () => getAccountingPeriodReviewCount(transactions, period),
+    [transactions, period],
+  );
+
+  const stragglerCount = useMemo(
+    () => getStragglerUncategorizedCount(transactions, period),
+    [transactions, period],
+  );
+
+  const taxReady = getAccountingPeriodStatus(transactions, period) === "ready";
 
   const [expandedSections, setExpandedSections] = useState({
     income: true,
@@ -269,10 +298,42 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          gap: `${hcpContentSpacing.blockGap}px`,
+          alignItems: "center",
           width: "100%",
         }}
       >
+        {!taxReady ? (
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: REPORT_DOCUMENT_MAX_WIDTH,
+              border: `1px solid ${hcpColors.border}`,
+              borderRadius: `${hcpLayout.controlRadius}px`,
+              bgcolor: hcpColors.paper,
+              px: `${hcpContentSpacing.surfaceInsetX}px`,
+              py: 2,
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: hcpFontWeight.semibold }}>
+              Report not tax ready yet
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              {reviewCount > 0
+                ? `${reviewCount} transaction${reviewCount === 1 ? "" : "s"} still need review before export.`
+                : "Some transactions in this period are still uncategorized."}
+            </Typography>
+          </Box>
+        ) : null}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
         <Box
           component="article"
           aria-label={`${ACCOUNTING_ZONE_TITLES.profitAndLoss}, ${report.periodLabel}`}
@@ -283,7 +344,16 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
             toolbarLeading={<HcpTableZoneHeader label={ACCOUNTING_ZONE_TITLES.profitAndLoss} />}
             toolbarActions={
               <Box sx={hcpTableToolbarActionsSx}>
-                <HcpTableToolbarIconButton tooltip="Export PDF" aria-label="Export PDF">
+                <AccountingPeriodMenu
+                  period={period}
+                  transactions={transactions}
+                  onPeriodChange={onPeriodChange}
+                />
+                <HcpTableToolbarIconButton
+                  tooltip={taxReady ? "Export PDF" : "Finish review to export"}
+                  aria-label="Export PDF"
+                  onClick={() => setExportDialogOpen(true)}
+                >
                   <DownloadSimple size={hcpIcon.md} weight="regular" />
                 </HcpTableToolbarIconButton>
               </Box>
@@ -388,7 +458,20 @@ export function AccountingReportsTab({ transactions, period }: AccountingReports
             </Box>
           </HcpSurfaceCard>
         </Box>
+        </Box>
       </Box>
+
+      <AccountingExportDialog
+        open={exportDialogOpen}
+        onClose={() => setExportDialogOpen(false)}
+        reviewCount={reviewCount}
+        stragglerCount={stragglerCount}
+        onReviewNow={() => {
+          setExportDialogOpen(false);
+          onReviewNow?.();
+        }}
+        onExport={() => setExportDialogOpen(false)}
+      />
     </AccountingTabPanel>
   );
 }

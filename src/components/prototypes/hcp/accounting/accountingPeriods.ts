@@ -52,3 +52,5 @@ export const ACCOUNTING_PERIODS: AccountingPeriod[] = [
 ];
 
 export const DEFAULT_ACCOUNTING_PERIOD = ACCOUNTING_PERIODS[0];
+
+export const ACCOUNTING_TAX_YEAR_LABEL = "2025 tax year";

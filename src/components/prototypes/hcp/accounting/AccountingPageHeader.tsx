@@ -3,51 +3,46 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
-import { AccountingPeriodMenu } from "./AccountingPeriodMenu";
-import type { AccountingPeriod } from "./accountingPeriods";
-import type { AccountingTransactionRow } from "./accountingTransactionData";
 import {
   hcpColors,
-  hcpModulePageHeaderSx,
-  hcpModulePageHeaderTabsSx,
+  hcpContentHeaderSx,
   hcpModulePageHeaderTitleRowSx,
+  hcpModuleStickyTabBarSx,
+  hcpModuleTitleToTabsGap,
+  hcpPageHeaderZoneSx,
 } from "../hcpTheme";
 
 type AccountingPageHeaderProps = {
-  period: AccountingPeriod;
-  transactions: AccountingTransactionRow[];
-  onPeriodChange: (period: AccountingPeriod) => void;
   tabs: ReactNode;
 };
 
-export function AccountingPageHeader({
-  period,
-  transactions,
-  onPeriodChange,
-  tabs,
-}: AccountingPageHeaderProps) {
+export function AccountingPageHeader({ tabs }: AccountingPageHeaderProps) {
   return (
-    <Box sx={hcpModulePageHeaderSx}>
-      <Box sx={hcpModulePageHeaderTitleRowSx}>
-        <Typography
-          component="h1"
-          variant="h4"
-          sx={{
-            color: hcpColors.textPrimary,
-            minWidth: 0,
-          }}
-        >
-          Accounting
-        </Typography>
-
-        <AccountingPeriodMenu
-          period={period}
-          transactions={transactions}
-          onPeriodChange={onPeriodChange}
-        />
+    <>
+      <Box
+        sx={{
+          ...hcpContentHeaderSx,
+          pt: hcpPageHeaderZoneSx.pt,
+          pb: `${hcpModuleTitleToTabsGap}px`,
+        }}
+      >
+        <Box sx={hcpModulePageHeaderTitleRowSx}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{
+              color: hcpColors.textPrimary,
+              minWidth: 0,
+            }}
+          >
+            Accounting
+          </Typography>
+        </Box>
       </Box>
 
-      <Box sx={hcpModulePageHeaderTabsSx}>{tabs}</Box>
-    </Box>
+      <Box sx={hcpModuleStickyTabBarSx}>
+        <Box sx={hcpContentHeaderSx}>{tabs}</Box>
+      </Box>
+    </>
   );
 }

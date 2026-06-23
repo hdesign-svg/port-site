@@ -1,4 +1,4 @@
-import type { AccountingPeriod } from "./accountingPeriods";
+import { ACCOUNTING_PERIODS, ACCOUNTING_TAX_YEAR_LABEL, type AccountingPeriod } from "./accountingPeriods";
 import type { AccountingTransactionRow } from "./accountingTransactionData";
 
 export const REVIEW_WINDOW_DAYS = 30;
@@ -83,5 +83,49 @@ export function getAccountingReadiness(
     needsYouCount,
     sortedCount,
     periodTotal,
+  };
+}
+
+export type AccountingPeriodSummary = {
+  period: AccountingPeriod;
+  readiness: AccountingReadiness;
+  status: AccountingPeriodStatus;
+  reviewCount: number;
+};
+
+export type TaxYearReadiness = {
+  label: string;
+  readyPercent: number;
+  sortedCount: number;
+  periodTotal: number;
+  needsYouCount: number;
+  periodsReady: number;
+  periodsTotal: number;
+  periodSummaries: AccountingPeriodSummary[];
+};
+
+export function getTaxYearReadiness(rows: AccountingTransactionRow[]): TaxYearReadiness {
+  const periodSummaries = ACCOUNTING_PERIODS.map((period) => ({
+    period,
+    readiness: getAccountingReadiness(rows, period),
+    status: getAccountingPeriodStatus(rows, period),
+    reviewCount: getAccountingPeriodReviewCount(rows, period),
+  }));
+
+  const sortedCount = periodSummaries.reduce((sum, item) => sum + item.readiness.sortedCount, 0);
+  const periodTotal = periodSummaries.reduce((sum, item) => sum + item.readiness.periodTotal, 0);
+  const needsYouCount = periodSummaries.reduce((sum, item) => sum + item.reviewCount, 0);
+  const periodsReady = periodSummaries.filter((item) => item.status === "ready").length;
+  const readyPercent = periodTotal === 0 ? 100 : Math.round((sortedCount / periodTotal) * 100);
+
+  return {
+    label: ACCOUNTING_TAX_YEAR_LABEL,
+    readyPercent,
+    sortedCount,
+    periodTotal,
+    needsYouCount,
+    periodsReady,
+    periodsTotal: ACCOUNTING_PERIODS.length,
+    periodSummaries,
   };
 }

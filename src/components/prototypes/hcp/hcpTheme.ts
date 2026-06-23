@@ -96,6 +96,24 @@ export const hcpPageHeaderZoneSx = {
   pb: `${hcpContentSpacing.tabToContent}px`,
 } as const;
 
+/** Tab bar band — sticks below scroll-away title (YouTube-style module nav) */
+export const hcpModuleStickyTabBarSx = {
+  position: "sticky" as const,
+  top: 0,
+  zIndex: 2,
+  bgcolor: hcpColors.background,
+} as const;
+
+/** Main module scroll column — no rubber-band overscroll */
+export const hcpModuleScrollRootSx = {
+  flex: 1,
+  minHeight: 0,
+  overflow: "auto",
+  overscrollBehavior: "none",
+  display: "flex",
+  flexDirection: "column",
+} as const;
+
 /** Peer blocks in one tab view — e.g. summary + activity card (zone B ↔ C) */
 export const hcpContentBlockStackSx = {
   display: "flex",
@@ -210,6 +228,18 @@ export const hcpModuleTabLabelSx = (isActive: boolean) =>
     whiteSpace: "nowrap",
   }) as const;
 
+/** Tab row — equal pad above labels and below labels to the divider */
+export const hcpModuleTabListSx = {
+  display: "flex",
+  alignItems: "flex-end",
+  flexWrap: "wrap",
+  gap: `${hcpLayout.tabLabelGap}px`,
+  pt: `${hcpLayout.tabLabelToIndicator}px`,
+} as const;
+
+/** Title block → tab labels (paired with hcpModuleTabListSx top pad) */
+export const hcpModuleTitleToTabsGap = hcpContentSpacing.zoneInset - hcpLayout.tabLabelToIndicator;
+
 /** Border radius tokens — use instead of magic numbers */
 export const hcpRadius = {
   control: `${hcpLayout.controlRadius}px`,
@@ -247,9 +277,9 @@ export const hcpModulePageHeaderTitleRowSx = {
   gap: 2,
 } as const;
 
-/** Tab bar — same inset below the page title as hcpPageHeaderZoneSx pt above it */
+/** Tab bar — inset below page title; tab list adds matching top pad */
 export const hcpModulePageHeaderTabsSx = {
-  mt: `${hcpContentSpacing.zoneInset}px`,
+  mt: `${hcpModuleTitleToTabsGap}px`,
 } as const;
 
 /** Core content page column — max width inside equal margins */

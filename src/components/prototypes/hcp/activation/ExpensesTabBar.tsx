@@ -10,6 +10,7 @@ import {
   hcpModuleTabInactiveHoverSx,
   hcpModuleTabItemSx,
   hcpModuleTabLabelSx,
+  hcpModuleTabListSx,
 } from "../hcpTheme";
 
 type ExpensesTabBarProps = {
@@ -23,12 +24,7 @@ export function ExpensesTabBar({ activeTab, onTabChange }: ExpensesTabBarProps) 
       <Box
         role="tablist"
         aria-label="Expenses views"
-        sx={{
-          display: "flex",
-          alignItems: "flex-end",
-          flexWrap: "wrap",
-          gap: `${hcpLayout.tabLabelGap}px`,
-        }}
+        sx={hcpModuleTabListSx}
       >
         {EXPENSES_TABS.map((label) => {
           const isActive = label === activeTab;

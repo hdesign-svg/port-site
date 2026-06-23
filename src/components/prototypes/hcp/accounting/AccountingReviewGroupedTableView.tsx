@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { useMemo, useState, type MouseEvent } from "react";
 import { AccountingCategoryCellTrigger } from "./AccountingCategoryCellTrigger";
-import { findCategoryRule, getSimilarReviewTransactionIds, type AccountingCategoryRule } from "./accountingCategoryRules";
+import { getSimilarReviewTransactionIds, type AccountingCategoryRule } from "./accountingCategoryRules";
 import {
   buildReviewGroups,
   getReviewGroupTransactions,
@@ -145,24 +145,16 @@ function GroupCategoryMenu({
   );
 }
 
-type VendorGroupTableSectionProps = {
+type ReviewGroupRowsProps = {
   group: ReviewGroup;
   groupIndex: number;
   transactions: AccountingTransactionRow[];
-  categoryRules: AccountingCategoryRule[];
   onApply: (row: AccountingTransactionRow, category: AccountingCategory, always: boolean) => void;
 };
 
-function VendorGroupTableSection({
-  group,
-  groupIndex,
-  transactions,
-  categoryRules,
-  onApply,
-}: VendorGroupTableSectionProps) {
+function ReviewGroupRows({ group, groupIndex, transactions, onApply }: ReviewGroupRowsProps) {
   const groupRows = getReviewGroupTransactions(transactions, group);
   const anchorRow = groupRows[0];
-  const existingRule = findCategoryRule(categoryRules, group.ruleMatch);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   if (!anchorRow) {
@@ -235,7 +227,6 @@ function VendorGroupTableSection({
         <Box sx={{ flexShrink: 0 }}>
           <AccountingCategoryCellTrigger
             category={null}
-            hasRule={Boolean(existingRule)}
             onClick={openMenu}
             onMouseDown={(event) => event.stopPropagation()}
           />
@@ -293,7 +284,6 @@ type AccountingReviewGroupedTableViewProps = {
   categoryRules: AccountingCategoryRule[];
   onTransactionsChange: (transactions: AccountingTransactionRow[]) => void;
   onCategoryRulesChange: (rules: AccountingCategoryRule[]) => void;
-  compact?: boolean;
 };
 
 export function AccountingReviewGroupedTableView({
@@ -302,7 +292,6 @@ export function AccountingReviewGroupedTableView({
   categoryRules,
   onTransactionsChange,
   onCategoryRulesChange,
-  compact = false,
 }: AccountingReviewGroupedTableViewProps) {
   const groups = useMemo(() => buildReviewGroups(transactions, period), [period, transactions]);
   const { applyToRow } = useReviewCategoryApply({
@@ -324,7 +313,13 @@ export function AccountingReviewGroupedTableView({
   };
 
   if (groups.length === 0) {
-    return null;
+    return (
+      <Box sx={{ px: CELL_PX, py: 4 }}>
+        <Typography variant="body2" color="text.secondary">
+          Nothing left to review.
+        </Typography>
+      </Box>
+    );
   }
 
   return (
@@ -333,19 +328,18 @@ export function AccountingReviewGroupedTableView({
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: compact ? 1.5 : 2,
-        px: compact ? 1.5 : 2,
-        py: compact ? 1.5 : 2,
+        gap: 2,
+        px: 2,
+        py: 2,
         fontSize: "0.875rem",
       }}
     >
       {groups.map((group, index) => (
-        <VendorGroupTableSection
+        <ReviewGroupRows
           key={group.id}
           group={group}
           groupIndex={index}
           transactions={transactions}
-          categoryRules={categoryRules}
           onApply={handleGroupApply}
         />
       ))}

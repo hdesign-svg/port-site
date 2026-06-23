@@ -1,0 +1,93 @@
+.close-root {
+  --close-ink: #141210;
+  --close-paper: #f3ece2;
+  --close-paper-elevated: #fffdf9;
+  --close-accent: #b84a2f;
+  --close-accent-soft: rgba(184, 74, 47, 0.12);
+  --close-success: #1f6b4a;
+  --close-success-soft: rgba(31, 107, 74, 0.1);
+  --close-muted: #6f6760;
+  --close-line: #ddd4c8;
+  --close-shadow: 0 24px 80px rgba(20, 18, 16, 0.08);
+  color: var(--close-ink);
+  background: var(--close-paper);
+  min-height: 100vh;
+}
+
+@keyframes close-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes close-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes close-card-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.97);
+  }
+}
+
+@keyframes close-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.4) rotate(-8deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.96) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes close-stream {
+  0% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-48px);
+    opacity: 0;
+  }
+}
+
+.close-rise {
+  animation: close-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.close-card-in {
+  animation: close-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.close-card-out {
+  animation: close-card-out 0.32s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.close-stamp {
+  animation: close-stamp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.close-stagger-1 { animation-delay: 0.04s; }
+.close-stagger-2 { animation-delay: 0.08s; }
+.close-stagger-3 { animation-delay: 0.12s; }
+.close-stagger-4 { animation-delay: 0.16s; }

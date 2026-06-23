@@ -14,6 +14,7 @@ import {
   hcpModuleTabInactiveHoverSx,
   hcpModuleTabItemSx,
   hcpModuleTabLabelSx,
+  hcpModuleTabListSx,
 } from "../hcpTheme";
 
 type AccountingTabBarProps = {
@@ -32,17 +33,12 @@ export function AccountingTabBar({
       <Box
         role="tablist"
         aria-label="Accounting views"
-        sx={{
-          display: "flex",
-          alignItems: "flex-end",
-          flexWrap: "wrap",
-          gap: `${hcpLayout.tabLabelGap}px`,
-        }}
+        sx={hcpModuleTabListSx}
       >
         {ACCOUNTING_TABS.map((tab) => {
           const label = ACCOUNTING_TAB_LABELS[tab];
           const isActive = tab === activeTab;
-          const showReviewCount = tab === "all" && reviewCount > 0;
+          const showReviewCount = tab === "toReview" && reviewCount > 0;
 
           return (
             <Box

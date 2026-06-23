@@ -100,7 +100,6 @@ export function ReviewCategoryCell({
       <Box ref={triggerRef} sx={{ width: "100%" }} onClick={(event) => event.stopPropagation()}>
         <AccountingCategoryCellTrigger
           category={row.category}
-          hasRule={hasRule}
           onClick={handleOpen}
           onMouseDown={(event) => event.stopPropagation()}
         />

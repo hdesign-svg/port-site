@@ -19,6 +19,11 @@ const flows = [
     title: "Basic Accounting",
     shots: "Transactions · Reports (post-activation)",
   },
+  {
+    href: "/prototypes/close",
+    title: "Close · Self-serve accounting (explore)",
+    shots: "Independent UX vision — Plaid → resolve → ledger → tax-ready → P&L",
+  },
 ];
 
 export default function HcpPrototypesIndexPage() {

@@ -2,7 +2,6 @@
 
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import type { MouseEvent } from "react";
 import type { AccountingCategory } from "./accountingTransactionData";
 import { hcpColors } from "../hcpTheme";
@@ -22,30 +21,12 @@ const chipSx = {
 
 type AccountingCategoryCellTriggerProps = {
   category: AccountingCategory | null;
-  hasRule: boolean;
   onClick: (event: MouseEvent<HTMLElement>) => void;
   onMouseDown?: (event: MouseEvent<HTMLElement>) => void;
 };
 
-function RuleHint({ hasRule }: { hasRule: boolean }) {
-  if (!hasRule) {
-    return null;
-  }
-
-  return (
-    <Typography
-      component="span"
-      variant="caption"
-      sx={{ color: hcpColors.primary, fontSize: "0.6875rem", flexShrink: 0 }}
-    >
-      Rule
-    </Typography>
-  );
-}
-
 export function AccountingCategoryCellTrigger({
   category,
-  hasRule,
   onClick,
   onMouseDown,
 }: AccountingCategoryCellTriggerProps) {
@@ -62,7 +43,6 @@ export function AccountingCategoryCellTrigger({
       sx={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 0.75,
         maxWidth: "100%",
         minWidth: 0,
         border: 0,
@@ -93,7 +73,6 @@ export function AccountingCategoryCellTrigger({
             : `1px solid ${hcpColors.borderControl}`,
         }}
       />
-      <RuleHint hasRule={hasRule} />
     </Box>
   );
 }

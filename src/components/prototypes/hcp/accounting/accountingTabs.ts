@@ -1,4 +1,6 @@
-export const ACCOUNTING_TABS = ["all", "reports"] as const;
+export type ReviewLayout = "grouped" | "focus";
+
+export const ACCOUNTING_TABS = ["readiness", "toReview", "ledger", "reports"] as const;
 
 export type AccountingTab = (typeof ACCOUNTING_TABS)[number];
 
@@ -11,7 +13,9 @@ export const ACCOUNTING_FLOW_FILTERS: { id: AccountingFlowFilter; label: string 
 ];
 
 export const ACCOUNTING_TAB_LABELS: Record<AccountingTab, string> = {
-  all: "Transactions",
+  readiness: "Readiness",
+  toReview: "To review",
+  ledger: "Ledger",
   reports: "Reports",
 };
 
@@ -30,6 +34,10 @@ export function isAccountingTab(value: string): value is AccountingTab {
   return ACCOUNTING_TABS.includes(value as AccountingTab);
 }
 
-export function isTransactionsTab(tab: AccountingTab): tab is "all" {
-  return tab === "all";
+export function isToReviewTab(tab: AccountingTab): tab is "toReview" {
+  return tab === "toReview";
+}
+
+export function isLedgerTab(tab: AccountingTab): tab is "ledger" {
+  return tab === "ledger";
 }
