@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { AccountingScene } from "@/components/prototypes/hcp/accounting/AccountingOverviewScene";
 import { UnlockModal } from "@/components/prototypes/hcp/activation/UnlockModal";
 import {
@@ -32,7 +32,9 @@ export default function HcpAccountingPrototypePage() {
           onMoneySubNavClick: handleMoneySubNavClick,
         }}
       >
-        <AccountingScene />
+        <Suspense fallback={null}>
+          <AccountingScene />
+        </Suspense>
       </HcpFramedShell>
 
       {unlockTarget ? (

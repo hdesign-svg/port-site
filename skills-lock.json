@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "prototype-to-figma": {
+      "source": "alima-max/prototype-to-figma-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "de734cb71beacd0e17dc1c9372bf3e6da4a007ea7e67c0f4a604d24ed58f33ed"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AccountingPageHeader } from "./AccountingPageHeader";
 import { AccountingReportsTab } from "./AccountingReportsTab";
@@ -19,8 +20,15 @@ import {
 } from "../hcpTheme";
 import { useHcpAccountingReviewCount } from "../HcpAppShell";
 
+function getInitialAccountingTab(searchParams: URLSearchParams): AccountingTab {
+  return searchParams.get("tab") === "reports" ? "reports" : "all";
+}
+
 export function AccountingScene() {
-  const [activeTab, setActiveTab] = useState<AccountingTab>("all");
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<AccountingTab>(() =>
+    getInitialAccountingTab(searchParams),
+  );
   const [selectedPeriod, setSelectedPeriod] = useState<AccountingPeriod>(DEFAULT_ACCOUNTING_PERIOD);
   const [transactions, setTransactions] = useState(initialTransactions);
   const [categoryRules, setCategoryRules] = useState<AccountingCategoryRule[]>([]);
