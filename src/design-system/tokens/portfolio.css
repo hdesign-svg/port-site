@@ -1,0 +1,49 @@
+/* Portfolio v2 design tokens — fresh start, not v1 Manu/Slate defaults */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --ds-bg: oklch(0.985 0.003 285);
+  --ds-fg: oklch(0.2 0.012 285);
+  --ds-muted: oklch(0.52 0.012 285);
+  --ds-border: oklch(0.91 0.006 285);
+  --ds-surface: oklch(1 0 0);
+  --ds-surface-raised: oklch(0.975 0.004 285);
+  --ds-accent: oklch(0.42 0.11 262);
+  --ds-accent-hover: oklch(0.36 0.11 262);
+  --ds-accent-fg: oklch(0.99 0 0);
+  --ds-focus: oklch(0.55 0.14 262);
+
+  --ds-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-text-xs: 0.75rem;
+  --ds-text-sm: 0.875rem;
+  --ds-text-base: 1rem;
+  --ds-text-lg: 1.125rem;
+  --ds-leading-tight: 1.25;
+  --ds-leading: 1.5;
+
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 10px;
+
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-6: 1.5rem;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ds-bg: oklch(0.16 0.012 285);
+  --ds-fg: oklch(0.94 0.006 285);
+  --ds-muted: oklch(0.62 0.012 285);
+  --ds-border: oklch(0.28 0.012 285);
+  --ds-surface: oklch(0.2 0.012 285);
+  --ds-surface-raised: oklch(0.24 0.012 285);
+  --ds-accent: oklch(0.72 0.12 262);
+  --ds-accent-hover: oklch(0.78 0.12 262);
+  --ds-accent-fg: oklch(0.16 0.02 262);
+  --ds-focus: oklch(0.72 0.14 262);
+}
