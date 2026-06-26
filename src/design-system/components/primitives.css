@@ -37,12 +37,12 @@
 }
 
 .ds-button--primary {
-  background: var(--ds-accent);
-  color: var(--ds-accent-fg);
+  background: var(--ds-fg-strong);
+  color: var(--ds-bg);
 }
 
 .ds-button--primary:hover:not(:disabled) {
-  background: var(--ds-accent-hover);
+  background: var(--ds-fg);
 }
 
 .ds-button--secondary {

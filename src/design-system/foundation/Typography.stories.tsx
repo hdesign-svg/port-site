@@ -48,7 +48,8 @@ function MockupPlaceholder({ style }: { style?: CSSProperties }) {
         borderRadius: "var(--ds-radius-md)",
         border: "1px solid var(--ds-border)",
         background:
-          "linear-gradient(145deg, var(--ds-surface-raised) 0%, var(--ds-surface) 55%, color-mix(in oklch, var(--ds-border) 40%, var(--ds-surface)) 100%)",
+          "linear-gradient(155deg, var(--ds-surface-raised) 0%, var(--ds-bg-subtle) 45%, var(--ds-surface) 100%)",
+        boxShadow: "var(--ds-shadow-raised)",
         ...style,
       }}
     />

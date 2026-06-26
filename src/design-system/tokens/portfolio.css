@@ -1,21 +1,8 @@
-/* Portfolio v2 design tokens — fresh start, not v1 Manu/Slate defaults */
+/* Portfolio v2 layout tokens — radius, spacing */
 
 :root,
-[data-theme="light"] {
-  color-scheme: light;
-
-  --ds-bg: oklch(0.985 0.003 285);
-  --ds-fg: oklch(0.2 0.012 285);
-  --ds-fg-strong: oklch(0.14 0.014 285);
-  --ds-muted: oklch(0.52 0.012 285);
-  --ds-border: oklch(0.91 0.006 285);
-  --ds-surface: oklch(1 0 0);
-  --ds-surface-raised: oklch(0.975 0.004 285);
-  --ds-accent: oklch(0.42 0.11 262);
-  --ds-accent-hover: oklch(0.36 0.11 262);
-  --ds-accent-fg: oklch(0.99 0 0);
-  --ds-focus: oklch(0.55 0.14 262);
-
+[data-theme="light"],
+[data-theme="dark"] {
   --ds-radius-sm: 6px;
   --ds-radius-md: 10px;
 
@@ -24,20 +11,4 @@
   --ds-space-3: 0.75rem;
   --ds-space-4: 1rem;
   --ds-space-6: 1.5rem;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --ds-bg: oklch(0.16 0.012 285);
-  --ds-fg: oklch(0.94 0.006 285);
-  --ds-fg-strong: oklch(0.98 0.004 285);
-  --ds-muted: oklch(0.62 0.012 285);
-  --ds-border: oklch(0.28 0.012 285);
-  --ds-surface: oklch(0.2 0.012 285);
-  --ds-surface-raised: oklch(0.24 0.012 285);
-  --ds-accent: oklch(0.72 0.12 262);
-  --ds-accent-hover: oklch(0.78 0.12 262);
-  --ds-accent-fg: oklch(0.16 0.02 262);
-  --ds-focus: oklch(0.72 0.14 262);
 }

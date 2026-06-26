@@ -1,0 +1,46 @@
+/* Portfolio v2 color — blue-gray precision (OKLCH, one cool family) */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Paper & canvas */
+  --ds-bg: oklch(0.98 0.012 250);
+  --ds-bg-subtle: oklch(0.965 0.014 255);
+  --ds-surface: oklch(0.988 0.011 252);
+  --ds-surface-raised: oklch(0.972 0.013 253);
+
+  /* Ink */
+  --ds-fg: oklch(0.3 0.03 265);
+  --ds-fg-strong: oklch(0.22 0.04 262);
+  --ds-muted: oklch(0.52 0.02 265);
+
+  --ds-border: color-mix(in oklch, var(--ds-fg-strong) 10%, transparent);
+
+  --ds-focus: var(--ds-fg-strong);
+  --ds-shadow-key: var(--ds-fg-strong);
+  --ds-shadow-raised:
+    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 6%, transparent),
+    0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 5%, transparent);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ds-bg: oklch(0.16 0.022 265);
+  --ds-bg-subtle: oklch(0.19 0.02 265);
+  --ds-surface: oklch(0.18 0.021 265);
+  --ds-surface-raised: oklch(0.22 0.023 265);
+
+  --ds-fg: oklch(0.88 0.018 265);
+  --ds-fg-strong: oklch(0.93 0.015 265);
+  --ds-muted: oklch(0.62 0.018 265);
+
+  --ds-border: color-mix(in oklch, var(--ds-fg-strong) 14%, transparent);
+
+  --ds-focus: var(--ds-fg-strong);
+  --ds-shadow-key: oklch(0.08 0.02 265);
+  --ds-shadow-raised:
+    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 40%, transparent),
+    0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 30%, transparent);
+}

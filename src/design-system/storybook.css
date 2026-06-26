@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./fonts/geist-sans.css";
+@import "./tokens/color.css";
 @import "./tokens/portfolio.css";
 @import "./tokens/typography.css";
 @import "./foundation/typography.css";
@@ -12,8 +13,7 @@
   --color-ds-border: var(--ds-border);
   --color-ds-surface: var(--ds-surface);
   --color-ds-surface-raised: var(--ds-surface-raised);
-  --color-ds-accent: var(--ds-accent);
-  --color-ds-accent-fg: var(--ds-accent-fg);
   --color-ds-fg-strong: var(--ds-fg-strong);
+  --color-ds-bg-subtle: var(--ds-bg-subtle);
   --font-sans: var(--ds-font-family);
 }
