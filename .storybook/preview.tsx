@@ -29,6 +29,7 @@ const preview: Preview = {
             minHeight: "100vh",
             background: "var(--ds-bg)",
             color: "var(--ds-fg)",
+            fontFamily: "var(--ds-font-family)",
           }}
         >
           <Story />

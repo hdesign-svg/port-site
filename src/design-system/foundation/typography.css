@@ -1,0 +1,120 @@
+.ds-type-strong,
+.ds-type-subtle,
+.ds-type-body,
+.ds-type-muted,
+.ds-type-meta,
+.ds-type-link-quiet,
+.ds-type-link-emphasis {
+  font-family: var(--ds-font-family);
+  font-style: normal;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Name, project titles */
+.ds-type-strong {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-strong);
+  letter-spacing: var(--ds-type-strong-tracking);
+  color: var(--ds-fg-strong);
+}
+
+/* Role line under name — same size, muted */
+.ds-type-subtle {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-muted);
+}
+
+/* Hero + project body copy */
+.ds-type-body {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-fg);
+  max-width: var(--ds-type-measure);
+  text-wrap: pretty;
+}
+
+/* Secondary lines, credits */
+.ds-type-muted {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-muted);
+  max-width: var(--ds-type-measure);
+  text-wrap: pretty;
+}
+
+/* Project eyebrow — client · year · role */
+.ds-type-meta {
+  font-size: var(--ds-text-meta);
+  line-height: var(--ds-leading-meta);
+  font-weight: var(--ds-weight-regular);
+  letter-spacing: var(--ds-type-meta-tracking);
+  color: var(--ds-muted);
+  text-wrap: balance;
+}
+
+/* About, LinkedIn ↗ in nav */
+.ds-type-link-quiet {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-muted);
+  text-decoration: none;
+  transition: color var(--ds-nav-link-color-dur) ease;
+}
+
+.ds-type-link-quiet:hover {
+  color: var(--ds-fg);
+}
+
+.ds-type-link-quiet:focus-visible {
+  outline: 2px solid var(--ds-fg-strong);
+  outline-offset: 2px;
+}
+
+/* LinkedIn, Resume in hero — underline + invert */
+.ds-type-link-emphasis {
+  display: inline;
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-base);
+  font-weight: var(--ds-weight-medium);
+  color: var(--ds-fg-strong);
+  text-decoration: underline;
+  text-underline-offset: var(--ds-type-link-underline-offset);
+  padding-inline: 0.2em;
+  margin-inline: -0.2em;
+}
+
+.ds-type-link-emphasis:hover {
+  background-color: var(--ds-fg-strong);
+  color: var(--ds-bg);
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+.ds-type-link-emphasis:focus-visible {
+  outline: 2px solid var(--ds-fg-strong);
+  outline-offset: 2px;
+}
+
+/* Stacked copy blocks */
+.ds-type-stack {
+  display: grid;
+  gap: var(--ds-type-gap-tight);
+}
+
+.ds-type-stack--loose {
+  gap: var(--ds-type-gap);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-type-link-quiet {
+    transition: none;
+  }
+}

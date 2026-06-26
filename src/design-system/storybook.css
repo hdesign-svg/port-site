@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "./fonts/geist-sans.css";
 @import "./tokens/portfolio.css";
+@import "./tokens/typography.css";
+@import "./foundation/typography.css";
 @import "./components/primitives.css";
 
 @theme inline {
@@ -11,4 +14,6 @@
   --color-ds-surface-raised: var(--ds-surface-raised);
   --color-ds-accent: var(--ds-accent);
   --color-ds-accent-fg: var(--ds-accent-fg);
+  --color-ds-fg-strong: var(--ds-fg-strong);
+  --font-sans: var(--ds-font-family);
 }
