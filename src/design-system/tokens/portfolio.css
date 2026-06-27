@@ -11,4 +11,10 @@
   --ds-space-3: 0.75rem;
   --ds-space-4: 1rem;
   --ds-space-6: 1.5rem;
+
+  /* Bottom dock — height, scroll control, content clearance */
+  --ds-dock-height: 2.75rem;
+  --ds-dock-content-clearance: calc(
+    var(--ds-dock-height) + var(--ds-space-6) + env(safe-area-inset-bottom, 0px)
+  );
 }

@@ -28,6 +28,7 @@
   --ds-shadow-raised:
     0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 6%, transparent),
     0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 5%, transparent);
+  --ds-shadow-segment-active: var(--ds-shadow-raised);
 }
 
 [data-theme="dark"] {
@@ -51,4 +52,5 @@
   --ds-shadow-raised:
     0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 40%, transparent),
     0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 30%, transparent);
+  --ds-shadow-segment-active: var(--ds-shadow-raised);
 }

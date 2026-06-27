@@ -1,0 +1,184 @@
+/* Bottom chrome — platform filter + scroll-to-top (separate surfaces) */
+
+.ds-dock-surface {
+  background: var(--ds-bg);
+  border: 1px solid var(--ds-border);
+  border-radius: 9999px;
+  box-shadow: var(--ds-shadow-raised);
+}
+
+/* Platform filter bar */
+.ds-platform-filter {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ds-dock-height);
+  padding: var(--ds-space-1);
+}
+
+.ds-platform-filter__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--ds-bg-subtle);
+  border-radius: 9999px;
+}
+
+.ds-platform-filter__option {
+  position: relative;
+  appearance: none;
+  border: none;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: 9999px;
+  color: var(--ds-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--ds-dock-dur) var(--ds-dock-ease-out),
+    background-color var(--ds-dock-dur) var(--ds-dock-ease-out),
+    box-shadow var(--ds-dock-dur) var(--ds-dock-ease-out);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ds-platform-filter__option:hover {
+  color: var(--ds-fg);
+}
+
+.ds-platform-filter__option--active {
+  color: var(--ds-fg-strong);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-segment-active);
+}
+
+.ds-platform-filter__option:focus-visible {
+  outline: 2px solid var(--ds-fg-strong);
+  outline-offset: 2px;
+}
+
+.ds-platform-filter__tooltip {
+  position: absolute;
+  bottom: calc(100% + var(--ds-space-2));
+  left: 50%;
+  z-index: 1;
+  translate: -50% 0.125rem;
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: var(--ds-radius-sm);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-text-meta);
+  line-height: var(--ds-leading-meta);
+  font-weight: var(--ds-weight-regular);
+  letter-spacing: var(--ds-type-meta-tracking);
+  white-space: nowrap;
+  pointer-events: none;
+  color: var(--ds-bg);
+  background: var(--ds-fg-strong);
+  box-shadow: var(--ds-shadow-raised);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ds-dock-dur) var(--ds-dock-ease-out),
+    visibility var(--ds-dock-dur) var(--ds-dock-ease-out),
+    translate var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+.ds-platform-filter__option:hover .ds-platform-filter__tooltip,
+.ds-platform-filter__option:focus-visible .ds-platform-filter__tooltip {
+  opacity: 1;
+  visibility: visible;
+  translate: -50% 0;
+}
+
+/* Scroll-to-top — own raised surface */
+.ds-scroll-to-top {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: var(--ds-dock-height);
+  height: var(--ds-dock-height);
+  padding: 0;
+  border: none;
+  color: var(--ds-fg-strong);
+  cursor: pointer;
+}
+
+.ds-scroll-to-top:focus-visible {
+  outline: 2px solid var(--ds-fg-strong);
+  outline-offset: 2px;
+}
+
+.ds-scroll-to-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.ds-scroll-to-top__progress {
+  fill: none;
+  stroke-width: 2;
+  stroke: var(--ds-fg-strong);
+  stroke-linecap: round;
+}
+
+.ds-scroll-to-top__icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+/* Anchor — positions filter + scroll side by side */
+.ds-dock-anchor {
+  pointer-events: none;
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2);
+  padding-inline: max(var(--ds-space-4), env(safe-area-inset-left, 0px))
+    max(var(--ds-space-4), env(safe-area-inset-right, 0px));
+  padding-bottom: max(var(--ds-space-4), env(safe-area-inset-bottom, 0px));
+}
+
+.ds-dock-anchor > * {
+  pointer-events: auto;
+  max-width: calc(100vw - 2 * var(--ds-space-4));
+}
+
+/* Storybook / page demo — dim non-matching projects */
+.ds-dock-story__project {
+  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+.ds-dock-story__project--dimmed {
+  opacity: 0.34;
+}
+
+@media (max-width: 24rem) {
+  .ds-dock-anchor {
+    gap: var(--ds-space-1);
+  }
+
+  .ds-platform-filter {
+    padding: var(--ds-space-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-platform-filter__option,
+  .ds-platform-filter__tooltip,
+  .ds-dock-story__project {
+    transition: none;
+  }
+}
