@@ -3,10 +3,20 @@
 :root,
 [data-theme="light"],
 [data-theme="dark"] {
-  --ds-link-decoration-dur: 150ms;
-  --ds-link-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ds-link-ease-in: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
+  /* Text link — matches text-states-swap duration */
+  --ds-link-decoration-dur: 150ms;
+  --ds-link-ease-out: var(--ds-ease);
+  --ds-link-ease-in: var(--ds-ease);
+
+  /* Dock chrome — tab hovers, dim, ring fade */
   --ds-dock-dur: 150ms;
-  --ds-dock-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-dock-ease-out: var(--ds-ease);
+
+  /* Tooltips — menu-dropdown pattern (CSS hover: slower open, faster close) */
+  --ds-dropdown-open-dur: 250ms;
+  --ds-dropdown-close-dur: 150ms;
+  --ds-dropdown-pre-scale: 0.97;
+  --ds-dropdown-ease: var(--ds-ease);
 }

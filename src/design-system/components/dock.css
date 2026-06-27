@@ -68,34 +68,45 @@
   color: var(--ds-bg);
   background: var(--ds-fg-strong);
   box-shadow: var(--ds-shadow-raised);
+  scale: var(--ds-dropdown-pre-scale);
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity var(--ds-dock-dur) var(--ds-dock-ease-out),
-    visibility var(--ds-dock-dur) var(--ds-dock-ease-out),
-    translate var(--ds-dock-dur) var(--ds-dock-ease-out);
+    scale var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
+    opacity var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
+    translate var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
+    visibility 0s var(--ds-dropdown-close-dur);
 }
 
 .ds-platform-filter__tooltip--middle {
   left: 50%;
   translate: -50% 0.125rem;
+  transform-origin: bottom center;
 }
 
 .ds-platform-filter__tooltip--start {
   left: 0;
   translate: 0 0.125rem;
+  transform-origin: bottom left;
 }
 
 .ds-platform-filter__tooltip--end {
   right: 0;
   left: auto;
   translate: 0 0.125rem;
+  transform-origin: bottom right;
 }
 
 .ds-platform-filter__option:hover .ds-platform-filter__tooltip,
 .ds-platform-filter__option:focus-visible .ds-platform-filter__tooltip {
+  scale: 1;
   opacity: 1;
   visibility: visible;
+  transition:
+    scale var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
+    opacity var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
+    translate var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
+    visibility 0s;
 }
 
 .ds-platform-filter__option:hover .ds-platform-filter__tooltip--middle,
@@ -155,6 +166,7 @@
   stroke: var(--ds-fg-strong);
   stroke-linecap: round;
   opacity: 0;
+  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
 }
 
 .ds-scroll-to-top--scrolled .ds-scroll-to-top__progress {
@@ -201,7 +213,12 @@
   .ds-platform-filter__option,
   .ds-platform-filter__tooltip,
   .ds-scroll-to-top,
+  .ds-scroll-to-top__progress,
   .ds-dock-story__project {
     transition: none;
+  }
+
+  .ds-platform-filter__tooltip {
+    scale: 1;
   }
 }
