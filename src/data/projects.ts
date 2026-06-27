@@ -1,5 +1,7 @@
 export type MockupDevice = "phone" | "desktop";
 
+export type ProjectPlatform = "mobile" | "web";
+
 export type ProjectImage = {
   src: string;
   alt: string;
@@ -12,10 +14,20 @@ export type Project = {
   title: string;
   company: string;
   year: string;
+  platform: ProjectPlatform;
   description: string[];
   outcomes: string[];
   images: ProjectImage[];
 };
+
+export type ProjectFilter = "all" | ProjectPlatform;
+
+export function projectMatchesFilter(
+  project: Project,
+  filter: ProjectFilter,
+): boolean {
+  return filter === "all" || project.platform === filter;
+}
 
 export const projects: Project[] = [
   {
@@ -23,6 +35,7 @@ export const projects: Project[] = [
     title: "Basic Accounting",
     company: "Housecall Pro",
     year: "2025",
+    platform: "web",
     description: [
       "Designed a self-serve accounting experience for a new DIY accounting offering.",
       "For home service professionals with simpler accounting needs, simplifying transaction review and reporting.",
@@ -46,6 +59,7 @@ export const projects: Project[] = [
     title: "HCP Money Activation",
     company: "Housecall Pro",
     year: "2025",
+    platform: "web",
     description: [
       "Redesigned activation after funnel analysis revealed users were dropping off before seeing the product.",
       "Built for home service professionals evaluating fintech products before commitment.",
@@ -74,6 +88,7 @@ export const projects: Project[] = [
     title: "Concierge Conversations",
     company: "Mad Mobile",
     year: "2024",
+    platform: "mobile",
     description: [
       "Reimagined customer messaging through strategy, workflow design, and delivery as part of the Concierge platform overhaul.",
       "Helping retail associates manage customer relationships through modern messaging, product sharing, and AI-assisted writing.",
@@ -97,6 +112,7 @@ export const projects: Project[] = [
     title: "Concierge AI",
     company: "Mad Mobile",
     year: "2024",
+    platform: "mobile",
     description: [
       "Led 0 → 1 design across strategy, system modeling, and delivery for a new agent experience.",
       "Built for retail associates managing customer relationships, product pairing, and outreach at scale.",
@@ -123,6 +139,7 @@ export const projects: Project[] = [
     title: "Concierge Platform",
     company: "Mad Mobile",
     year: "2024",
+    platform: "mobile",
     description: [
       "Led 0 → 1 design across strategy, system modeling, and delivery for a foundational clienteling platform redesign.",
       "Built for retail associates managing customer relationships, modernizing a stagnant clienteling experience.",

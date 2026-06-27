@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import "./fonts/geist-sans.css";
+@import "./tokens/color.css";
+@import "./tokens/motion.css";
+@import "./tokens/portfolio.css";
+@import "./tokens/typography.css";
+@import "./foundation/typography.css";
+@import "./components/text-link.css";
+@import "./components/dock.css";
+@import "./components/primitives.css";
+
+@theme inline {
+  --color-ds-bg: var(--ds-bg);
+  --color-ds-fg: var(--ds-fg);
+  --color-ds-muted: var(--ds-muted);
+  --color-ds-border: var(--ds-border);
+  --color-ds-surface: var(--ds-surface);
+  --color-ds-surface-raised: var(--ds-surface-raised);
+  --color-ds-fg-strong: var(--ds-fg-strong);
+  --color-ds-bg-subtle: var(--ds-bg-subtle);
+  --font-sans: var(--ds-font-family);
+}
