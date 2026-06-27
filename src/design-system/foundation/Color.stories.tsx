@@ -145,24 +145,16 @@ function PalettePage() {
         </div>
       </Specimen>
 
-      <Specimen label="Links" token="ds-type-link-*">
-        <div
-          className="ds-type-stack"
-          style={{ gap: "var(--ds-type-gap-tight)" }}
-        >
-          <a href="#quiet" className="ds-type-link-quiet">
-            About
+      <Specimen label="Text links" token="ds-text-link">
+        <p style={{ margin: 0 }}>
+          <a href="#linkedin" className="ds-text-link">
+            LinkedIn
           </a>
-          <p style={{ margin: 0 }}>
-            <a href="#emphasis" className="ds-type-link-emphasis">
-              LinkedIn
-            </a>
-            {" · "}
-            <a href="#emphasis" className="ds-type-link-emphasis">
-              Resume
-            </a>
-          </p>
-        </div>
+          {" · "}
+          <a href="#resume" className="ds-text-link">
+            Resume
+          </a>
+        </p>
       </Specimen>
 
       <Specimen label="Raised surface" token="--ds-shadow-raised">

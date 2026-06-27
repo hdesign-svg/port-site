@@ -1,9 +1,11 @@
 @import "tailwindcss";
 @import "./fonts/geist-sans.css";
 @import "./tokens/color.css";
+@import "./tokens/motion.css";
 @import "./tokens/portfolio.css";
 @import "./tokens/typography.css";
 @import "./foundation/typography.css";
+@import "./components/text-link.css";
 @import "./components/primitives.css";
 
 @theme inline {

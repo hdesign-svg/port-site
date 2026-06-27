@@ -1,0 +1,9 @@
+/* Portfolio v2 motion — transitions.dev-aligned curves */
+
+:root,
+[data-theme="light"],
+[data-theme="dark"] {
+  --ds-link-decoration-dur: 150ms;
+  --ds-link-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-link-ease-in: cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -96,19 +96,13 @@ function TypographyPage() {
         <p className="ds-type-meta">Housecall Pro · 2024 · Product design</p>
       </Specimen>
 
-      <Specimen label="Link quiet" token="ds-type-link-quiet">
-        <a href="#nav" className="ds-type-link-quiet">
-          LinkedIn ↗
-        </a>
-      </Specimen>
-
-      <Specimen label="Link emphasis" token="ds-type-link-emphasis">
+      <Specimen label="Text link" token="ds-text-link">
         <p style={{ margin: 0 }}>
-          <a href="#link" className="ds-type-link-emphasis">
+          <a href="#linkedin" className="ds-text-link">
             LinkedIn
           </a>
           {" · "}
-          <a href="#link" className="ds-type-link-emphasis">
+          <a href="#resume" className="ds-text-link">
             Resume
           </a>
         </p>
@@ -134,11 +128,11 @@ function TypographyPage() {
             Previously at Housecall Pro, Mad Mobile, and Ibotta.
           </p>
           <p style={{ margin: 0 }}>
-            <a href="#linkedin" className="ds-type-link-emphasis">
+            <a href="#linkedin" className="ds-text-link">
               LinkedIn
             </a>
             {" · "}
-            <a href="#resume" className="ds-type-link-emphasis">
+            <a href="#resume" className="ds-text-link">
               Resume
             </a>
           </p>
