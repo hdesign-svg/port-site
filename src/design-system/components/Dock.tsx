@@ -4,7 +4,7 @@ import {
   ArrowUp,
   Desktop,
   DeviceMobile,
-  SquaresFour,
+  Stack,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import {
@@ -24,12 +24,13 @@ export const DOCK_FILTERS: {
   label: string;
   icon: Icon;
 }[] = [
-  { id: "all", label: "All", icon: SquaresFour },
+  { id: "all", label: "All", icon: Stack },
   { id: "mobile", label: "Mobile", icon: DeviceMobile },
   { id: "web", label: "Web", icon: Desktop },
 ];
 
-const FILTER_ICON_SIZE = 18;
+const FILTER_ICON_SIZE = 16;
+const SCROLL_ICON_SIZE = 16;
 
 const SCROLL_RING_RADIUS = 15;
 const SCROLL_RING_CIRCUMFERENCE = 2 * Math.PI * SCROLL_RING_RADIUS;
@@ -138,34 +139,45 @@ export function PlatformFilter({
       role="radiogroup"
       aria-label="Filter projects by platform"
     >
-      <div className="ds-platform-filter__track">
-        {DOCK_FILTERS.map(({ id, label, icon: Icon }, index) => {
-          const active = filter === id;
+      {DOCK_FILTERS.map(({ id, label, icon: Icon }, index) => {
+        const active = filter === id;
+        const position =
+          index === 0
+            ? "start"
+            : index === DOCK_FILTERS.length - 1
+              ? "end"
+              : "middle";
 
-          return (
-            <button
-              key={id}
-              ref={(node) => {
-                filterRefs.current[index] = node;
-              }}
-              type="button"
-              role="radio"
-              id={`${groupId}-${id}`}
-              aria-checked={active}
-              aria-label={label}
-              tabIndex={active ? 0 : -1}
-              className={`ds-platform-filter__option${active ? " ds-platform-filter__option--active" : ""}`}
-              onClick={() => onFilterChange(id)}
-              onKeyDown={(event) => handleFilterKeyDown(event, index)}
+        return (
+          <button
+            key={id}
+            ref={(node) => {
+              filterRefs.current[index] = node;
+            }}
+            type="button"
+            role="radio"
+            id={`${groupId}-${id}`}
+            aria-checked={active}
+            aria-label={label}
+            tabIndex={active ? 0 : -1}
+            className={`ds-platform-filter__option${active ? " ds-platform-filter__option--active" : ""}`}
+            onClick={() => onFilterChange(id)}
+            onKeyDown={(event) => handleFilterKeyDown(event, index)}
+          >
+            <Icon
+              size={FILTER_ICON_SIZE}
+              weight={active ? "fill" : "regular"}
+              aria-hidden
+            />
+            <span
+              className={`ds-platform-filter__tooltip ds-platform-filter__tooltip--${position}`}
+              aria-hidden
             >
-              <Icon size={FILTER_ICON_SIZE} weight="regular" aria-hidden />
-              <span className="ds-platform-filter__tooltip" aria-hidden>
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+              {label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -217,7 +229,11 @@ export function ScrollToTop({ scrollRoot, className }: ScrollToTopProps) {
   }, [resolveScrollRoot, scrollRoot]);
 
   const dashOffset = SCROLL_RING_CIRCUMFERENCE * (1 - progress);
+  const scrolled = progress > 0.05;
   const classes = ["ds-dock-surface", "ds-scroll-to-top"];
+  if (scrolled) {
+    classes.push("ds-scroll-to-top--scrolled");
+  }
   if (className) {
     classes.push(className);
   }
@@ -226,11 +242,7 @@ export function ScrollToTop({ scrollRoot, className }: ScrollToTopProps) {
     <button
       type="button"
       className={classes.join(" ")}
-      aria-label={
-        progress > 0.001
-          ? `Back to top, ${Math.round(progress * 100)}% scrolled`
-          : "Back to top"
-      }
+      aria-label="Back to top"
       onClick={() => scrollToTop(resolveScrollRoot())}
     >
       <svg className="ds-scroll-to-top__ring" viewBox="0 0 36 36" aria-hidden>
@@ -245,7 +257,7 @@ export function ScrollToTop({ scrollRoot, className }: ScrollToTopProps) {
       </svg>
       <ArrowUp
         className="ds-scroll-to-top__icon"
-        size={16}
+        size={SCROLL_ICON_SIZE}
         weight="regular"
         aria-hidden
       />

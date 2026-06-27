@@ -12,9 +12,51 @@
   --ds-space-4: 1rem;
   --ds-space-6: 1.5rem;
 
-  /* Bottom dock — height, scroll control, content clearance */
-  --ds-dock-height: 2.75rem;
-  --ds-dock-content-clearance: calc(
-    var(--ds-dock-height) + var(--ds-space-6) + env(safe-area-inset-bottom, 0px)
+  /* Bottom dock — size from inset tabs inward */
+  --ds-dock-tab-size: 1.875rem;
+  --ds-dock-tab-gap: 3px;
+  --ds-dock-tab-inset: 0.3125rem;
+  --ds-dock-shell-size: calc(
+    var(--ds-dock-tab-size) + 2 * var(--ds-dock-tab-inset)
   );
+  --ds-dock-anchor-gap: var(--ds-space-4);
+  --ds-dock-anchor-inset: var(--ds-space-3);
+  --ds-dock-content-clearance: calc(
+    var(--ds-dock-shell-size) + var(--ds-space-6) + env(safe-area-inset-bottom, 0px)
+  );
+
+  /* Tab fills — light defaults; dark overrides below */
+  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-fg-strong) 5%, var(--ds-bg));
+  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-fg-strong) 3%, var(--ds-bg));
+}
+
+:root,
+[data-theme="light"] {
+  /*
+   * Light floating chrome: inset edge from ink at opacity (elite-ui tonality tactic).
+   * Slightly stronger than --ds-border (10%) so the pill reads on canvas;
+   * tune --ds-dock-edge % (8–12) for lighter/heavier rim.
+   */
+  --ds-dock-edge: color-mix(in oklch, var(--ds-fg) 10%, transparent);
+  --ds-dock-shadow:
+    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 3.5%, transparent),
+    0 4px 12px color-mix(in oklch, var(--ds-shadow-key) 2.5%, transparent),
+    inset 0 0 0 1px var(--ds-dock-edge);
+}
+
+[data-theme="dark"] {
+  --ds-dock-edge: color-mix(in oklch, var(--ds-fg-strong) 8%, transparent);
+  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-fg-strong) 9%, var(--ds-bg));
+  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-fg-strong) 4%, var(--ds-bg));
+  --ds-dock-shadow:
+    var(--ds-shadow-raised),
+    inset 0 0 0 1px var(--ds-dock-edge);
+}
+
+@media (pointer: coarse) {
+  :root,
+  [data-theme="light"],
+  [data-theme="dark"] {
+    --ds-dock-tab-size: 2rem;
+  }
 }
