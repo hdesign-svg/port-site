@@ -3,19 +3,22 @@
 import { Moon, Sun } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+
 import {
   applyThemeWithTransition,
   DEFAULT_THEME,
   type Theme,
 } from "@/lib/theme";
-import { iconButtonSize } from "@/lib/icon-button";
 
 function readThemeFromDom(): Theme {
-  if (typeof document === "undefined") return DEFAULT_THEME;
+  if (typeof document === "undefined") {
+    return DEFAULT_THEME;
+  }
+
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-export function ThemeToggle() {
+export function PortfolioThemeToggle() {
   const router = useRouter();
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
@@ -46,21 +49,14 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={handleClick}
-      className="icon-btn icon-btn--sm icon-btn--ghost"
+      className="portfolio__theme-toggle"
       aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
     >
-      <span
-        className="t-icon-swap"
-        data-state={isLight ? "a" : "b"}
-        aria-hidden
-      >
-        <span className="t-icon" data-icon="a">
-          <Moon size={iconButtonSize.sm} weight="regular" />
-        </span>
-        <span className="t-icon" data-icon="b">
-          <Sun size={iconButtonSize.sm} weight="regular" />
-        </span>
-      </span>
+      {isLight ? (
+        <Moon size={16} weight="regular" aria-hidden />
+      ) : (
+        <Sun size={16} weight="regular" aria-hidden />
+      )}
     </button>
   );
 }

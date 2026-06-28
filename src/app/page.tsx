@@ -1,11 +1,5 @@
-import { BackToTop } from "@/components/lab/BackToTop";
-import { LabHomeMainFromQuery } from "@/components/lab/LabHomeMain";
+import { PortfolioHome } from "@/components/portfolio/PortfolioHome";
 
 export default function Home() {
-  return (
-    <>
-      <LabHomeMainFromQuery />
-      <BackToTop />
-    </>
-  );
+  return <PortfolioHome />;
 }

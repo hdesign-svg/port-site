@@ -1,18 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+
+import "@/design-system/portfolio-app.css";
+import "./portfolio.css";
 import { site } from "@/data/site";
 import { themeInitScript } from "@/lib/theme";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: `${site.name} — ${site.title}`,
@@ -25,13 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      data-theme="dark"
-      suppressHydrationWarning
-    >
-      <body className="min-h-full font-mono">
+    <html lang="en" className="h-full" data-theme="dark" suppressHydrationWarning>
+      <body className="portfolio min-h-full">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {children}
       </body>

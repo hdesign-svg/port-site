@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { PortfolioHero } from "@/components/v2/PortfolioHero";
-import { PortfolioProject } from "@/components/v2/PortfolioProject";
+import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
+import { PortfolioProject } from "@/components/portfolio/PortfolioProject";
 import {
   Dock,
   DockAnchor,
@@ -34,7 +34,7 @@ export function PortfolioHome() {
 
   return (
     <>
-      <main className="portfolio-v2__main">
+      <main className="portfolio__main">
         <PortfolioHero />
         {projects.map((project) => (
           <PortfolioProject

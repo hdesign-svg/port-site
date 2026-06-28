@@ -1,0 +1,200 @@
+.portfolio {
+  --portfolio-rail: 22rem;
+
+  min-height: 100%;
+  background: var(--ds-bg);
+  color: var(--ds-fg);
+  font-family: var(--ds-font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.portfolio__main {
+  padding-bottom: var(--ds-dock-content-clearance);
+}
+
+.portfolio__hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.portfolio__hero-mobile-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.portfolio__hero-rail {
+  display: none;
+}
+
+.portfolio__hero-body {
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.portfolio__hero-body-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+}
+
+.portfolio__hero-body-row .portfolio__theme-toggle {
+  display: none;
+}
+
+.portfolio__identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--ds-space-3);
+}
+
+.portfolio__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.portfolio__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2) var(--ds-space-3);
+  padding-top: var(--ds-type-gap-tight);
+}
+
+.portfolio__theme-toggle {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ds-dock-tab-size);
+  height: var(--ds-dock-tab-size);
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  color: var(--ds-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--ds-dock-dur) var(--ds-dock-ease-out),
+    background-color var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+.portfolio__theme-toggle:hover {
+  color: var(--ds-fg-strong);
+  background: var(--ds-dock-tab-hover-fill);
+}
+
+.portfolio__theme-toggle:focus-visible {
+  outline: 2px solid var(--ds-fg-strong);
+  outline-offset: 1px;
+}
+
+.portfolio__project {
+  display: grid;
+  grid-template-columns: minmax(0, var(--portfolio-rail)) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--ds-border);
+  scroll-margin-top: 1.5rem;
+  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+.portfolio__project:last-child {
+  border-bottom: none;
+}
+
+.portfolio__project--dimmed {
+  opacity: 0.34;
+}
+
+.portfolio__copy {
+  position: sticky;
+  top: clamp(1.5rem, 4vw, 3rem);
+  align-self: start;
+}
+
+.portfolio__outcomes {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.portfolio__mockups {
+  display: grid;
+  gap: var(--ds-type-gap);
+}
+
+.portfolio__mockup {
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.portfolio__mockup-screen {
+  position: relative;
+  width: 100%;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-bg-subtle);
+}
+
+.portfolio__mockup-screen--phone {
+  max-width: 13.125rem;
+  aspect-ratio: 210 / 477;
+}
+
+.portfolio__mockup-screen--desktop {
+  aspect-ratio: 1024 / 704;
+}
+
+@media (min-width: 64rem) {
+  .portfolio__hero {
+    grid-template-columns: minmax(0, var(--portfolio-rail)) minmax(0, 1fr);
+  }
+
+  .portfolio__hero-mobile-bar {
+    display: none;
+  }
+
+  .portfolio__hero-rail {
+    display: block;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border-right: 1px solid var(--ds-border);
+  }
+
+  .portfolio__hero-body {
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .portfolio__hero-body-row .portfolio__theme-toggle {
+    display: grid;
+  }
+}
+
+@media (max-width: 48rem) {
+  .portfolio__project {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio__copy {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio__project,
+  .portfolio__theme-toggle {
+    transition: none;
+  }
+}
