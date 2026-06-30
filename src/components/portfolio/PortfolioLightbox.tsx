@@ -1,17 +1,182 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 import type { ProjectImage } from "@/data/projects";
 
+export type LightboxOrigin = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
+export type LightboxState = {
+  image: ProjectImage;
+  origin: LightboxOrigin;
+};
+
 type PortfolioLightboxProps = {
-  image: ProjectImage | null;
+  state: LightboxState | null;
   onClose: () => void;
 };
 
-export function PortfolioLightbox({ image, onClose }: PortfolioLightboxProps) {
+type LightboxPhase = "enter" | "open" | "close";
+
+const OPEN_MS = 320;
+const CLOSE_MS = 240;
+const LIGHTBOX_MAX_WIDTH = 72 * 16;
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function readPageInset() {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(
+    "--portfolio-page-inset",
+  );
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : 32;
+}
+
+function fallbackAspect(image: ProjectImage) {
+  return image.device === "desktop" ? 1024 / 704 : 210 / 477;
+}
+
+function computeTargetRect(
+  image: ProjectImage,
+  naturalWidth: number,
+  naturalHeight: number,
+): LightboxOrigin {
+  const inset = readPageInset();
+  const maxWidth = Math.min(window.innerWidth - inset * 2, LIGHTBOX_MAX_WIDTH);
+  const maxHeight = window.innerHeight - inset * 2;
+  const aspect =
+    naturalWidth > 0 && naturalHeight > 0
+      ? naturalWidth / naturalHeight
+      : fallbackAspect(image);
+
+  let width = maxWidth;
+  let height = width / aspect;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * aspect;
+  }
+
+  return {
+    top: (window.innerHeight - height) / 2,
+    left: (window.innerWidth - width) / 2,
+    width,
+    height,
+  };
+}
+
+function getFlightTransform(origin: LightboxOrigin, target: LightboxOrigin) {
+  const originCenterX = origin.left + origin.width / 2;
+  const originCenterY = origin.top + origin.height / 2;
+  const targetCenterX = target.left + target.width / 2;
+  const targetCenterY = target.top + target.height / 2;
+  const scaleX = origin.width / target.width;
+  const scaleY = origin.height / target.height;
+
+  return `translate(${originCenterX - targetCenterX}px, ${originCenterY - targetCenterY}px) scale(${scaleX}, ${scaleY})`;
+}
+
+export function PortfolioLightbox({ state, onClose }: PortfolioLightboxProps) {
+  const closeTimerRef = useRef<number | null>(null);
+  const [phase, setPhase] = useState<LightboxPhase>("enter");
+  const [target, setTarget] = useState<LightboxOrigin | null>(null);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const requestClose = useCallback(() => {
+    if (!state) {
+      return;
+    }
+
+    clearCloseTimer();
+
+    if (reduceMotion) {
+      onClose();
+      return;
+    }
+
+    setPhase("close");
+    closeTimerRef.current = window.setTimeout(() => {
+      closeTimerRef.current = null;
+      onClose();
+    }, CLOSE_MS);
+  }, [clearCloseTimer, onClose, reduceMotion, state]);
+
   useEffect(() => {
-    if (!image) {
+    setReduceMotion(prefersReducedMotion());
+  }, []);
+
+  useEffect(() => {
+    if (!state) {
+      setPhase("enter");
+      setTarget(null);
+      return;
+    }
+
+    clearCloseTimer();
+    setPhase(reduceMotion ? "open" : "enter");
+    setTarget(null);
+
+    const probe = new Image();
+    probe.src = state.image.src;
+
+    const resolveTarget = () => {
+      setTarget(
+        computeTargetRect(
+          state.image,
+          probe.naturalWidth,
+          probe.naturalHeight,
+        ),
+      );
+    };
+
+    resolveTarget();
+
+    if (!probe.complete) {
+      probe.onload = resolveTarget;
+      probe.onerror = resolveTarget;
+    }
+  }, [clearCloseTimer, reduceMotion, state]);
+
+  useLayoutEffect(() => {
+    if (!state || !target || reduceMotion || phase !== "enter") {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        setPhase("open");
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [phase, reduceMotion, state, target]);
+
+  useEffect(() => {
+    if (!state) {
+      document.body.style.overflow = "";
       return;
     }
 
@@ -20,7 +185,7 @@ export function PortfolioLightbox({ image, onClose }: PortfolioLightboxProps) {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        requestClose();
       }
     };
 
@@ -29,36 +194,74 @@ export function PortfolioLightbox({ image, onClose }: PortfolioLightboxProps) {
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      clearCloseTimer();
     };
-  }, [image, onClose]);
+  }, [clearCloseTimer, requestClose, state]);
 
-  if (!image) {
+  if (!state || !target) {
     return null;
   }
 
+  const isOpen = phase === "open";
+  const isClosing = phase === "close";
+  const flightTransform =
+    isOpen || reduceMotion
+      ? "none"
+      : getFlightTransform(state.origin, target);
+
+  const lightboxClass = [
+    "portfolio-lightbox",
+    isOpen || reduceMotion ? "portfolio-lightbox--open" : "",
+    isClosing ? "portfolio-lightbox--closing" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const flightClass = [
+    "portfolio-lightbox__flight",
+    state.image.device === "desktop"
+      ? "portfolio-lightbox__flight--desktop"
+      : "portfolio-lightbox__flight--phone",
+  ].join(" ");
+
   return (
     <div
-      className="portfolio-lightbox"
+      className={lightboxClass}
       role="dialog"
       aria-modal="true"
-      aria-label={image.alt}
-      onClick={onClose}
+      aria-label={state.image.alt}
+      style={
+        {
+          "--portfolio-lightbox-open-ms": `${OPEN_MS}ms`,
+          "--portfolio-lightbox-close-ms": `${CLOSE_MS}ms`,
+        } as CSSProperties
+      }
     >
-      <button
-        type="button"
-        className="portfolio-lightbox__close"
-        onClick={onClose}
-        aria-label="Close"
-      >
-        ×
-      </button>
       <div
-        className="portfolio-lightbox__frame"
+        className="portfolio-lightbox__backdrop"
+        onClick={requestClose}
+        aria-hidden="true"
+      />
+      <div
+        className="portfolio-lightbox__flight-wrap"
+        style={{
+          top: target.top,
+          left: target.left,
+          width: target.width,
+          height: target.height,
+          transform: isClosing
+            ? getFlightTransform(state.origin, target)
+            : flightTransform,
+        }}
         onClick={(event) => event.stopPropagation()}
       >
         {/* Native img preserves source aspect in the lightbox */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image.src} alt={image.alt} className="portfolio-lightbox__image" />
+        <img
+          src={state.image.src}
+          alt={state.image.alt}
+          className={flightClass}
+        />
       </div>
     </div>
   );

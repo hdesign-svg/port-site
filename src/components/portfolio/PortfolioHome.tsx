@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
-import { PortfolioLightbox } from "@/components/portfolio/PortfolioLightbox";
+import { PortfolioLightbox, type LightboxState } from "@/components/portfolio/PortfolioLightbox";
 import { PortfolioProject } from "@/components/portfolio/PortfolioProject";
 import {
   Dock,
@@ -11,12 +11,11 @@ import {
   dockScrollBehavior,
   type DockFilter,
 } from "@/design-system/components/Dock";
-import type { ProjectImage } from "@/data/projects";
 import { projects, projectMatchesFilter } from "@/data/projects";
 
 export function PortfolioHome() {
   const [filter, setFilter] = useState<DockFilter>("all");
-  const [lightboxImage, setLightboxImage] = useState<ProjectImage | null>(null);
+  const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
   useEffect(() => {
     if (filter === "all") {
@@ -45,15 +44,12 @@ export function PortfolioHome() {
             key={project.id}
             project={project}
             dimmed={!projectMatchesFilter(project, filter)}
-            onImageClick={setLightboxImage}
+            onImageClick={(image, origin) => setLightbox({ image, origin })}
           />
         ))}
       </main>
 
-      <PortfolioLightbox
-        image={lightboxImage}
-        onClose={() => setLightboxImage(null)}
-      />
+      <PortfolioLightbox state={lightbox} onClose={() => setLightbox(null)} />
 
       <DockAnchor>
         <Dock filter={filter} onFilterChange={setFilter} />
