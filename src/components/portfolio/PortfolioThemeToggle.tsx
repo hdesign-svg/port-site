@@ -53,9 +53,9 @@ export function PortfolioThemeToggle() {
       aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
     >
       {isLight ? (
-        <Moon size={16} weight="regular" aria-hidden />
+        <Moon size={18} weight="regular" aria-hidden />
       ) : (
-        <Sun size={16} weight="regular" aria-hidden />
+        <Sun size={18} weight="regular" aria-hidden />
       )}
     </button>
   );

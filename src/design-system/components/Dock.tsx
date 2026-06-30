@@ -29,8 +29,8 @@ export const DOCK_FILTERS: {
   { id: "web", label: "Web", icon: Desktop },
 ];
 
-const FILTER_ICON_SIZE = 16;
-const SCROLL_ICON_SIZE = 16;
+const FILTER_ICON_SIZE = 18;
+const SCROLL_ICON_SIZE = 18;
 
 const SCROLL_RING_RADIUS = 15;
 const SCROLL_RING_CIRCUMFERENCE = 2 * Math.PI * SCROLL_RING_RADIUS;

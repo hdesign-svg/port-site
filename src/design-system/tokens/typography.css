@@ -1,24 +1,24 @@
-/* Portfolio v2 typography — Geist Sans, compressed 3-size scale */
+/* Portfolio v2 typography — Geist Mono, compressed 3-size scale */
 
 :root,
 [data-theme="light"] {
-  --ds-font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-family: var(--font-geist-mono), ui-monospace, monospace;
 
   /* Size ramp — 12 / 14 / 14 */
   --ds-text-meta: 0.75rem; /* 12px */
   --ds-text-base: 0.875rem; /* 14px */
-  --ds-leading-strong: 1.25; /* 14px → ~17.5px — name, project title */
-  --ds-leading-ui: 1.286; /* 14px → ~18px — role line, short labels */
-  --ds-leading-body: 1.429; /* 14px → 20px — paragraphs, links */
-  --ds-leading-meta: 1.333; /* 12px → 16px */
+  --ds-leading-strong: 1.3;
+  --ds-leading-ui: 1.35;
+  --ds-leading-body: 1.5;
+  --ds-leading-meta: 1.35;
 
   /* Weights — hierarchy without size jumps */
   --ds-weight-regular: 400;
   --ds-weight-medium: 500;
   --ds-weight-strong: 600;
 
-  --ds-type-strong-tracking: -0.01em;
-  --ds-type-meta-tracking: 0.05em;
+  --ds-type-strong-tracking: -0.02em;
+  --ds-type-meta-tracking: 0.02em;
   --ds-type-link-underline-offset: 2px;
   --ds-type-measure: 72ch;
 
@@ -26,10 +26,12 @@
   --ds-type-rhythm: 1.25rem;
   --ds-type-gap-tight: 0.625rem;
   --ds-type-gap: 1.25rem;
+
+  /* Identity — name/title, case header label spacing */
+  --ds-identity-line-gap: 0.25rem;
 }
 
 [data-theme="dark"] {
-  /* Light-on-dark blooms — ease weight slightly */
   --ds-weight-regular: 380;
   --ds-weight-strong: 580;
 }

@@ -1,10 +1,11 @@
-/* Portfolio v2 layout tokens — radius, spacing */
+/* Portfolio v2 layout tokens — radius, spacing, dock */
 
 :root,
 [data-theme="light"],
 [data-theme="dark"] {
-  --ds-radius-sm: 6px;
-  --ds-radius-md: 10px;
+  --ds-radius-sm: 8px;
+  --ds-radius-md: 12px;
+  --ds-radius-lg: 16px;
 
   --ds-space-1: 0.25rem;
   --ds-space-2: 0.5rem;
@@ -12,51 +13,50 @@
   --ds-space-4: 1rem;
   --ds-space-6: 1.5rem;
 
-  /* Bottom dock — size from inset tabs inward */
-  --ds-dock-tab-size: 1.875rem;
+  /* Bottom dock — inverted chrome, shared icon sizing */
+  --ds-dock-icon-size: 18px;
+  --ds-dock-tab-size: 2rem;
   --ds-dock-tab-gap: 3px;
-  --ds-dock-tab-inset: 0.3125rem;
+  --ds-dock-tab-inset: 0.375rem;
   --ds-dock-shell-size: calc(
     var(--ds-dock-tab-size) + 2 * var(--ds-dock-tab-inset)
   );
   --ds-dock-anchor-gap: var(--ds-space-4);
-  --ds-dock-anchor-inset: var(--ds-space-3);
+  --ds-dock-anchor-inset: var(--ds-space-4);
   --ds-dock-content-clearance: calc(
     var(--ds-dock-shell-size) + var(--ds-space-6) + env(safe-area-inset-bottom, 0px)
   );
-
-  /* Tab fills — light defaults; dark overrides below */
-  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-fg-strong) 5%, var(--ds-bg));
-  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-fg-strong) 3%, var(--ds-bg));
 }
 
-:root,
 [data-theme="light"] {
-  /*
-   * Light floating chrome: inset edge from ink at opacity (elite-ui tonality tactic).
-   * Slightly stronger than --ds-border (10%) so the pill reads on canvas;
-   * tune --ds-dock-edge % (8–12) for lighter/heavier rim.
-   */
-  --ds-dock-edge: color-mix(in oklch, var(--ds-fg) 10%, transparent);
+  /* Inverted dock — dark chrome on light canvas */
+  --ds-dock-bg: oklch(0.17 0.005 0);
+  --ds-dock-fg: oklch(0.93 0.002 0);
+  --ds-dock-muted: oklch(0.64 0.006 0);
+  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-dock-fg) 16%, transparent);
+  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-dock-fg) 9%, transparent);
   --ds-dock-shadow:
-    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 3.5%, transparent),
-    0 4px 12px color-mix(in oklch, var(--ds-shadow-key) 2.5%, transparent),
-    inset 0 0 0 1px var(--ds-dock-edge);
+    0 4px 18px color-mix(in oklch, var(--ds-dock-bg) 28%, transparent),
+    0 1px 2px color-mix(in oklch, var(--ds-dock-bg) 18%, transparent);
 }
 
 [data-theme="dark"] {
-  --ds-dock-edge: color-mix(in oklch, var(--ds-fg-strong) 8%, transparent);
-  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-fg-strong) 9%, var(--ds-bg));
-  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-fg-strong) 4%, var(--ds-bg));
+  /* Inverted dock — light chrome on dark canvas */
+  --ds-dock-bg: oklch(0.96 0.003 0);
+  --ds-dock-fg: oklch(0.17 0.005 0);
+  --ds-dock-muted: oklch(0.46 0.006 0);
+  --ds-dock-tab-active-fill: color-mix(in oklch, var(--ds-dock-fg) 12%, transparent);
+  --ds-dock-tab-hover-fill: color-mix(in oklch, var(--ds-dock-fg) 7%, transparent);
   --ds-dock-shadow:
-    var(--ds-shadow-raised),
-    inset 0 0 0 1px var(--ds-dock-edge);
+    0 4px 18px color-mix(in oklch, var(--ds-dock-bg) 22%, transparent),
+    0 1px 2px color-mix(in oklch, var(--ds-fg-strong) 8%, transparent);
 }
 
 @media (pointer: coarse) {
   :root,
   [data-theme="light"],
   [data-theme="dark"] {
-    --ds-dock-tab-size: 2rem;
+    --ds-dock-tab-size: 2.125rem;
+    --ds-dock-icon-size: 20px;
   }
 }

@@ -10,7 +10,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Name, project titles */
+/* Name, project titles, years */
 .ds-type-strong {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-strong);
@@ -20,7 +20,7 @@
   text-wrap: balance;
 }
 
-/* Role line under name — same size, muted */
+/* Role line, org · domain labels */
 .ds-type-subtle {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-ui);
@@ -38,7 +38,7 @@
   text-wrap: pretty;
 }
 
-/* Secondary lines, credits */
+/* Secondary lines, credits, outcome bullets */
 .ds-type-muted {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-body);
@@ -48,7 +48,7 @@
   text-wrap: pretty;
 }
 
-/* Project eyebrow — client · year · role */
+/* Tooltips, micro labels */
 .ds-type-meta {
   font-size: var(--ds-text-meta);
   line-height: var(--ds-leading-meta);
@@ -66,4 +66,24 @@
 
 .ds-type-stack--loose {
   gap: var(--ds-type-gap);
+}
+
+/* Name + title, title + label pairs */
+.ds-type-identity {
+  display: grid;
+  gap: var(--ds-identity-line-gap);
+}
+
+/* Hero blurb zones — paragraphs, credits, links */
+.ds-type-stack--sectioned {
+  display: grid;
+  gap: var(--ds-type-gap);
+}
+
+.ds-type-stack--sectioned > .ds-type-stack {
+  gap: var(--ds-type-gap-tight);
+}
+
+.ds-type-tabular {
+  font-variant-numeric: tabular-nums;
 }

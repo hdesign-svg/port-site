@@ -6,7 +6,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
 } from "react";
 
 import type { ProjectImage } from "@/data/projects";
@@ -30,9 +29,21 @@ type PortfolioLightboxProps = {
 
 type LightboxPhase = "enter" | "open" | "close";
 
-const OPEN_MS = 320;
-const CLOSE_MS = 240;
 const LIGHTBOX_MAX_WIDTH = 72 * 16;
+
+function readLightboxMs(
+  element: HTMLElement | null,
+  property: string,
+  fallback: number,
+) {
+  if (!element) {
+    return fallback;
+  }
+
+  const raw = getComputedStyle(element).getPropertyValue(property);
+  const parsed = Number.parseFloat(raw);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -91,6 +102,7 @@ function getFlightTransform(origin: LightboxOrigin, target: LightboxOrigin) {
 }
 
 export function PortfolioLightbox({ state, onClose }: PortfolioLightboxProps) {
+  const lightboxRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<number | null>(null);
   const [phase, setPhase] = useState<LightboxPhase>("enter");
   const [target, setTarget] = useState<LightboxOrigin | null>(null);
@@ -116,10 +128,15 @@ export function PortfolioLightbox({ state, onClose }: PortfolioLightboxProps) {
     }
 
     setPhase("close");
+    const closeMs = readLightboxMs(
+      lightboxRef.current,
+      "--portfolio-lightbox-close-ms",
+      260,
+    );
     closeTimerRef.current = window.setTimeout(() => {
       closeTimerRef.current = null;
       onClose();
-    }, CLOSE_MS);
+    }, closeMs);
   }, [clearCloseTimer, onClose, reduceMotion, state]);
 
   useEffect(() => {
@@ -226,16 +243,11 @@ export function PortfolioLightbox({ state, onClose }: PortfolioLightboxProps) {
 
   return (
     <div
+      ref={lightboxRef}
       className={lightboxClass}
       role="dialog"
       aria-modal="true"
       aria-label={state.image.alt}
-      style={
-        {
-          "--portfolio-lightbox-open-ms": `${OPEN_MS}ms`,
-          "--portfolio-lightbox-close-ms": `${CLOSE_MS}ms`,
-        } as CSSProperties
-      }
     >
       <div
         className="portfolio-lightbox__backdrop"

@@ -5,7 +5,6 @@ import type {
   MockupDevice,
   Project,
   ProjectImage,
-  ProjectPlatform,
 } from "@/data/projects";
 
 function mockupDevice(image: ProjectImage): MockupDevice {
@@ -18,10 +17,6 @@ function mockupClass(image: ProjectImage) {
 
 function mockupScreenClass(image: ProjectImage) {
   return `portfolio__mockup-screen portfolio__mockup-screen--${mockupDevice(image)}`;
-}
-
-function platformLabel(platform: ProjectPlatform) {
-  return platform === "web" ? "Web" : "Mobile";
 }
 
 type PortfolioProjectProps = {
@@ -42,29 +37,29 @@ export function PortfolioProject({
 
   return (
     <section id={project.id} className={classes.join(" ")}>
-      <div className="portfolio__project-meta">
+      <div className="portfolio__project-meta ds-type-identity">
         <div className="portfolio__meta-row">
           <h2 className="ds-type-strong">{project.title}</h2>
-          <p className="ds-type-meta">{project.year}</p>
+          <p className="ds-type-strong ds-type-tabular">{project.year}</p>
         </div>
-        <div className="portfolio__meta-row">
-          <p className="ds-type-meta">
-            {project.company} · {platformLabel(project.platform)}
-          </p>
-        </div>
+        <p className="ds-type-subtle">
+          {project.company} · {project.domain}
+        </p>
       </div>
 
-      <div className="portfolio__prose ds-type-stack">
-        {project.description.map((paragraph) => (
-          <p key={paragraph} className="ds-type-body">
-            {paragraph}
-          </p>
-        ))}
-        {project.outcomes.map((outcome) => (
-          <p key={outcome} className="ds-type-body">
-            {outcome}
-          </p>
-        ))}
+      <div className="portfolio__prose">
+        <div className="ds-type-stack">
+          {project.description.map((paragraph) => (
+            <p key={paragraph} className="ds-type-body">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+        <ul className="portfolio__outcomes ds-type-muted">
+          {project.outcomes.map((outcome) => (
+            <li key={outcome}>{outcome}</li>
+          ))}
+        </ul>
       </div>
 
       <div className="portfolio__mockups">

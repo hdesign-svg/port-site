@@ -13,13 +13,12 @@ type Story = StoryObj<typeof meta>;
 
 const SWATCHES = [
   { label: "Background", token: "--ds-bg", role: "bg" },
-  { label: "Background subtle", token: "--ds-bg-subtle", role: "bg-subtle" },
+  { label: "Gallery well", token: "--ds-bg-subtle", role: "bg-subtle" },
   { label: "Foreground", token: "--ds-fg", role: "fg" },
   { label: "Foreground strong", token: "--ds-fg-strong", role: "fg-strong" },
   { label: "Muted", token: "--ds-muted", role: "muted" },
-  { label: "Surface", token: "--ds-surface", role: "surface" },
-  { label: "Surface raised", token: "--ds-surface-raised", role: "surface-raised" },
-  { label: "Border", token: "--ds-border", role: "border" },
+  { label: "Rule", token: "--ds-rule", role: "rule" },
+  { label: "Dock (inverted)", token: "--ds-dock-bg", role: "dock-bg" },
 ] as const;
 
 function Swatch({
@@ -38,10 +37,9 @@ function Swatch({
       <div
         style={{
           height: "4.5rem",
-          borderRadius: "var(--ds-radius-sm)",
+          borderRadius: "var(--ds-radius-md)",
           background: fill,
           border: bordered ? "1px solid var(--ds-border)" : undefined,
-          boxShadow: bordered ? undefined : "inset 0 0 0 1px color-mix(in oklch, var(--ds-fg-strong) 8%, transparent)",
         }}
       />
       <p
@@ -68,7 +66,7 @@ function Specimen({
     <div
       style={{
         paddingBlock: "var(--ds-type-gap)",
-        borderBottom: "1px solid var(--ds-border)",
+        borderBottom: "1px solid var(--ds-rule)",
       }}
     >
       <p
@@ -83,17 +81,14 @@ function Specimen({
   );
 }
 
-function MockupPlaceholder({ style }: { style?: CSSProperties }) {
+function GalleryPlaceholder({ style }: { style?: CSSProperties }) {
   return (
     <div
       aria-hidden
       style={{
         minHeight: "18rem",
         borderRadius: "var(--ds-radius-md)",
-        border: "1px solid var(--ds-border)",
-        background:
-          "linear-gradient(155deg, var(--ds-surface-raised) 0%, var(--ds-bg-subtle) 45%, var(--ds-surface) 100%)",
-        boxShadow: "var(--ds-shadow-raised)",
+        background: "var(--ds-bg-subtle)",
         ...style,
       }}
     />
@@ -109,8 +104,8 @@ function PalettePage() {
       >
         <h1 className="ds-type-strong">Color</h1>
         <p className="ds-type-muted">
-          Blue-gray precision · chromatic paper and ink · toggle light/dark in
-          the toolbar.
+          Pure neutral tonality · gallery wells · inverted dock · toggle
+          light/dark in the toolbar.
         </p>
       </header>
 
@@ -127,57 +122,59 @@ function PalettePage() {
             key={token}
             label={label}
             token={token}
-            fill={role === "border" ? "var(--ds-bg)" : `var(--ds-${role})`}
-            bordered={role === "border"}
+            fill={
+              role === "rule"
+                ? "var(--ds-bg)"
+                : role === "dock-bg"
+                  ? "var(--ds-dock-bg)"
+                  : `var(--ds-${role})`
+            }
+            bordered={role === "rule"}
           />
         ))}
       </div>
 
-      <Specimen label="Text on background" token="composed">
-        <div className="ds-type-stack--loose ds-type-stack">
-          <p className="ds-type-strong">Harry Howe</p>
-          <p className="ds-type-subtle">Product Designer</p>
-          <p className="ds-type-body">
-            Hierarchy comes from weight and color — not hue. Muted copy stays
-            secondary; strong foreground anchors names and links.
-          </p>
-          <p className="ds-type-muted">Previously at Housecall Pro.</p>
-        </div>
-      </Specimen>
-
-      <Specimen label="Text links" token="ds-text-link">
-        <p style={{ margin: 0 }}>
-          <a href="#linkedin" className="ds-text-link">
-            LinkedIn
-          </a>
-          {" · "}
-          <a href="#resume" className="ds-text-link">
-            Resume
-          </a>
-        </p>
-      </Specimen>
-
-      <Specimen label="Raised surface" token="--ds-shadow-raised">
+      <Specimen label="Canvas vs gallery" token="composed">
         <div
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "2.5rem",
-            height: "2.5rem",
-            borderRadius: "9999px",
-            border: "1px solid var(--ds-border)",
-            background: "var(--ds-bg)",
-            color: "var(--ds-fg-strong)",
-            boxShadow: "var(--ds-shadow-raised)",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "var(--ds-type-gap-tight)",
           }}
-          aria-hidden
         >
-          ↑
+          <div
+            style={{
+              padding: "var(--ds-type-gap)",
+              background: "var(--ds-bg)",
+              border: "1px solid var(--ds-rule)",
+            }}
+          >
+            <p className="ds-type-meta">Canvas</p>
+          </div>
+          <div
+            style={{
+              padding: "var(--ds-type-gap)",
+              background: "var(--ds-bg-subtle)",
+              borderRadius: "var(--ds-radius-md)",
+            }}
+          >
+            <p className="ds-type-meta">Gallery well</p>
+          </div>
         </div>
-        <p className="ds-type-muted" style={{ marginTop: "var(--ds-type-gap-tight)" }}>
-          Back-to-top icon button elevation
-        </p>
+      </Specimen>
+
+      <Specimen label="Identity + rule" token="composed">
+        <div className="ds-type-identity">
+          <p className="ds-type-strong">Harry Howe</p>
+          <p className="ds-type-subtle">Senior Product Designer</p>
+        </div>
+        <hr
+          style={{
+            margin: "var(--ds-type-gap) 0 0",
+            border: "none",
+            borderTop: "1px solid var(--ds-rule)",
+          }}
+        />
       </Specimen>
     </div>
   );
@@ -190,7 +187,7 @@ function BesideMockupPage() {
         className="ds-type-meta"
         style={{ marginBottom: "var(--ds-type-gap)" }}
       >
-        Context · type + color beside mockup
+        Context · case header beside gallery well
       </p>
       <div
         style={{
@@ -200,18 +197,20 @@ function BesideMockupPage() {
           alignItems: "start",
         }}
       >
-        <div className="ds-type-stack--loose ds-type-stack">
-          <p className="ds-type-meta">Housecall Pro · 2024 · Product design</p>
-          <p className="ds-type-strong">Accounting activation</p>
-          <p className="ds-type-body">
-            Onboarding and money surfaces for small business owners — from
-            linked accounts through categorization, review, and close readiness.
-          </p>
-          <p className="ds-type-muted">
-            Design systems, prototypes, and production UI in React.
-          </p>
+        <div className="ds-type-identity">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "var(--ds-type-gap)",
+            }}
+          >
+            <p className="ds-type-strong">Basic Accounting</p>
+            <p className="ds-type-strong ds-type-tabular">2025</p>
+          </div>
+          <p className="ds-type-subtle">Housecall Pro · Trades</p>
         </div>
-        <MockupPlaceholder style={{ minHeight: "22rem" }} />
+        <GalleryPlaceholder style={{ minHeight: "22rem" }} />
       </div>
     </div>
   );

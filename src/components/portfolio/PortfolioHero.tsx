@@ -12,12 +12,12 @@ export function PortfolioHero() {
           <Image
             src="/images/profile.jpg"
             alt=""
-            width={40}
-            height={40}
+            width={36}
+            height={36}
             className="portfolio__avatar"
             priority
           />
-          <div className="portfolio__hero-names">
+          <div className="portfolio__hero-names ds-type-identity">
             <p className="ds-type-strong">{site.name}</p>
             <p className="ds-type-subtle">{site.title}</p>
           </div>
@@ -28,12 +28,14 @@ export function PortfolioHero() {
 
       <hr className="portfolio__divider" />
 
-      <div className="portfolio__hero-blurb ds-type-stack">
-        {site.heroBody.map((paragraph) => (
-          <p key={paragraph} className="ds-type-body">
-            {paragraph}
-          </p>
-        ))}
+      <div className="portfolio__hero-blurb ds-type-stack--sectioned">
+        <div className="ds-type-stack">
+          {site.heroBody.map((paragraph) => (
+            <p key={paragraph} className="ds-type-body">
+              {paragraph}
+            </p>
+          ))}
+        </div>
         <p className="ds-type-muted">{site.previousRoles}</p>
         <div className="portfolio__links">
           <TextLink href={site.linkedin} external>

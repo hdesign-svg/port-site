@@ -13,6 +13,7 @@ export type Project = {
   id: string;
   title: string;
   company: string;
+  domain: string;
   year: string;
   platform: ProjectPlatform;
   description: string[];
@@ -34,6 +35,7 @@ export const projects: Project[] = [
     id: "basic-accounting",
     title: "Basic Accounting",
     company: "Housecall Pro",
+    domain: "Trades",
     year: "2025",
     platform: "web",
     description: [
@@ -58,6 +60,7 @@ export const projects: Project[] = [
     id: "hcp-money-activation",
     title: "HCP Money Activation",
     company: "Housecall Pro",
+    domain: "Trades",
     year: "2025",
     platform: "web",
     description: [
@@ -87,6 +90,7 @@ export const projects: Project[] = [
     id: "concierge-conversations",
     title: "Concierge Conversations",
     company: "Mad Mobile",
+    domain: "Retail",
     year: "2024",
     platform: "mobile",
     description: [
@@ -111,6 +115,7 @@ export const projects: Project[] = [
     id: "concierge-ai",
     title: "Concierge AI",
     company: "Mad Mobile",
+    domain: "Retail",
     year: "2024",
     platform: "mobile",
     description: [
@@ -138,6 +143,7 @@ export const projects: Project[] = [
     id: "concierge-platform",
     title: "Concierge Platform",
     company: "Mad Mobile",
+    domain: "Retail",
     year: "2024",
     platform: "mobile",
     description: [

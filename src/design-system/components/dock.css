@@ -1,14 +1,15 @@
-/* Bottom chrome — platform filter + scroll-to-top (separate surfaces) */
+/* Bottom chrome — platform filter + scroll-to-top (inverted surfaces) */
 
 .ds-dock-surface {
-  background: var(--ds-bg);
+  background: var(--ds-dock-bg);
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-dock-shadow);
   box-sizing: border-box;
+  color: var(--ds-dock-fg);
 }
 
-/* Filter dock — canvas-matched shell; flat active tab + fill icon weight */
+/* Filter dock */
 .ds-platform-filter {
   display: inline-flex;
   align-items: center;
@@ -26,8 +27,8 @@
   width: var(--ds-dock-tab-size);
   height: var(--ds-dock-tab-size);
   padding: 0;
-  border-radius: 9999px;
-  color: var(--ds-muted);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-dock-muted);
   background: transparent;
   cursor: pointer;
   transition:
@@ -38,17 +39,17 @@
 }
 
 .ds-platform-filter__option:hover:not(.ds-platform-filter__option--active) {
-  color: var(--ds-fg);
+  color: var(--ds-dock-fg);
   background: var(--ds-dock-tab-hover-fill);
 }
 
 .ds-platform-filter__option--active {
-  color: var(--ds-fg-strong);
+  color: var(--ds-dock-fg);
   background: var(--ds-dock-tab-active-fill);
 }
 
 .ds-platform-filter__option:focus-visible {
-  outline: 2px solid var(--ds-fg-strong);
+  outline: 2px solid var(--ds-dock-fg);
   outline-offset: 1px;
 }
 
@@ -65,14 +66,12 @@
   letter-spacing: var(--ds-type-meta-tracking);
   white-space: nowrap;
   pointer-events: none;
-  color: var(--ds-bg);
-  background: var(--ds-fg-strong);
-  box-shadow: var(--ds-shadow-raised);
-  scale: var(--ds-dropdown-pre-scale);
+  color: var(--ds-dock-bg);
+  background: var(--ds-dock-fg);
   opacity: 0;
   visibility: hidden;
+  translate: 0 0.125rem;
   transition:
-    scale var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
     opacity var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
     translate var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
     visibility 0s var(--ds-dropdown-close-dur);
@@ -81,29 +80,22 @@
 .ds-platform-filter__tooltip--middle {
   left: 50%;
   translate: -50% 0.125rem;
-  transform-origin: bottom center;
 }
 
 .ds-platform-filter__tooltip--start {
   left: 0;
-  translate: 0 0.125rem;
-  transform-origin: bottom left;
 }
 
 .ds-platform-filter__tooltip--end {
   right: 0;
   left: auto;
-  translate: 0 0.125rem;
-  transform-origin: bottom right;
 }
 
 .ds-platform-filter__option:hover .ds-platform-filter__tooltip,
 .ds-platform-filter__option:focus-visible .ds-platform-filter__tooltip {
-  scale: 1;
   opacity: 1;
   visibility: visible;
   transition:
-    scale var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
     opacity var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
     translate var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
     visibility 0s;
@@ -130,7 +122,7 @@
   width: var(--ds-dock-shell-size);
   height: var(--ds-dock-shell-size);
   padding: 0;
-  color: var(--ds-muted);
+  color: var(--ds-dock-muted);
   cursor: pointer;
   transition:
     color var(--ds-dock-dur) var(--ds-dock-ease-out),
@@ -138,16 +130,16 @@
 }
 
 .ds-scroll-to-top:hover {
-  color: var(--ds-fg-strong);
+  color: var(--ds-dock-fg);
   background: var(--ds-dock-tab-hover-fill);
 }
 
 .ds-scroll-to-top--scrolled {
-  color: var(--ds-fg-strong);
+  color: var(--ds-dock-fg);
 }
 
 .ds-scroll-to-top:focus-visible {
-  outline: 2px solid var(--ds-fg-strong);
+  outline: 2px solid var(--ds-dock-fg);
   outline-offset: 1px;
 }
 
@@ -163,7 +155,7 @@
 .ds-scroll-to-top__progress {
   fill: none;
   stroke-width: 1.5;
-  stroke: var(--ds-fg-strong);
+  stroke: var(--ds-dock-fg);
   stroke-linecap: round;
   opacity: 0;
   transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
@@ -219,6 +211,6 @@
   }
 
   .ds-platform-filter__tooltip {
-    scale: 1;
+    translate: 0 0;
   }
 }
