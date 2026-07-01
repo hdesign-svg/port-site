@@ -1,6 +1,6 @@
 export const site = {
   name: "Harry Howe",
-  title: "Senior Product Designer",
+  title: "Product Designer",
   tagline:
     "Designed for web and mobile for 8 years. Systems under the hood, experiences people can trust.",
   heroBody: [

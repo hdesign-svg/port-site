@@ -3,7 +3,7 @@
 .ds-dock-surface {
   background: var(--ds-dock-bg);
   border: none;
-  border-radius: var(--ds-radius-lg);
+  border-radius: 9999px;
   box-shadow: var(--ds-dock-shadow);
   box-sizing: border-box;
   color: var(--ds-dock-fg);
@@ -27,7 +27,7 @@
   width: var(--ds-dock-tab-size);
   height: var(--ds-dock-tab-size);
   padding: 0;
-  border-radius: var(--ds-radius-md);
+  border-radius: 9999px;
   color: var(--ds-dock-muted);
   background: transparent;
   cursor: pointer;
@@ -58,7 +58,7 @@
   bottom: calc(100% + var(--ds-space-2));
   z-index: 1;
   padding: var(--ds-space-1) var(--ds-space-2);
-  border-radius: var(--ds-radius-sm);
+  border-radius: 9999px;
   font-family: var(--ds-font-family);
   font-size: var(--ds-text-meta);
   line-height: var(--ds-leading-meta);
@@ -66,8 +66,9 @@
   letter-spacing: var(--ds-type-meta-tracking);
   white-space: nowrap;
   pointer-events: none;
-  color: var(--ds-dock-bg);
-  background: var(--ds-dock-fg);
+  color: var(--ds-dock-tooltip-fg);
+  background: var(--ds-dock-tooltip-bg);
+  box-shadow: var(--ds-dock-shadow);
   opacity: 0;
   visibility: hidden;
   translate: 0 0.125rem;
@@ -131,6 +132,9 @@
 
 .ds-scroll-to-top:hover {
   color: var(--ds-dock-fg);
+}
+
+.ds-scroll-to-top--scrolled:hover {
   background: var(--ds-dock-tab-hover-fill);
 }
 

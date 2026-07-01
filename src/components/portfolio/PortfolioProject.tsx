@@ -30,14 +30,14 @@ export function PortfolioProject({
   dimmed = false,
   onImageClick,
 }: PortfolioProjectProps) {
-  const classes = ["portfolio__project"];
+  const classes = ["portfolio__row", "portfolio__project"];
   if (dimmed) {
     classes.push("portfolio__project--dimmed");
   }
 
   return (
     <section id={project.id} className={classes.join(" ")}>
-      <div className="portfolio__project-meta ds-type-identity">
+      <div className="portfolio__project-meta">
         <div className="portfolio__meta-row">
           <h2 className="ds-type-strong">{project.title}</h2>
           <p className="ds-type-strong ds-type-tabular">{project.year}</p>
@@ -99,8 +99,8 @@ export function PortfolioProject({
                 }
                 sizes={
                   mockupDevice(image) === "desktop"
-                    ? "(min-width: 64rem) 70rem, 100vw"
-                    : "(min-width: 40rem) 20rem, 45vw"
+                    ? "(min-width: 64rem) 80rem, 100vw"
+                    : "(min-width: 40rem) 28rem, 50vw"
                 }
               />
             </div>

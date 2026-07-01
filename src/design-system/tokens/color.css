@@ -1,56 +1,108 @@
-/* Portfolio v2 color — pure neutral precision (OKLCH)
+/* Portfolio v2 — Bootstrap gray primitives + semantic aliases
  *
- * Tonality: near-zero chroma neutrals. Gallery wells step further from canvas.
- * Dividers use --ds-rule (full ink) for Swiss editorial contrast.
+ * Primitives (100 = lightest):
+ *  100 #F8F9FA  Bright Snow
+ *  200 #E9ECEF  Platinum
+ *  300 #DEE2E6  Alabaster Grey
+ *  400 #CED4DA  Pale Slate
+ *  500 #ADB5BD  Pale Slate
+ *  600 #6C757D  Slate Grey
+ *  700 #495057  Iron Grey
+ *  800 #343A40  Gunmetal
+ *  850 #2A2F34  (derived — 50% 800 + 900)
+ *  900 #212529  Carbon Black
  */
+
+:root,
+[data-theme="light"],
+[data-theme="dark"] {
+  --ds-gray-100: #f8f9fa;
+  --ds-gray-200: #e9ecef;
+  --ds-gray-300: #dee2e6;
+  --ds-gray-400: #ced4da;
+  --ds-gray-500: #adb5bd;
+  --ds-gray-600: #6c757d;
+  --ds-gray-700: #495057;
+  --ds-gray-800: #343a40;
+  --ds-gray-850: #2a2f34;
+  --ds-gray-900: #212529;
+}
 
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
-  --ds-hue: 0;
+  --ds-bg: var(--ds-gray-100);
+  --ds-bg-subtle: var(--ds-gray-200);
+  --ds-surface: var(--ds-gray-200);
+  --ds-surface-raised: var(--ds-gray-300);
 
-  /* Canvas & gallery */
-  --ds-bg: oklch(0.985 0.002 var(--ds-hue));
-  --ds-bg-subtle: oklch(0.94 0.003 var(--ds-hue));
-  --ds-surface: oklch(0.99 0.002 var(--ds-hue));
-  --ds-surface-raised: oklch(0.97 0.003 var(--ds-hue));
+  --ds-fg: var(--ds-gray-900);
+  --ds-muted: var(--ds-gray-600);
+  --ds-muted-on-subtle: var(--ds-gray-600);
 
-  /* Ink */
-  --ds-fg: oklch(0.28 0.004 var(--ds-hue));
-  --ds-fg-strong: oklch(0.17 0.005 var(--ds-hue));
-  --ds-muted: oklch(0.48 0.006 var(--ds-hue));
+  --ds-rule: var(--ds-gray-300);
+  --ds-link-underline: var(--ds-gray-500);
+  --ds-border: var(--ds-gray-400);
 
-  --ds-border: color-mix(in oklch, var(--ds-fg-strong) 10%, transparent);
-  --ds-rule: var(--ds-fg-strong);
+  --ds-focus: var(--ds-fg);
+  --ds-fill-hover: color-mix(in srgb, var(--ds-fg) 6%, var(--ds-bg));
+  --ds-scrim: color-mix(in srgb, var(--ds-fg) 72%, var(--ds-bg));
+  --ds-scrim-reduced: color-mix(in srgb, var(--ds-bg) 88%, var(--ds-fg));
 
-  --ds-focus: var(--ds-fg-strong);
-  --ds-shadow-key: var(--ds-fg-strong);
+  --ds-shadow-key: var(--ds-gray-900);
   --ds-shadow-raised:
-    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 6%, transparent),
-    0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 5%, transparent);
+    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent),
+    0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 3%, transparent);
+
+  /* Inverted dock — dark chip on light canvas */
+  --ds-dock-bg: var(--ds-gray-800);
+  --ds-dock-fg: var(--ds-gray-100);
+  --ds-dock-muted: var(--ds-gray-500);
+  --ds-dock-tab-active-fill: color-mix(in srgb, var(--ds-dock-fg) 14%, transparent);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-dock-fg) 8%, transparent);
+  --ds-dock-tooltip-bg: var(--ds-dock-bg);
+  --ds-dock-tooltip-fg: var(--ds-dock-fg);
+  --ds-dock-shadow:
+    0 4px 18px color-mix(in srgb, var(--ds-dock-bg) 26%, transparent),
+    0 1px 2px color-mix(in srgb, var(--ds-dock-bg) 16%, transparent);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --ds-hue: 0;
+  --ds-bg: var(--ds-gray-900);
+  --ds-bg-subtle: var(--ds-gray-850);
+  --ds-surface: var(--ds-gray-850);
+  --ds-surface-raised: var(--ds-gray-800);
 
-  --ds-bg: oklch(0.155 0.004 var(--ds-hue));
-  --ds-bg-subtle: oklch(0.225 0.005 var(--ds-hue));
-  --ds-surface: oklch(0.175 0.004 var(--ds-hue));
-  --ds-surface-raised: oklch(0.24 0.005 var(--ds-hue));
+  --ds-fg: var(--ds-gray-100);
+  --ds-muted: var(--ds-gray-600);
+  --ds-muted-on-subtle: var(--ds-gray-500);
 
-  --ds-fg: oklch(0.88 0.003 var(--ds-hue));
-  --ds-fg-strong: oklch(0.94 0.002 var(--ds-hue));
-  --ds-muted: oklch(0.58 0.006 var(--ds-hue));
+  --ds-rule: var(--ds-gray-800);
+  --ds-link-underline: var(--ds-gray-700);
+  --ds-border: var(--ds-gray-700);
 
-  --ds-border: color-mix(in oklch, var(--ds-fg-strong) 14%, transparent);
-  --ds-rule: var(--ds-fg-strong);
+  --ds-focus: var(--ds-fg);
+  --ds-fill-hover: color-mix(in srgb, var(--ds-fg) 6%, var(--ds-bg));
+  --ds-scrim: color-mix(in srgb, var(--ds-fg) 72%, var(--ds-bg));
+  --ds-scrim-reduced: color-mix(in srgb, var(--ds-bg) 88%, var(--ds-fg));
 
-  --ds-focus: var(--ds-fg-strong);
-  --ds-shadow-key: oklch(0.06 0.004 var(--ds-hue));
+  --ds-shadow-key: #000000;
   --ds-shadow-raised:
-    0 1px 2px color-mix(in oklch, var(--ds-shadow-key) 40%, transparent),
-    0 4px 14px color-mix(in oklch, var(--ds-shadow-key) 30%, transparent);
+    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 28%, transparent),
+    0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 18%, transparent);
+
+  /* Inverted dock — light chip on dark canvas */
+  --ds-dock-bg: var(--ds-gray-100);
+  --ds-dock-fg: var(--ds-gray-900);
+  --ds-dock-muted: var(--ds-gray-600);
+  --ds-dock-tab-active-fill: color-mix(in srgb, var(--ds-dock-fg) 10%, transparent);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-dock-fg) 6%, transparent);
+  --ds-dock-tooltip-bg: var(--ds-dock-bg);
+  --ds-dock-tooltip-fg: var(--ds-dock-fg);
+  --ds-dock-shadow:
+    0 4px 18px color-mix(in srgb, var(--ds-dock-bg) 20%, transparent),
+    0 1px 2px color-mix(in srgb, var(--ds-dock-fg) 6%, transparent);
 }

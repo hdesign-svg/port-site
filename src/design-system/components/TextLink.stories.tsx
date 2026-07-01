@@ -27,7 +27,7 @@ export const Pair: Story = {
     docs: {
       description: {
         story:
-          "Rest: muted text and underline. Hover: both shift to fg-strong.",
+          "Rest: fg text with link-underline decoration. Hover: both shift to fg.",
       },
     },
   },

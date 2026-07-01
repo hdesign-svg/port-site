@@ -45,7 +45,7 @@ function GalleryPlaceholder({ style }: { style?: CSSProperties }) {
       aria-hidden
       style={{
         minHeight: "18rem",
-        borderRadius: "var(--ds-radius-md)",
+        borderRadius: "var(--ds-radius-xl)",
         background: "var(--ds-bg-subtle)",
         ...style,
       }}
@@ -62,8 +62,8 @@ function TypographyPage() {
       >
         <h1 className="ds-type-strong">Typography</h1>
         <p className="ds-type-muted">
-          Geist Mono · 3-size compressed scale (12 / 14 / 14px roles). Toggle
-          light/dark in the toolbar.
+          Geist Mono · flat 12px / 20px · color hierarchy (primary / muted).
+          Toggle light/dark in the toolbar.
         </p>
       </header>
 
@@ -72,7 +72,7 @@ function TypographyPage() {
       </Specimen>
 
       <Specimen label="Subtle" token="ds-type-subtle">
-        <p className="ds-type-subtle">Senior Product Designer</p>
+        <p className="ds-type-subtle">Product Designer</p>
       </Specimen>
 
       <Specimen label="Body" token="ds-type-body">
@@ -108,7 +108,7 @@ function TypographyPage() {
       <Specimen label="Identity block" token="ds-type-identity">
         <div className="ds-type-identity">
           <p className="ds-type-strong">Harry Howe</p>
-          <p className="ds-type-subtle">Senior Product Designer</p>
+          <p className="ds-type-subtle">Product Designer</p>
         </div>
       </Specimen>
 
@@ -139,7 +139,7 @@ function TypographyPage() {
               already think.
             </p>
           </div>
-          <p className="ds-type-muted">
+          <p className="ds-type-body">
             Previously at Housecall Pro, Mad Mobile, and Ibotta.
           </p>
           <p style={{ margin: 0 }}>

@@ -2,60 +2,72 @@
 .ds-type-subtle,
 .ds-type-body,
 .ds-type-muted,
+.ds-type-muted-on-subtle,
 .ds-type-meta {
   font-family: var(--ds-font-family);
   font-style: normal;
+  font-weight: var(--ds-weight-regular);
   margin: 0;
+  font-feature-settings: var(--ds-type-features);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Name, project titles, years */
+/* Primary emphasis — names, project titles, years */
 .ds-type-strong {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-strong);
-  font-weight: var(--ds-weight-strong);
   letter-spacing: var(--ds-type-strong-tracking);
-  color: var(--ds-fg-strong);
-  text-wrap: balance;
+  color: var(--ds-fg);
+  text-wrap: wrap;
 }
 
-/* Role line, org · domain labels */
+/* Secondary labels — role, org · domain */
 .ds-type-subtle {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-ui);
-  font-weight: var(--ds-weight-regular);
+  letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-muted);
+  text-wrap: wrap;
 }
 
-/* Hero + project body copy */
+/* Primary copy — hero body, case study prose */
 .ds-type-body {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-body);
-  font-weight: var(--ds-weight-regular);
+  letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-fg);
   max-width: var(--ds-type-measure);
-  text-wrap: pretty;
+  text-wrap: wrap;
 }
 
-/* Secondary lines, credits, outcome bullets */
+/* De-emphasized copy — outcomes, credits when secondary */
 .ds-type-muted {
   font-size: var(--ds-text-base);
   line-height: var(--ds-leading-body);
-  font-weight: var(--ds-weight-regular);
+  letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-muted);
   max-width: var(--ds-type-measure);
-  text-wrap: pretty;
+  text-wrap: wrap;
 }
 
-/* Tooltips, micro labels */
+/* De-emphasized copy on gallery wells — higher contrast on dark card bg */
+.ds-type-muted-on-subtle {
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-body);
+  letter-spacing: var(--ds-type-body-tracking);
+  color: var(--ds-muted-on-subtle);
+  max-width: var(--ds-type-measure);
+  text-wrap: wrap;
+}
+
+/* Micro labels — dock tooltips */
 .ds-type-meta {
   font-size: var(--ds-text-meta);
   line-height: var(--ds-leading-meta);
-  font-weight: var(--ds-weight-regular);
   letter-spacing: var(--ds-type-meta-tracking);
   color: var(--ds-muted);
-  text-wrap: balance;
+  text-wrap: wrap;
 }
 
 /* Stacked copy blocks */
@@ -68,10 +80,29 @@
   gap: var(--ds-type-gap);
 }
 
-/* Name + title, title + label pairs */
+/* Name + title, case header title + label */
 .ds-type-identity {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--ds-identity-line-gap);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.ds-type-identity .ds-type-strong,
+.ds-type-identity .ds-type-subtle {
+  line-height: var(--ds-leading-identity);
+  letter-spacing: 0;
+}
+
+.ds-type-identity > .portfolio__meta-row {
+  line-height: var(--ds-leading-identity);
+}
+
+.ds-type-identity > .portfolio__meta-row .ds-type-strong {
+  line-height: var(--ds-leading-identity);
+  letter-spacing: 0;
 }
 
 /* Hero blurb zones — paragraphs, credits, links */

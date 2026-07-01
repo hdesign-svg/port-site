@@ -1,37 +1,42 @@
-/* Portfolio v2 typography — Geist Mono, compressed 3-size scale */
+/* Portfolio v2 typography — Geist Mono, flat 12/20, color hierarchy */
 
 :root,
 [data-theme="light"] {
   --ds-font-family: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* Size ramp — 12 / 14 / 14 */
-  --ds-text-meta: 0.75rem; /* 12px */
-  --ds-text-base: 0.875rem; /* 14px */
-  --ds-leading-strong: 1.3;
-  --ds-leading-ui: 1.35;
-  --ds-leading-body: 1.5;
-  --ds-leading-meta: 1.35;
+  /* Size ramp — flat 12px */
+  --ds-text-meta: 12px;
+  --ds-text-base: 12px;
+  --ds-leading-strong: 20px;
+  --ds-leading-ui: 20px;
+  --ds-leading-body: 20px;
+  --ds-leading-meta: 20px;
 
-  /* Weights — hierarchy without size jumps */
-  --ds-weight-regular: 400;
-  --ds-weight-medium: 500;
-  --ds-weight-strong: 600;
+  /* Identity — between body (20px) and cap-height (12px); gap mid of 4px↔6px */
+  --ds-leading-identity: 14px;
+  --ds-identity-line-gap: 5px;
 
-  --ds-type-strong-tracking: -0.02em;
+  /* Single weight — hierarchy via color only */
+  --ds-weight-regular: 450;
+  --ds-weight-medium: 450;
+  --ds-weight-strong: 450;
+
+  --ds-type-strong-tracking: 0;
+  --ds-type-body-tracking: 0;
   --ds-type-meta-tracking: 0.02em;
-  --ds-type-link-underline-offset: 2px;
-  --ds-type-measure: 72ch;
+  --ds-type-link-underline-offset: 3px;
+  --ds-type-measure: 38ch;
+  --ds-type-features: "kern" 1, "liga" 0, "calt" 0;
 
   /* Vertical rhythm — multiples of 20px line box */
-  --ds-type-rhythm: 1.25rem;
-  --ds-type-gap-tight: 0.625rem;
-  --ds-type-gap: 1.25rem;
-
-  /* Identity — name/title, case header label spacing */
-  --ds-identity-line-gap: 0.25rem;
+  --ds-type-rhythm: 20px;
+  --ds-type-gap-tight: 10px;
+  --ds-type-gap: 20px;
+  --ds-type-gap-block: 40px;
 }
 
 [data-theme="dark"] {
-  --ds-weight-regular: 380;
-  --ds-weight-strong: 580;
+  --ds-weight-regular: 450;
+  --ds-weight-medium: 450;
+  --ds-weight-strong: 450;
 }

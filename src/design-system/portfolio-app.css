@@ -13,10 +13,15 @@
   --color-ds-bg: var(--ds-bg);
   --color-ds-fg: var(--ds-fg);
   --color-ds-muted: var(--ds-muted);
+  --color-ds-muted-on-subtle: var(--ds-muted-on-subtle);
+  --color-ds-link-underline: var(--ds-link-underline);
   --color-ds-border: var(--ds-border);
+  --color-ds-rule: var(--ds-rule);
   --color-ds-surface: var(--ds-surface);
   --color-ds-surface-raised: var(--ds-surface-raised);
-  --color-ds-fg-strong: var(--ds-fg-strong);
   --color-ds-bg-subtle: var(--ds-bg-subtle);
+  --color-ds-dock-bg: var(--ds-dock-bg);
+  --color-ds-dock-fg: var(--ds-dock-fg);
+  --color-ds-dock-muted: var(--ds-dock-muted);
   --font-sans: var(--ds-font-family);
 }

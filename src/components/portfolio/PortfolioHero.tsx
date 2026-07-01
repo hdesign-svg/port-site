@@ -7,28 +7,32 @@ import { site } from "@/data/site";
 export function PortfolioHero() {
   return (
     <section className="portfolio__hero">
-      <header className="portfolio__hero-header">
-        <div className="portfolio__hero-identity">
-          <Image
-            src="/images/profile.jpg"
-            alt=""
-            width={36}
-            height={36}
-            className="portfolio__avatar"
-            priority
-          />
-          <div className="portfolio__hero-names ds-type-identity">
-            <p className="ds-type-strong">{site.name}</p>
-            <p className="ds-type-subtle">{site.title}</p>
-          </div>
-        </div>
+      <hr className="portfolio__divider" />
 
-        <PortfolioThemeToggle />
-      </header>
+      <div className="portfolio__row portfolio__row--tight">
+        <header className="portfolio__hero-header">
+          <div className="portfolio__hero-identity">
+            <Image
+              src="/images/profile.jpg"
+              alt=""
+              width={36}
+              height={36}
+              className="portfolio__avatar"
+              priority
+            />
+            <div className="portfolio__hero-names ds-type-identity">
+              <p className="ds-type-strong">{site.name}</p>
+              <p className="ds-type-subtle">{site.title}</p>
+            </div>
+          </div>
+
+          <PortfolioThemeToggle />
+        </header>
+      </div>
 
       <hr className="portfolio__divider" />
 
-      <div className="portfolio__hero-blurb ds-type-stack--sectioned">
+      <div className="portfolio__row portfolio__hero-blurb ds-type-stack--sectioned">
         <div className="ds-type-stack">
           {site.heroBody.map((paragraph) => (
             <p key={paragraph} className="ds-type-body">
@@ -36,7 +40,7 @@ export function PortfolioHero() {
             </p>
           ))}
         </div>
-        <p className="ds-type-muted">{site.previousRoles}</p>
+        <p className="ds-type-body">{site.previousRoles}</p>
         <div className="portfolio__links">
           <TextLink href={site.linkedin} external>
             LinkedIn
@@ -46,8 +50,6 @@ export function PortfolioHero() {
           </TextLink>
         </div>
       </div>
-
-      <hr className="portfolio__divider" />
     </section>
   );
 }

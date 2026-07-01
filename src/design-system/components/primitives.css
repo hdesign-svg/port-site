@@ -37,7 +37,7 @@
 }
 
 .ds-button--primary {
-  background: var(--ds-fg-strong);
+  background: var(--ds-fg);
   color: var(--ds-bg);
 }
 
