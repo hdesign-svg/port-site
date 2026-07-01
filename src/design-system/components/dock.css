@@ -57,11 +57,11 @@
   position: absolute;
   bottom: calc(100% + var(--ds-space-2));
   z-index: 1;
-  padding: var(--ds-space-1) var(--ds-space-2);
-  border-radius: 9999px;
+  padding: var(--ds-dock-tooltip-pad-block) var(--ds-dock-tooltip-pad-inline);
+  border-radius: var(--ds-dock-tooltip-radius);
   font-family: var(--ds-font-family);
   font-size: var(--ds-text-meta);
-  line-height: var(--ds-leading-meta);
+  line-height: var(--ds-dock-tooltip-leading);
   font-weight: var(--ds-weight-regular);
   letter-spacing: var(--ds-type-meta-tracking);
   white-space: nowrap;
@@ -188,7 +188,10 @@
   gap: var(--ds-dock-anchor-gap);
   padding-inline: max(var(--ds-dock-anchor-inset), env(safe-area-inset-left, 0px))
     max(var(--ds-dock-anchor-inset), env(safe-area-inset-right, 0px));
-  padding-bottom: max(var(--ds-dock-anchor-inset), env(safe-area-inset-bottom, 0px));
+  padding-bottom: max(
+    var(--ds-dock-anchor-inset-bottom),
+    env(safe-area-inset-bottom, 0px)
+  );
 }
 
 .ds-dock-anchor > * {
