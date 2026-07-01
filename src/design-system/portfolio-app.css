@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./fonts/geist-mono.css";
+@import "./fonts/geist-sans.css";
 @import "./tokens/color.css";
 @import "./tokens/motion.css";
 @import "./tokens/portfolio.css";

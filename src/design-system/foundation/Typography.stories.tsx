@@ -62,13 +62,17 @@ function TypographyPage() {
       >
         <h1 className="ds-type-strong">Typography</h1>
         <p className="ds-type-muted">
-          Geist Mono · flat 12px / 20px · color hierarchy (primary / muted).
+          Geist Sans · 15px lead / 13px body · hierarchy via size + color.
           Toggle light/dark in the toolbar.
         </p>
       </header>
 
       <Specimen label="Strong" token="ds-type-strong">
         <p className="ds-type-strong">Harry Howe</p>
+      </Specimen>
+
+      <Specimen label="Label" token="ds-type-label">
+        <p className="ds-type-label">Role</p>
       </Specimen>
 
       <Specimen label="Subtle" token="ds-type-subtle">

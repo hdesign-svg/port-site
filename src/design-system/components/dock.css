@@ -1,12 +1,14 @@
-/* Bottom chrome — platform filter + scroll-to-top (inverted surfaces) */
+/* Bottom chrome — material glass filter + scroll-to-top */
 
 .ds-dock-surface {
   background: var(--ds-dock-bg);
-  border: none;
+  border: 1px solid var(--ds-dock-border);
   border-radius: 9999px;
   box-shadow: var(--ds-dock-shadow);
   box-sizing: border-box;
   color: var(--ds-dock-fg);
+  backdrop-filter: var(--ds-dock-backdrop);
+  -webkit-backdrop-filter: var(--ds-dock-backdrop);
 }
 
 /* Filter dock */
@@ -44,8 +46,8 @@
 }
 
 .ds-platform-filter__option--active {
-  color: var(--ds-dock-fg);
-  background: var(--ds-dock-tab-active-fill);
+  color: var(--ds-dock-tab-active-fg);
+  background: var(--ds-dock-tab-active-bg);
 }
 
 .ds-platform-filter__option:focus-visible {
@@ -68,7 +70,10 @@
   pointer-events: none;
   color: var(--ds-dock-tooltip-fg);
   background: var(--ds-dock-tooltip-bg);
+  border: 1px solid var(--ds-dock-border);
   box-shadow: var(--ds-dock-shadow);
+  backdrop-filter: var(--ds-dock-backdrop);
+  -webkit-backdrop-filter: var(--ds-dock-backdrop);
   opacity: 0;
   visibility: hidden;
   translate: 0 0.125rem;
@@ -219,5 +224,23 @@
 
   .ds-platform-filter__tooltip {
     translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ds-dock-surface,
+  .ds-platform-filter__tooltip {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  [data-theme="light"] .ds-dock-surface,
+  [data-theme="light"] .ds-platform-filter__tooltip {
+    background: var(--ds-gray-100);
+  }
+
+  [data-theme="dark"] .ds-dock-surface,
+  [data-theme="dark"] .ds-platform-filter__tooltip {
+    background: var(--ds-gray-850);
   }
 }

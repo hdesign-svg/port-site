@@ -32,7 +32,7 @@
 }
 
 .ds-button--md {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   padding: var(--ds-space-2) var(--ds-space-4);
 }
 
@@ -78,7 +78,7 @@
 .ds-surface__title {
   margin: 0;
   font-family: var(--ds-font-family);
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   font-weight: var(--ds-weight-strong);
   line-height: var(--ds-leading-strong);
 }

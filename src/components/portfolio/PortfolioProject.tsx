@@ -11,102 +11,163 @@ function mockupDevice(image: ProjectImage): MockupDevice {
   return image.device === "desktop" ? "desktop" : "phone";
 }
 
-function mockupClass(image: ProjectImage) {
-  return `portfolio__mockup portfolio__mockup--${mockupDevice(image)}`;
-}
+type MediaBlock =
+  | { type: "desktop"; image: ProjectImage }
+  | { type: "phone-row"; images: ProjectImage[] };
 
-function mockupScreenClass(image: ProjectImage) {
-  return `portfolio__mockup-screen portfolio__mockup-screen--${mockupDevice(image)}`;
+function groupProjectMedia(images: ProjectImage[]): MediaBlock[] {
+  const blocks: MediaBlock[] = [];
+  let phoneBuffer: ProjectImage[] = [];
+
+  const flushPhones = () => {
+    if (phoneBuffer.length === 0) {
+      return;
+    }
+
+    blocks.push({ type: "phone-row", images: [...phoneBuffer] });
+    phoneBuffer = [];
+  };
+
+  for (const image of images) {
+    if (mockupDevice(image) === "desktop") {
+      flushPhones();
+      blocks.push({ type: "desktop", image });
+      continue;
+    }
+
+    phoneBuffer.push(image);
+  }
+
+  flushPhones();
+  return blocks;
 }
 
 type PortfolioProjectProps = {
   project: Project;
+  dimmed?: boolean;
   onImageClick: (image: ProjectImage, origin: LightboxOrigin) => void;
 };
 
+function PortfolioShot({
+  image,
+  onImageClick,
+}: {
+  image: ProjectImage;
+  onImageClick: (image: ProjectImage, origin: LightboxOrigin) => void;
+}) {
+  const device = mockupDevice(image);
+
+  return (
+    <button
+      type="button"
+      className={`portfolio__shot portfolio__shot--${device}`}
+      onClick={(event) => {
+        const frame = event.currentTarget.querySelector(".portfolio__shot-frame");
+        const rect = frame?.getBoundingClientRect();
+
+        if (!rect) {
+          return;
+        }
+
+        onImageClick(image, {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        });
+      }}
+      aria-label={`View larger: ${image.alt}`}
+    >
+      <span className={`portfolio__shot-frame portfolio__shot-frame--${device}`}>
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="object-contain object-top"
+          sizes={
+            device === "desktop"
+              ? "(min-width: 48rem) 42rem, 100vw"
+              : "(min-width: 48rem) 14rem, 100vw"
+          }
+        />
+      </span>
+    </button>
+  );
+}
+
 export function PortfolioProject({
   project,
+  dimmed = false,
   onImageClick,
 }: PortfolioProjectProps) {
+  const mediaBlocks = groupProjectMedia(project.images);
+  const classes = ["portfolio__section", "portfolio__project"];
+
+  if (dimmed) {
+    classes.push("portfolio__project--dimmed");
+  }
+
   return (
-    <section id={project.id} className="portfolio__project">
-      <div className="portfolio__grid">
-        <div className="portfolio__grid-col portfolio__project-copy">
-          <hr className="portfolio__divider" />
-
-          <div className="portfolio__project-meta">
-            <div className="portfolio__meta-row">
-              <h2 className="ds-type-strong">{project.title}</h2>
-              <p className="ds-type-strong ds-type-tabular">{project.year}</p>
-            </div>
-            <p className="ds-type-subtle">
-              {project.company} · {project.domain}
-            </p>
+    <section id={project.id} className={classes.join(" ")}>
+      <div className="portfolio__shell">
+        <div className="portfolio__project-meta">
+          <div className="portfolio__meta-row">
+            <h2 className="ds-type-strong">{project.title}</h2>
+            <p className="ds-type-strong ds-type-tabular">{project.year}</p>
           </div>
-
-          <div className="portfolio__prose">
-            <div className="ds-type-stack">
-              {project.description.map((paragraph) => (
-                <p key={paragraph} className="ds-type-body">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-            <ul className="portfolio__outcomes ds-type-muted">
-              {project.outcomes.map((outcome) => (
-                <li key={outcome}>{outcome}</li>
-              ))}
-            </ul>
-          </div>
+          <p className="ds-type-subtle">
+            {project.company} · {project.domain}
+          </p>
         </div>
-      </div>
 
-      <div
-        className="portfolio__mockup-scroll"
-        aria-label={`${project.title} work samples`}
-        tabIndex={0}
-      >
-        <div className="portfolio__mockup-track">
-          {project.images.map((image, imageIndex) => (
-            <button
-              key={`${image.src}-${imageIndex}`}
-              type="button"
-              className={mockupClass(image)}
-              onClick={(event) => {
-                const screen = event.currentTarget.querySelector(
-                  ".portfolio__mockup-screen",
+        <div className="portfolio__prose">
+          <div className="ds-type-stack">
+            {project.description.map((paragraph) => (
+              <p key={paragraph} className="ds-type-body">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+          <ul className="portfolio__outcomes ds-type-muted">
+            {project.outcomes.map((outcome) => (
+              <li key={outcome}>{outcome}</li>
+            ))}
+          </ul>
+        </div>
+
+        {mediaBlocks.length > 0 ? (
+          <div
+            className="portfolio__media"
+            aria-label={`${project.title} work samples`}
+          >
+            {mediaBlocks.map((block, blockIndex) => {
+              if (block.type === "desktop") {
+                return (
+                  <PortfolioShot
+                    key={`${block.image.src}-desktop-${blockIndex}`}
+                    image={block.image}
+                    onImageClick={onImageClick}
+                  />
                 );
-                const rect = screen?.getBoundingClientRect();
+              }
 
-                if (!rect) {
-                  return;
-                }
-
-                onImageClick(image, {
-                  top: rect.top,
-                  left: rect.left,
-                  width: rect.width,
-                  height: rect.height,
-                });
-              }}
-              aria-label={`View larger: ${image.alt}`}
-            >
-              <div className={mockupScreenClass(image)}>
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-contain object-center"
-                  sizes={
-                    mockupDevice(image) === "desktop"
-                      ? "88vw"
-                      : "52vw"
-                  }
-                />
-              </div>
-            </button>
-          ))}
-        </div>
+              return (
+                <div
+                  key={`phone-row-${blockIndex}`}
+                  className="portfolio__phone-grid"
+                >
+                  {block.images.map((image, imageIndex) => (
+                    <PortfolioShot
+                      key={`${image.src}-${blockIndex}-${imageIndex}`}
+                      image={image}
+                      onImageClick={onImageClick}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </section>
   );

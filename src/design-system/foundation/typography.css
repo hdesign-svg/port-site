@@ -1,4 +1,5 @@
 .ds-type-strong,
+.ds-type-label,
 .ds-type-subtle,
 .ds-type-body,
 .ds-type-muted,
@@ -15,16 +16,27 @@
 
 /* Primary emphasis — names, project titles, years */
 .ds-type-strong {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-lead);
   line-height: var(--ds-leading-strong);
   letter-spacing: var(--ds-type-strong-tracking);
+  font-weight: var(--ds-weight-strong);
   color: var(--ds-fg);
+  text-wrap: wrap;
+}
+
+/* Section labels within copy — Role, Services */
+.ds-type-label {
+  font-size: var(--ds-text-lead);
+  line-height: var(--ds-leading-lead);
+  letter-spacing: var(--ds-type-strong-tracking);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-muted);
   text-wrap: wrap;
 }
 
 /* Secondary labels — role, org · domain */
 .ds-type-subtle {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   line-height: var(--ds-leading-ui);
   letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-muted);
@@ -33,7 +45,7 @@
 
 /* Primary copy — hero body, case study prose */
 .ds-type-body {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   line-height: var(--ds-leading-body);
   letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-fg);
@@ -43,7 +55,7 @@
 
 /* De-emphasized copy — outcomes, credits when secondary */
 .ds-type-muted {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   line-height: var(--ds-leading-body);
   letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-muted);
@@ -51,9 +63,9 @@
   text-wrap: wrap;
 }
 
-/* De-emphasized copy on gallery wells — higher contrast on dark card bg */
+/* De-emphasized copy on tinted surfaces */
 .ds-type-muted-on-subtle {
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   line-height: var(--ds-leading-body);
   letter-spacing: var(--ds-type-body-tracking);
   color: var(--ds-muted-on-subtle);
@@ -93,7 +105,7 @@
 .ds-type-identity .ds-type-strong,
 .ds-type-identity .ds-type-subtle {
   line-height: var(--ds-leading-identity);
-  letter-spacing: 0;
+  letter-spacing: var(--ds-type-strong-tracking);
 }
 
 .ds-type-identity > .portfolio__meta-row {
@@ -102,7 +114,7 @@
 
 .ds-type-identity > .portfolio__meta-row .ds-type-strong {
   line-height: var(--ds-leading-identity);
-  letter-spacing: 0;
+  letter-spacing: var(--ds-type-strong-tracking);
 }
 
 /* Hero blurb zones — paragraphs, credits, links */

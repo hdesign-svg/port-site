@@ -1,7 +1,7 @@
 .ds-text-link {
   display: inline;
   font-family: var(--ds-font-family);
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   line-height: var(--ds-leading-body);
   font-weight: var(--ds-weight-regular);
   font-style: normal;

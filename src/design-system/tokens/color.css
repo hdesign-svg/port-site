@@ -55,17 +55,20 @@
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent),
     0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 3%, transparent);
 
-  /* Inverted dock — dark chip on light canvas */
-  --ds-dock-bg: var(--ds-gray-800);
-  --ds-dock-fg: var(--ds-gray-100);
-  --ds-dock-muted: var(--ds-gray-500);
-  --ds-dock-tab-active-fill: color-mix(in srgb, var(--ds-dock-fg) 14%, transparent);
-  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-dock-fg) 8%, transparent);
-  --ds-dock-tooltip-bg: var(--ds-dock-bg);
-  --ds-dock-tooltip-fg: var(--ds-dock-fg);
+  /* Material dock — frosted glass shell, solid active pill */
+  --ds-dock-bg: color-mix(in srgb, var(--ds-gray-100) 78%, transparent);
+  --ds-dock-border: color-mix(in srgb, var(--ds-gray-900) 9%, transparent);
+  --ds-dock-fg: var(--ds-gray-900);
+  --ds-dock-muted: color-mix(in srgb, var(--ds-gray-900) 52%, transparent);
+  --ds-dock-backdrop: blur(20px) saturate(1.45);
+  --ds-dock-tab-active-bg: var(--ds-gray-900);
+  --ds-dock-tab-active-fg: var(--ds-gray-100);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-900) 7%, transparent);
+  --ds-dock-tooltip-bg: color-mix(in srgb, var(--ds-gray-100) 88%, transparent);
+  --ds-dock-tooltip-fg: var(--ds-gray-900);
   --ds-dock-shadow:
-    0 4px 18px color-mix(in srgb, var(--ds-dock-bg) 26%, transparent),
-    0 1px 2px color-mix(in srgb, var(--ds-dock-bg) 16%, transparent);
+    0 8px 28px color-mix(in srgb, var(--ds-gray-900) 10%, transparent),
+    0 1px 0 color-mix(in srgb, var(--ds-gray-100) 65%, transparent) inset;
 }
 
 [data-theme="dark"] {
@@ -94,15 +97,18 @@
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 28%, transparent),
     0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 18%, transparent);
 
-  /* Inverted dock — light chip on dark canvas */
-  --ds-dock-bg: var(--ds-gray-100);
-  --ds-dock-fg: var(--ds-gray-900);
-  --ds-dock-muted: var(--ds-gray-600);
-  --ds-dock-tab-active-fill: color-mix(in srgb, var(--ds-dock-fg) 10%, transparent);
-  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-dock-fg) 6%, transparent);
-  --ds-dock-tooltip-bg: var(--ds-dock-bg);
-  --ds-dock-tooltip-fg: var(--ds-dock-fg);
+  /* Material dock — frosted glass on dark canvas */
+  --ds-dock-bg: color-mix(in srgb, var(--ds-gray-850) 72%, transparent);
+  --ds-dock-border: color-mix(in srgb, var(--ds-gray-100) 14%, transparent);
+  --ds-dock-fg: var(--ds-gray-100);
+  --ds-dock-muted: color-mix(in srgb, var(--ds-gray-100) 52%, transparent);
+  --ds-dock-backdrop: blur(20px) saturate(1.35);
+  --ds-dock-tab-active-bg: var(--ds-gray-100);
+  --ds-dock-tab-active-fg: var(--ds-gray-900);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-100) 8%, transparent);
+  --ds-dock-tooltip-bg: color-mix(in srgb, var(--ds-gray-850) 88%, transparent);
+  --ds-dock-tooltip-fg: var(--ds-gray-100);
   --ds-dock-shadow:
-    0 4px 18px color-mix(in srgb, var(--ds-dock-bg) 20%, transparent),
-    0 1px 2px color-mix(in srgb, var(--ds-dock-fg) 6%, transparent);
+    0 8px 28px color-mix(in srgb, #000000 32%, transparent),
+    0 1px 0 color-mix(in srgb, var(--ds-gray-100) 8%, transparent) inset;
 }

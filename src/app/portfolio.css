@@ -1,35 +1,18 @@
 .portfolio {
-  /* Page margin — viewport edge to centered grid */
-  --portfolio-page-margin: clamp(1.5rem, 5vw, 4rem);
+  /* Page shell — single centered column */
+  --portfolio-page-margin: clamp(1.25rem, 4vw, 2.5rem);
   --portfolio-page-inset: var(--portfolio-page-margin);
-
-  /* Centered 3-column grid */
-  --portfolio-grid-max: 72rem;
-  --portfolio-grid-columns: 3;
-  --portfolio-grid-gutter: var(--ds-type-gap);
-
-  /* Column 1 left edge — aligns gallery start to copy column */
-  --portfolio-grid-offset: calc(
-    var(--portfolio-page-margin) +
-      max(
-        0px,
-        (100vw - 2 * var(--portfolio-page-margin) - var(--portfolio-grid-max)) / 2
-      )
-  );
-
-  /* Horizontal gallery — symmetric inset at scroll start and end */
-  --portfolio-copy-media-gap: var(--ds-type-gap);
-  --portfolio-section-pad: clamp(1.75rem, 4vw, 2.5rem);
-  --portfolio-band-pad-tight: clamp(0.875rem, 2vw, 1.125rem);
-  --portfolio-row-inner-gap: var(--ds-type-gap);
-  --portfolio-mockup-inset-inline: clamp(2rem, 4vw, 2.75rem);
-  --portfolio-mockup-inset-block: clamp(2.75rem, 6.5vw, 4.5rem);
-  --portfolio-mockup-screen-width: 62%;
-  --portfolio-mockup-width-phone: min(54vw, 26rem);
-  --portfolio-mockup-width-desktop: min(90vw, 60rem);
+  --portfolio-shell-max: 42rem;
+  --portfolio-section-pad: 3.5rem;
+  --portfolio-stack-gap: 1.5rem;
+  --portfolio-shot-radius: var(--ds-radius-lg);
+  --portfolio-shot-shadow:
+    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
+    0 10px 28px color-mix(in srgb, var(--ds-shadow-key) 9%, transparent);
+  --portfolio-shot-border: 1px solid color-mix(in srgb, var(--ds-border) 55%, transparent);
 
   min-height: 100%;
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-body);
   background: var(--ds-bg);
   color: var(--ds-fg);
   font-family: var(--ds-font-family);
@@ -43,98 +26,36 @@
   width: 100%;
   margin-inline: auto;
   padding-inline: var(--portfolio-page-margin);
-  padding-block-start: var(--portfolio-band-pad-tight);
-  padding-block-end: var(--portfolio-section-pad);
-  overflow-x: visible;
+  padding-block-end: var(--ds-dock-content-clearance);
 }
 
-/* Section bands — single pad per zone, not stacked rows */
-.portfolio__hero {
-  padding-block-end: 0;
-}
-
-.portfolio__hero-inner {
+/* Sections — divider between zones, 56px pad, 24px internal stack */
+.portfolio__section {
   display: flex;
   flex-direction: column;
-}
-
-.portfolio__hero-band--tight {
-  padding-block: var(--portfolio-band-pad-tight);
-}
-
-.portfolio__hero-blurb {
-  padding-block-start: var(--portfolio-band-pad-tight);
-  padding-block-end: var(--portfolio-section-pad);
-}
-
-.portfolio__project {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  gap: var(--portfolio-copy-media-gap);
-  padding-block-start: var(--portfolio-section-pad);
+  padding-block: var(--portfolio-section-pad);
   scroll-margin-top: var(--portfolio-page-margin);
-  overflow-x: visible;
 }
 
-.portfolio__hero + .portfolio__project {
-  padding-block-start: 0;
-}
-
-.portfolio__project:last-child {
-  padding-block-end: var(--portfolio-section-pad);
-}
-
-.portfolio__divider {
-  width: 100%;
-  margin: 0;
-  border: none;
+.portfolio__section + .portfolio__section {
   border-top: 1px solid var(--ds-rule);
 }
 
-/* Legacy row helper */
-.portfolio__row {
-  padding-block: var(--portfolio-section-pad);
-}
-
-.portfolio__row--tight {
-  padding-block: var(--portfolio-band-pad-tight);
-}
-
-/* Centered 3-column grid — copy in column 1 */
-.portfolio__grid {
+.portfolio__shell {
   box-sizing: border-box;
-  width: min(100%, var(--portfolio-grid-max));
+  display: flex;
+  flex-direction: column;
+  gap: var(--portfolio-stack-gap);
+  width: min(100%, var(--portfolio-shell-max));
   margin-inline: auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: var(--portfolio-grid-gutter);
 }
 
-.portfolio__grid-col {
-  grid-column: 1;
-  min-width: 0;
-  text-align: left;
-}
-
-.portfolio__grid-col .ds-type-identity {
-  align-items: flex-start;
-  width: 100%;
-}
-
-@media (max-width: 40rem) {
-  .portfolio__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* Hero — identity band + blurb band */
+/* Hero */
 .portfolio__hero-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--portfolio-row-inner-gap);
+  gap: var(--portfolio-stack-gap);
 }
 
 .portfolio__hero-identity {
@@ -196,7 +117,15 @@
   outline-offset: 1px;
 }
 
-/* Project header — title + year in narrow copy band */
+/* Project copy */
+.portfolio__project {
+  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+.portfolio__project--dimmed {
+  opacity: 0.34;
+}
+
 .portfolio__meta-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -232,16 +161,9 @@
   white-space: nowrap;
 }
 
-/* Project — copy in grid col 1, gallery scrolls below */
-.portfolio__project .portfolio__project-copy {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ds-type-gap);
-}
-
 .portfolio__prose {
   display: grid;
-  gap: var(--portfolio-row-inner-gap);
+  gap: var(--portfolio-stack-gap);
   max-width: none;
   text-align: left;
 }
@@ -264,84 +186,71 @@
   content: "–\00a0";
 }
 
-/* Horizontal gallery — full viewport window, cards scroll off both edges */
-.portfolio__mockup-scroll {
-  width: 100vw;
-  max-width: none;
-  margin-inline: calc(50% - 50vw);
-  overflow-x: auto;
-  overflow-y: visible;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: var(--portfolio-grid-offset);
-  scrollbar-width: none;
-  cursor: grab;
-}
-
-.portfolio__mockup-scroll:focus-visible {
-  outline: 2px solid var(--ds-fg);
-  outline-offset: -2px;
-}
-
-.portfolio__mockup-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.portfolio__mockup-track {
+/* Media — bare screenshots, vertical stack; phones 3-up from tablet up */
+.portfolio__media {
   display: flex;
-  align-items: stretch;
-  gap: var(--ds-type-gap);
-  width: max-content;
-  padding-inline: var(--portfolio-grid-offset);
+  flex-direction: column;
+  gap: var(--portfolio-stack-gap);
+  width: 100%;
 }
 
-.portfolio__mockup {
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-block: var(--portfolio-mockup-inset-block);
-  padding-inline: var(--portfolio-mockup-inset-inline);
-  border: none;
-  border-radius: var(--ds-radius-xl);
-  background: var(--ds-bg-subtle);
+.portfolio__phone-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--portfolio-stack-gap);
+  width: 100%;
+}
+
+@media (min-width: 48rem) {
+  .portfolio__phone-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.portfolio__shot {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: var(--portfolio-shot-border);
+  border-radius: var(--portfolio-shot-radius);
+  background: transparent;
   cursor: pointer;
   font: inherit;
   color: inherit;
-  scroll-snap-align: start;
+  overflow: hidden;
+  box-shadow: var(--portfolio-shot-shadow);
+  transition:
+    box-shadow var(--ds-dock-dur) var(--ds-dock-ease-out),
+    border-color var(--ds-dock-dur) var(--ds-dock-ease-out);
 }
 
-.portfolio__mockup--phone {
-  width: var(--portfolio-mockup-width-phone);
+.portfolio__shot:hover {
+  box-shadow:
+    0 2px 4px color-mix(in srgb, var(--ds-shadow-key) 6%, transparent),
+    0 14px 36px color-mix(in srgb, var(--ds-shadow-key) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ds-border) 75%, transparent);
 }
 
-.portfolio__mockup--desktop {
-  width: var(--portfolio-mockup-width-desktop);
-}
-
-.portfolio__mockup:focus-visible {
+.portfolio__shot:focus-visible {
   outline: 2px solid var(--ds-fg);
   outline-offset: 2px;
 }
 
-.portfolio__mockup-screen {
+.portfolio__shot-frame {
   position: relative;
   display: block;
-  width: var(--portfolio-mockup-screen-width);
-  flex-shrink: 0;
+  width: 100%;
   overflow: hidden;
-  border-radius: var(--ds-radius-md);
-  background: var(--ds-surface-raised);
-  pointer-events: none;
+  border-radius: inherit;
+  background: var(--ds-surface);
 }
 
-.portfolio__mockup-screen--phone {
+.portfolio__shot-frame--phone {
   aspect-ratio: 210 / 477;
 }
 
-.portfolio__mockup-screen--desktop {
+.portfolio__shot-frame--desktop {
   aspect-ratio: 1024 / 704;
 }
 
@@ -409,7 +318,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio__theme-toggle {
+  .portfolio__project,
+  .portfolio__theme-toggle,
+  .portfolio__shot {
     transition: none;
   }
 

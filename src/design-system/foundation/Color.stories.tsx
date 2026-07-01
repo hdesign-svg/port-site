@@ -257,7 +257,7 @@ function PalettePage() {
         />
       </Specimen>
 
-      <Specimen label="Inverted dock" token="--ds-dock-*">
+      <Specimen label="Material dock" token="--ds-dock-*">
         <div
           style={{
             display: "inline-flex",
@@ -266,8 +266,11 @@ function PalettePage() {
             padding: "var(--ds-dock-tab-inset)",
             borderRadius: "9999px",
             background: "var(--ds-dock-bg)",
+            border: "1px solid var(--ds-dock-border)",
             color: "var(--ds-dock-fg)",
             boxShadow: "var(--ds-dock-shadow)",
+            backdropFilter: "var(--ds-dock-backdrop)",
+            WebkitBackdropFilter: "var(--ds-dock-backdrop)",
           }}
         >
           <span
@@ -290,8 +293,8 @@ function PalettePage() {
               width: "var(--ds-dock-tab-size)",
               height: "var(--ds-dock-tab-size)",
               borderRadius: "9999px",
-              color: "var(--ds-dock-fg)",
-              background: "var(--ds-dock-tab-active-fill)",
+              color: "var(--ds-dock-tab-active-fg)",
+              background: "var(--ds-dock-tab-active-bg)",
             }}
           >
             ●
