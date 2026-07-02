@@ -17,7 +17,6 @@ export type Project = {
   year: string;
   platform: ProjectPlatform;
   description: string[];
-  outcomes: string[];
   images: ProjectImage[];
 };
 
@@ -42,7 +41,6 @@ export const projects: Project[] = [
       "Designed a self-serve accounting experience for a new DIY accounting offering.",
       "For home service professionals with simpler accounting needs, simplifying transaction review and reporting.",
     ],
-    outcomes: ["Validated self-serve accounting through pilot testing."],
     images: [
       {
         src: "/images/plane-desktop.png",
@@ -67,7 +65,6 @@ export const projects: Project[] = [
       "Redesigned activation after funnel analysis revealed users were dropping off before seeing the product.",
       "Built for home service professionals evaluating fintech products before commitment.",
     ],
-    outcomes: ["3% → 12% conversion", "Adopted across product squads"],
     images: [
       {
         src: "/images/plane-desktop.png",
@@ -97,7 +94,6 @@ export const projects: Project[] = [
       "Reimagined customer messaging through strategy, workflow design, and delivery as part of the Concierge platform overhaul.",
       "Helping retail associates manage customer relationships through modern messaging, product sharing, and AI-assisted writing.",
     ],
-    outcomes: ["Kept associates in-platform", "$mm protected in contract renewals"],
     images: [
       {
         src: "/images/mindvalley-light.png",
@@ -124,12 +120,9 @@ export const projects: Project[] = [
     year: "2024",
     platform: "mobile",
     description: [
-      "Led 0 → 1 design across strategy, system modeling, and delivery for a new agent experience.",
-      "Built for retail associates managing customer relationships, product pairing, and outreach at scale.",
-    ],
-    outcomes: [
-      "75% faster task completion",
-      "$mm protected in contract renewals",
+      "At Mad Mobile, I led 0 → 1 design for an agent experience used by retail associates at brands including Ralph Lauren, Tractor Supply, and Estée Lauder. It unified customer relationships, product recommendations, and outreach through a conversational interface.",
+      "From strategy through launch, I explored interaction models, validated concepts, and designed an experience retail associates could trust.",
+      "The result reduced task time by 75% and established a foundation for AI-powered workflows across the platform.",
     ],
     images: [
       {
@@ -157,12 +150,9 @@ export const projects: Project[] = [
     year: "2024",
     platform: "mobile",
     description: [
-      "Led 0 → 1 design across strategy, system modeling, and delivery for a foundational clienteling platform redesign.",
-      "Built for retail associates managing customer relationships, modernizing a stagnant clienteling experience.",
-    ],
-    outcomes: [
-      "10% increase in associate sentiment",
-      "$mm protected in contract renewals",
+      "At Mad Mobile, I led the transformation of the Concierge platform for retailers including Ralph Lauren, Urban Outfitters, and Pandora, modernizing a stagnant clienteling experience.",
+      "From strategy through launch, I defined the system model, guided other designers, and established a scalable foundation future experiences could build on.",
+      "The redesign secured contract renewals, increased customer satisfaction by 10%, and renewed confidence from brands considering leaving the platform.",
     ],
     images: [
       {

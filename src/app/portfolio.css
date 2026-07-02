@@ -3,7 +3,7 @@
   --portfolio-page-margin: clamp(1.25rem, 4vw, 2.5rem);
   --portfolio-page-inset: var(--portfolio-page-margin);
   --portfolio-copy-max: 26rem;
-  --portfolio-media-max: 52rem;
+  --portfolio-media-max: 56rem;
   --portfolio-gap-lg: 4.5rem;
   --portfolio-gap-sm: 1.5rem;
   --portfolio-shot-radius: var(--ds-radius-lg);
@@ -119,10 +119,6 @@
   color: var(--ds-muted);
 }
 
-.portfolio__outcomes.ds-type-md {
-  color: var(--ds-fg);
-}
-
 .portfolio__prose {
   display: grid;
   gap: var(--portfolio-gap-sm);
@@ -138,17 +134,8 @@
   max-width: none;
 }
 
-.portfolio__outcomes {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--ds-type-gap-tight);
-  justify-items: start;
-}
-
-.portfolio__outcomes li::before {
-  content: "–\00a0";
+.portfolio__copy-phrase {
+  white-space: nowrap;
 }
 
 /* Media — 72px after copy; 24px between shots */
@@ -188,16 +175,6 @@
   color: inherit;
   overflow: hidden;
   box-shadow: var(--portfolio-shot-shadow);
-  transition:
-    box-shadow var(--ds-dock-dur) var(--ds-dock-ease-out),
-    border-color var(--ds-dock-dur) var(--ds-dock-ease-out);
-}
-
-.portfolio__shot:hover {
-  box-shadow:
-    0 2px 4px color-mix(in srgb, var(--ds-shadow-key) 6%, transparent),
-    0 14px 36px color-mix(in srgb, var(--ds-shadow-key) 12%, transparent);
-  border-color: color-mix(in srgb, var(--ds-border) 75%, transparent);
 }
 
 .portfolio__shot:focus-visible {
@@ -286,8 +263,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio__project,
-  .portfolio__shot {
+  .portfolio__project {
     transition: none;
   }
 

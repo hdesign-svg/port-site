@@ -142,21 +142,6 @@ function TypographyPage() {
           </p>
         </div>
       </Specimen>
-
-      <Specimen label="Outcomes" token="portfolio__outcomes">
-        <ul
-          className="ds-type-md ds-type--muted"
-          style={{
-            margin: 0,
-            paddingInlineStart: "1.1em",
-            listStyle: "disc",
-            listStylePosition: "outside",
-          }}
-        >
-          <li>3% → 12% conversion</li>
-          <li>Adopted across product squads</li>
-        </ul>
-      </Specimen>
     </div>
   );
 }

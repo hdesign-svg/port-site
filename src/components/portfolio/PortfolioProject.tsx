@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { PortfolioCopy } from "@/components/portfolio/PortfolioCopy";
 import type { LightboxOrigin } from "@/components/portfolio/PortfolioLightbox";
 import type {
   MockupDevice,
@@ -86,8 +87,8 @@ function PortfolioShot({
           className="object-contain object-top"
           sizes={
             device === "desktop"
-              ? "(min-width: 48rem) 52rem, 100vw"
-              : "(min-width: 48rem) 16rem, 100vw"
+              ? "(min-width: 48rem) 56rem, 100vw"
+              : "(min-width: 48rem) 18rem, 100vw"
           }
         />
       </span>
@@ -117,15 +118,10 @@ export function PortfolioProject({
             <div className="ds-type-stack">
               {project.description.map((paragraph) => (
                 <p key={paragraph} className="ds-type-md">
-                  {paragraph}
+                  <PortfolioCopy text={paragraph} />
                 </p>
               ))}
             </div>
-            <ul className="portfolio__outcomes ds-type-md">
-              {project.outcomes.map((outcome) => (
-                <li key={outcome}>{outcome}</li>
-              ))}
-            </ul>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { PortfolioCopy } from "@/components/portfolio/PortfolioCopy";
 import { TextLink } from "@/design-system/components/TextLink";
 import { site } from "@/data/site";
 
@@ -24,7 +25,7 @@ export function PortfolioHero() {
             <div className="ds-type-stack">
               {site.heroBody.map((paragraph) => (
                 <p key={paragraph} className="ds-type-md">
-                  {paragraph}
+                  <PortfolioCopy text={paragraph} />
                 </p>
               ))}
               <p className="ds-type-md">
@@ -51,7 +52,7 @@ export function PortfolioHero() {
                     </span>
                   );
                 })}
-                {site.heroExperienceTail}
+                <PortfolioCopy text={site.heroExperienceTail} />
               </p>
             </div>
             <div className="portfolio__links">
