@@ -120,9 +120,9 @@ export const projects: Project[] = [
     year: "2024",
     platform: "mobile",
     description: [
-      "At Mad Mobile, I led 0 → 1 design for an agent experience used by retail associates at brands including Ralph Lauren, Tractor Supply, and Estée Lauder. It unified customer relationships, product recommendations, and outreach through a conversational interface.",
-      "From strategy through launch, I explored interaction models, validated concepts, and designed an experience retail associates could trust.",
-      "The result reduced task time by 75% and established a foundation for AI-powered workflows across the platform.",
+      "At Mad Mobile, I led 0 → 1 design for an agent experience used by retail associates at brands including Tractor Supply, Estée Lauder, and Talbots.",
+      "I designed the agent around the platform's system model so it could understand customers, recommend products, and handle personalized communication.",
+      "The result reduced task time by 75%, giving retail associates more time to build relationships and drive sales.",
     ],
     images: [
       {
@@ -150,9 +150,9 @@ export const projects: Project[] = [
     year: "2024",
     platform: "mobile",
     description: [
-      "At Mad Mobile, I led the transformation of the Concierge platform for retailers including Ralph Lauren, Urban Outfitters, and Pandora, modernizing a stagnant clienteling experience.",
-      "From strategy through launch, I defined the system model, guided other designers, and established a scalable foundation future experiences could build on.",
-      "The redesign secured contract renewals, increased customer satisfaction by 10%, and renewed confidence from brands considering leaving the platform.",
+      "At Mad Mobile, I led 0 → 1 design for the Concierge platform, rebuilding a clienteling product used by retailers including Ralph Lauren, Urban Outfitters, and Pandora.",
+      "I helped shape the product strategy, then led the redesign from system modeling through delivery to create a stronger foundation for the product.",
+      "The redesign secured contract renewals, increased customer satisfaction by 10%, and helped put the product back on a path to growth.",
     ],
     images: [
       {
