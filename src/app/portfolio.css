@@ -17,6 +17,12 @@
     0 10px 28px color-mix(in srgb, var(--ds-shadow-key) 9%, transparent);
   --portfolio-shot-border: 1px solid color-mix(in srgb, var(--ds-border) 55%, transparent);
 
+  /* On-load reveal — focus-in blur, fine-grained top-down stagger */
+  --portfolio-reveal-dur: 800ms;
+  --portfolio-reveal-stagger: 40ms;
+  --portfolio-reveal-blur: 4px;
+  --portfolio-reveal-lift: 6px;
+
   min-height: 100%;
   font-size: var(--ds-text-md);
   background: var(--ds-bg);
@@ -36,6 +42,32 @@
   padding-inline: var(--portfolio-page-margin);
   padding-block-start: var(--portfolio-gap-lg);
   padding-block-end: var(--ds-dock-content-clearance);
+}
+
+/* On-load reveal */
+@keyframes portfolio-reveal {
+  from {
+    opacity: 0;
+    filter: blur(var(--portfolio-reveal-blur));
+    transform: translateY(var(--portfolio-reveal-lift));
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.portfolio__reveal {
+  animation: portfolio-reveal var(--portfolio-reveal-dur) var(--ds-ease) backwards;
+  animation-delay: calc(var(--reveal-index, 0) * var(--portfolio-reveal-stagger));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio__reveal {
+    animation: none;
+  }
 }
 
 .portfolio__section {

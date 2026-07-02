@@ -4,6 +4,10 @@ import { Fragment, useEffect, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import {
+  PORTFOLIO_HERO_REVEAL_COUNT,
+  portfolioRevealStyle,
+} from "@/components/portfolio/portfolioReveal";
+import {
   PortfolioLightbox,
   type LightboxState,
 } from "@/components/portfolio/PortfolioLightbox";
@@ -43,19 +47,31 @@ export function PortfolioHome() {
       <main className="portfolio__main">
         <PortfolioHero />
 
-        {projects.map((project) => (
-          <Fragment key={project.id}>
-            <hr className="portfolio__divider" />
-            <PortfolioProject
-              project={project}
-              dimmed={!projectMatchesFilter(project, filter)}
-              activeSourceId={lightbox?.sourceId ?? null}
-              onImageClick={(image, origin, sourceId) =>
-                setLightbox({ image, origin, sourceId })
-              }
-            />
-          </Fragment>
-        ))}
+        {projects.map((project, index) => {
+          const revealBase = PORTFOLIO_HERO_REVEAL_COUNT + index * 2;
+
+          return (
+            <Fragment key={project.id}>
+              <hr
+                className="portfolio__divider portfolio__reveal"
+                style={portfolioRevealStyle(revealBase)}
+              />
+              <div
+                className="portfolio__reveal"
+                style={portfolioRevealStyle(revealBase + 1)}
+              >
+                <PortfolioProject
+                  project={project}
+                  dimmed={!projectMatchesFilter(project, filter)}
+                  activeSourceId={lightbox?.sourceId ?? null}
+                  onImageClick={(image, origin, sourceId) =>
+                    setLightbox({ image, origin, sourceId })
+                  }
+                />
+              </div>
+            </Fragment>
+          );
+        })}
       </main>
 
       <PortfolioLightbox state={lightbox} onClose={() => setLightbox(null)} />
