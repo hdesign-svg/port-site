@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import { PortfolioLightbox, type LightboxState } from "@/components/portfolio/PortfolioLightbox";
@@ -41,12 +41,14 @@ export function PortfolioHome() {
         <PortfolioHero />
 
         {projects.map((project) => (
-          <PortfolioProject
-            key={project.id}
-            project={project}
-            dimmed={!projectMatchesFilter(project, filter)}
-            onImageClick={(image, origin) => setLightbox({ image, origin })}
-          />
+          <Fragment key={project.id}>
+            <hr className="portfolio__divider" />
+            <PortfolioProject
+              project={project}
+              dimmed={!projectMatchesFilter(project, filter)}
+              onImageClick={(image, origin) => setLightbox({ image, origin })}
+            />
+          </Fragment>
         ))}
       </main>
 

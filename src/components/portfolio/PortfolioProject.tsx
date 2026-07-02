@@ -86,8 +86,8 @@ function PortfolioShot({
           className="object-contain object-top"
           sizes={
             device === "desktop"
-              ? "(min-width: 48rem) 42rem, 100vw"
-              : "(min-width: 48rem) 14rem, 100vw"
+              ? "(min-width: 48rem) 52rem, 100vw"
+              : "(min-width: 48rem) 16rem, 100vw"
           }
         />
       </span>
@@ -109,30 +109,24 @@ export function PortfolioProject({
 
   return (
     <section id={project.id} className={classes.join(" ")}>
-      <div className="portfolio__shell">
-        <div className="portfolio__project-meta">
-          <div className="portfolio__meta-row">
-            <h2 className="ds-type-strong">{project.title}</h2>
-            <p className="ds-type-strong ds-type-tabular">{project.year}</p>
-          </div>
-          <p className="ds-type-subtle">
-            {project.company} · {project.domain}
-          </p>
-        </div>
+      <div className="portfolio__section-inner">
+        <div className="portfolio__copy">
+          <h2 className="ds-type-lg">{project.title}</h2>
 
-        <div className="portfolio__prose">
-          <div className="ds-type-stack">
-            {project.description.map((paragraph) => (
-              <p key={paragraph} className="ds-type-body">
-                {paragraph}
-              </p>
-            ))}
+          <div className="portfolio__prose">
+            <div className="ds-type-stack">
+              {project.description.map((paragraph) => (
+                <p key={paragraph} className="ds-type-md">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            <ul className="portfolio__outcomes ds-type-md">
+              {project.outcomes.map((outcome) => (
+                <li key={outcome}>{outcome}</li>
+              ))}
+            </ul>
           </div>
-          <ul className="portfolio__outcomes ds-type-muted">
-            {project.outcomes.map((outcome) => (
-              <li key={outcome}>{outcome}</li>
-            ))}
-          </ul>
         </div>
 
         {mediaBlocks.length > 0 ? (

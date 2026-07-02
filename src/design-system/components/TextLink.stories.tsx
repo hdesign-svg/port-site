@@ -32,7 +32,7 @@ export const Pair: Story = {
     },
   },
   render: () => (
-    <p className="ds-type-body" style={{ maxWidth: "none", margin: 0 }}>
+    <p className="ds-type-md" style={{ maxWidth: "none", margin: 0 }}>
       <TextLink href="#linkedin" external>
         LinkedIn
       </TextLink>
@@ -47,10 +47,10 @@ export const Pair: Story = {
 export const InHero: Story = {
   render: () => (
     <div className="ds-type-stack--loose ds-type-stack">
-      <p className="ds-type-body">
+      <p className="ds-type-md">
         I&apos;ve designed for web and mobile for 8 years.
       </p>
-      <p className="ds-type-muted">
+      <p className="ds-type-md ds-type--muted">
         Previously at Housecall Pro, Mad Mobile, and Ibotta.
       </p>
       <p style={{ margin: 0 }}>
@@ -68,7 +68,7 @@ export const InHero: Story = {
 
 export const Multiline: Story = {
   render: () => (
-    <p className="ds-type-body" style={{ maxWidth: "12rem", margin: 0 }}>
+    <p className="ds-type-md" style={{ maxWidth: "12rem", margin: 0 }}>
       <TextLink href="#resume" external>
         Download my full resume as PDF
       </TextLink>

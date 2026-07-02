@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowUp,
-  Desktop,
-  DeviceMobile,
-  Stack,
-} from "@phosphor-icons/react";
+import { ArrowUp, Moon, Sun } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import {
   useCallback,
@@ -16,24 +11,44 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+import {
+  applyThemeWithTransition,
+  DEFAULT_THEME,
+  type Theme,
+} from "@/lib/theme";
 
 export type DockFilter = "all" | "mobile" | "web";
 
-export const DOCK_FILTERS: {
-  id: DockFilter;
+export const DOCK_FILTERS: { id: DockFilter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "mobile", label: "Mobile" },
+  { id: "web", label: "Web" },
+];
+
+export const DOCK_THEMES: {
+  id: Theme;
   label: string;
   icon: Icon;
 }[] = [
-  { id: "all", label: "All", icon: Stack },
-  { id: "mobile", label: "Mobile", icon: DeviceMobile },
-  { id: "web", label: "Web", icon: Desktop },
+  { id: "light", label: "Light", icon: Sun },
+  { id: "dark", label: "Dark", icon: Moon },
 ];
 
-const FILTER_ICON_SIZE = 18;
+const DOCK_ICON_SIZE = 18;
 const SCROLL_ICON_SIZE = 18;
 
 const SCROLL_RING_RADIUS = 15;
 const SCROLL_RING_CIRCUMFERENCE = 2 * Math.PI * SCROLL_RING_RADIUS;
+
+function readThemeFromDom(): Theme {
+  if (typeof document === "undefined") {
+    return DEFAULT_THEME;
+  }
+
+  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+}
 
 export function dockScrollBehavior(): ScrollBehavior {
   if (typeof window === "undefined") {
@@ -75,120 +90,43 @@ function scrollToTop(root: HTMLElement | Window) {
   root.scrollTo({ top: 0, behavior: dockScrollBehavior() });
 }
 
-type PlatformFilterProps = {
-  filter: DockFilter;
-  onFilterChange: (filter: DockFilter) => void;
-  className?: string;
-};
+function handleRadioKeyDown(
+  event: KeyboardEvent<HTMLButtonElement>,
+  index: number,
+  length: number,
+  onSelect: (index: number) => void,
+) {
+  let nextIndex: number | null = null;
 
-export function PlatformFilter({
-  filter,
-  onFilterChange,
-  className,
-}: PlatformFilterProps) {
-  const groupId = useId();
-  const filterRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const focusFilterAt = (index: number) => {
-    const next = DOCK_FILTERS[index];
-    if (!next) {
+  switch (event.key) {
+    case "ArrowRight":
+    case "ArrowDown":
+      nextIndex = (index + 1) % length;
+      break;
+    case "ArrowLeft":
+    case "ArrowUp":
+      nextIndex = (index - 1 + length) % length;
+      break;
+    case "Home":
+      nextIndex = 0;
+      break;
+    case "End":
+      nextIndex = length - 1;
+      break;
+    default:
       return;
-    }
-
-    onFilterChange(next.id);
-    filterRefs.current[index]?.focus();
-  };
-
-  const handleFilterKeyDown = (
-    event: KeyboardEvent<HTMLButtonElement>,
-    index: number,
-  ) => {
-    let nextIndex: number | null = null;
-
-    switch (event.key) {
-      case "ArrowRight":
-      case "ArrowDown":
-        nextIndex = (index + 1) % DOCK_FILTERS.length;
-        break;
-      case "ArrowLeft":
-      case "ArrowUp":
-        nextIndex = (index - 1 + DOCK_FILTERS.length) % DOCK_FILTERS.length;
-        break;
-      case "Home":
-        nextIndex = 0;
-        break;
-      case "End":
-        nextIndex = DOCK_FILTERS.length - 1;
-        break;
-      default:
-        return;
-    }
-
-    event.preventDefault();
-    focusFilterAt(nextIndex);
-  };
-
-  const classes = ["ds-dock-surface", "ds-platform-filter"];
-  if (className) {
-    classes.push(className);
   }
 
-  return (
-    <div
-      className={classes.join(" ")}
-      role="radiogroup"
-      aria-label="Filter projects by platform"
-    >
-      {DOCK_FILTERS.map(({ id, label, icon: Icon }, index) => {
-        const active = filter === id;
-        const position =
-          index === 0
-            ? "start"
-            : index === DOCK_FILTERS.length - 1
-              ? "end"
-              : "middle";
-
-        return (
-          <button
-            key={id}
-            ref={(node) => {
-              filterRefs.current[index] = node;
-            }}
-            type="button"
-            role="radio"
-            id={`${groupId}-${id}`}
-            aria-checked={active}
-            aria-label={label}
-            tabIndex={active ? 0 : -1}
-            className={`ds-platform-filter__option${active ? " ds-platform-filter__option--active" : ""}`}
-            onClick={() => onFilterChange(id)}
-            onKeyDown={(event) => handleFilterKeyDown(event, index)}
-          >
-            <Icon
-              size={FILTER_ICON_SIZE}
-              weight={active ? "fill" : "regular"}
-              aria-hidden
-            />
-            <span
-              className={`ds-platform-filter__tooltip ds-platform-filter__tooltip--${position}`}
-              aria-hidden
-            >
-              {label}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
+  event.preventDefault();
+  onSelect(nextIndex);
 }
 
 type ScrollToTopProps = {
-  /** Scroll root for progress + back-to-top. Defaults to window. */
   scrollRoot?: HTMLElement | null;
   className?: string;
 };
 
-export function ScrollToTop({ scrollRoot, className }: ScrollToTopProps) {
+function ScrollToTop({ scrollRoot, className }: ScrollToTopProps) {
   const [progress, setProgress] = useState(0);
   const rafRef = useRef<number | null>(null);
 
@@ -272,21 +210,167 @@ type DockProps = {
   className?: string;
 };
 
-/** Side-by-side platform filter + scroll-to-top — use inside DockAnchor. */
+/** Unified filter + theme dock and scroll-to-top — use inside DockAnchor. */
 export function Dock({
   filter,
   onFilterChange,
   scrollRoot,
   className,
 }: DockProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const filterGroupId = useId();
+  const themeGroupId = useId();
+  const filterRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const themeRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
+
+  useEffect(() => {
+    setTheme(readThemeFromDom());
+  }, []);
+
+  const focusFilterAt = (index: number) => {
+    const next = DOCK_FILTERS[index];
+    if (!next) {
+      return;
+    }
+
+    onFilterChange(next.id);
+    filterRefs.current[index]?.focus();
+  };
+
+  const applyThemeChoice = async (
+    nextTheme: Theme,
+    x: number,
+    y: number,
+  ) => {
+    if (nextTheme === theme) {
+      return;
+    }
+
+    await applyThemeWithTransition(nextTheme, x, y, () => setTheme(nextTheme));
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("theme", nextTheme);
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
+
+  const selectThemeAt = (
+    index: number,
+    pointer?: { clientX: number; clientY: number },
+  ) => {
+    const next = DOCK_THEMES[index];
+    const button = themeRefs.current[index];
+
+    if (!next || !button) {
+      return;
+    }
+
+    const rect = button.getBoundingClientRect();
+    const clientX = pointer?.clientX ?? rect.left + rect.width / 2;
+    const clientY = pointer?.clientY ?? rect.top + rect.height / 2;
+
+    void applyThemeChoice(next.id, clientX, clientY);
+    button.focus();
+  };
+
+  const dockClasses = ["ds-dock-surface", "ds-dock"];
+  if (className) {
+    dockClasses.push(className);
+  }
+
   return (
     <>
-      <PlatformFilter
-        filter={filter}
-        onFilterChange={onFilterChange}
-        className={className}
-      />
-      <ScrollToTop scrollRoot={scrollRoot} />
+      <div className={dockClasses.join(" ")}>
+        <div
+          className="ds-dock__group"
+          role="radiogroup"
+          aria-label="Filter projects by platform"
+        >
+          {DOCK_FILTERS.map(({ id, label }, index) => {
+            const active = filter === id;
+
+            return (
+              <button
+                key={id}
+                ref={(node) => {
+                  filterRefs.current[index] = node;
+                }}
+                type="button"
+                role="radio"
+                id={`${filterGroupId}-${id}`}
+                aria-checked={active}
+                tabIndex={active ? 0 : -1}
+                className={`ds-dock__option ds-dock__text-option${active ? " ds-dock__option--active" : ""}`}
+                onClick={() => onFilterChange(id)}
+                onKeyDown={(event) =>
+                  handleRadioKeyDown(
+                    event,
+                    index,
+                    DOCK_FILTERS.length,
+                    focusFilterAt,
+                  )
+                }
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="ds-dock__divider" aria-hidden />
+
+        <div
+          className="ds-dock__group"
+          role="radiogroup"
+          aria-label="Color theme"
+        >
+          {DOCK_THEMES.map(({ id, label, icon: Icon }, index) => {
+            const active = theme === id;
+            const position = index === 0 ? "start" : "end";
+
+            return (
+              <button
+                key={id}
+                ref={(node) => {
+                  themeRefs.current[index] = node;
+                }}
+                type="button"
+                role="radio"
+                id={`${themeGroupId}-${id}`}
+                aria-checked={active}
+                aria-label={label}
+                tabIndex={active ? 0 : -1}
+                className={`ds-dock__option ds-dock__icon-option${active ? " ds-dock__option--active" : ""}`}
+                onClick={(event) => selectThemeAt(index, event)}
+                onKeyDown={(event) =>
+                  handleRadioKeyDown(
+                    event,
+                    index,
+                    DOCK_THEMES.length,
+                    selectThemeAt,
+                  )
+                }
+              >
+                <Icon
+                  size={DOCK_ICON_SIZE}
+                  weight={active ? "fill" : "regular"}
+                  aria-hidden
+                />
+                <span
+                  className={`ds-dock__tooltip ds-dock__tooltip--${position}`}
+                  aria-hidden
+                >
+                  {label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <ScrollToTop scrollRoot={scrollRoot} className={className} />
     </>
   );
 }

@@ -73,7 +73,7 @@ function Swatch({
         }}
       />
       <p
-        className="ds-type-meta"
+        className="ds-type-sm"
         style={{ marginTop: "var(--ds-type-gap-tight)" }}
       >
         {label}
@@ -104,7 +104,7 @@ function Specimen({
       }}
     >
       <p
-        className="ds-type-meta"
+        className="ds-type-sm"
         style={{ marginBottom: "var(--ds-type-gap-tight)" }}
       >
         {label}
@@ -149,8 +149,8 @@ function PalettePage() {
         className="ds-type-stack"
         style={{ marginBottom: "var(--ds-type-gap)" }}
       >
-        <h1 className="ds-type-strong">Color</h1>
-        <p className="ds-type-muted">
+        <h1 className="ds-type-lg">Color</h1>
+        <p className="ds-type-md ds-type--muted">
           Bootstrap gray primitives (--ds-gray-100–900) mapped to semantic tokens.
           Two type steps on canvas: fg + muted. Toggle light/dark in the toolbar.
         </p>
@@ -210,7 +210,7 @@ function PalettePage() {
               borderTop: "1px solid var(--ds-rule)",
             }}
           >
-            <p className="ds-type-meta">Canvas + rule</p>
+            <p className="ds-type-sm">Canvas + rule</p>
           </div>
           <div
             style={{
@@ -219,7 +219,7 @@ function PalettePage() {
               borderRadius: "var(--ds-radius-xl)",
             }}
           >
-            <p className="ds-type-muted-on-subtle">Muted on well</p>
+            <p className="ds-type-md ds-type--on-subtle">Muted on well</p>
           </div>
         </div>
       </Specimen>
@@ -232,7 +232,7 @@ function PalettePage() {
       </Specimen>
 
       <Specimen label="Text link" token="--ds-fg · --ds-link-underline">
-        <p className="ds-type-body" style={{ maxWidth: "none", margin: 0 }}>
+        <p className="ds-type-md" style={{ maxWidth: "none", margin: 0 }}>
           <TextLink href="#linkedin" external>
             LinkedIn
           </TextLink>
@@ -245,8 +245,8 @@ function PalettePage() {
 
       <Specimen label="Identity + rule" token="composed">
         <div className="ds-type-identity">
-          <p className="ds-type-strong">Harry Howe</p>
-          <p className="ds-type-subtle">Product Designer</p>
+          <p className="ds-type-lg">Harry Howe</p>
+          <p className="ds-type-md ds-type--muted">Product Designer</p>
         </div>
         <hr
           style={{
@@ -274,7 +274,7 @@ function PalettePage() {
           }}
         >
           <span
-            className="ds-type-meta"
+            className="ds-type-sm"
             style={{
               display: "grid",
               placeItems: "center",
@@ -286,7 +286,7 @@ function PalettePage() {
             ···
           </span>
           <span
-            className="ds-type-meta"
+            className="ds-type-sm"
             style={{
               display: "grid",
               placeItems: "center",
@@ -309,7 +309,7 @@ function BesideMockupPage() {
   return (
     <div style={{ padding: "1.5rem clamp(1rem, 3vw, 2.5rem) 3rem" }}>
       <p
-        className="ds-type-meta"
+        className="ds-type-sm"
         style={{ marginBottom: "var(--ds-type-gap)" }}
       >
         Context · case header beside gallery well
@@ -323,19 +323,8 @@ function BesideMockupPage() {
         }}
       >
         <div className="ds-type-identity">
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1fr) auto",
-              alignItems: "baseline",
-              gap: "var(--ds-type-gap)",
-              width: "100%",
-            }}
-          >
-            <p className="ds-type-strong">Basic Accounting</p>
-            <p className="ds-type-strong ds-type-tabular">2025</p>
-          </div>
-          <p className="ds-type-subtle">Housecall Pro · Trades</p>
+          <p className="ds-type-lg">Basic Accounting</p>
+          <p className="ds-type-md ds-type--muted">Housecall Pro · Trades</p>
         </div>
         <MockupCard style={{ minHeight: "22rem" }} />
       </div>

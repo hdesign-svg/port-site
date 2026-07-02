@@ -1,10 +1,8 @@
-.ds-type-strong,
-.ds-type-label,
-.ds-type-subtle,
-.ds-type-body,
-.ds-type-muted,
-.ds-type-muted-on-subtle,
-.ds-type-meta {
+/* Base — size sets scale; --muted / --on-subtle set color */
+
+.ds-type-sm,
+.ds-type-md,
+.ds-type-lg {
   font-family: var(--ds-font-family);
   font-style: normal;
   font-weight: var(--ds-weight-regular);
@@ -12,74 +10,37 @@
   font-feature-settings: var(--ds-type-features);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Primary emphasis — names, project titles, years */
-.ds-type-strong {
-  font-size: var(--ds-text-lead);
-  line-height: var(--ds-leading-strong);
-  letter-spacing: var(--ds-type-strong-tracking);
-  font-weight: var(--ds-weight-strong);
-  color: var(--ds-fg);
   text-wrap: wrap;
 }
 
-/* Section labels within copy — Role, Services */
-.ds-type-label {
-  font-size: var(--ds-text-lead);
-  line-height: var(--ds-leading-lead);
-  letter-spacing: var(--ds-type-strong-tracking);
+.ds-type-lg {
+  font-size: var(--ds-text-lg);
+  line-height: var(--ds-leading-lg);
+  letter-spacing: var(--ds-type-tracking-tight);
+  font-weight: var(--ds-weight-medium);
+  color: var(--ds-fg);
+}
+
+.ds-type-md {
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-leading-md);
+  color: var(--ds-fg);
+  max-width: var(--ds-type-measure);
+}
+
+.ds-type-sm {
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-leading-sm);
+  color: var(--ds-muted);
+}
+
+.ds-type--muted {
+  color: var(--ds-muted);
   font-weight: var(--ds-weight-regular);
-  color: var(--ds-muted);
-  text-wrap: wrap;
 }
 
-/* Secondary labels — role, org · domain */
-.ds-type-subtle {
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-ui);
-  letter-spacing: var(--ds-type-body-tracking);
-  color: var(--ds-muted);
-  text-wrap: wrap;
-}
-
-/* Primary copy — hero body, case study prose */
-.ds-type-body {
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-body);
-  letter-spacing: var(--ds-type-body-tracking);
-  color: var(--ds-fg);
-  max-width: var(--ds-type-measure);
-  text-wrap: wrap;
-}
-
-/* De-emphasized copy — outcomes, credits when secondary */
-.ds-type-muted {
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-body);
-  letter-spacing: var(--ds-type-body-tracking);
-  color: var(--ds-muted);
-  max-width: var(--ds-type-measure);
-  text-wrap: wrap;
-}
-
-/* De-emphasized copy on tinted surfaces */
-.ds-type-muted-on-subtle {
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-body);
-  letter-spacing: var(--ds-type-body-tracking);
+.ds-type--on-subtle {
   color: var(--ds-muted-on-subtle);
-  max-width: var(--ds-type-measure);
-  text-wrap: wrap;
-}
-
-/* Micro labels — dock tooltips */
-.ds-type-meta {
-  font-size: var(--ds-text-meta);
-  line-height: var(--ds-leading-meta);
-  letter-spacing: var(--ds-type-meta-tracking);
-  color: var(--ds-muted);
-  text-wrap: wrap;
 }
 
 /* Stacked copy blocks */
@@ -92,7 +53,7 @@
   gap: var(--ds-type-gap);
 }
 
-/* Name + title, case header title + label */
+/* Name + title, case header */
 .ds-type-identity {
   display: flex;
   flex-direction: column;
@@ -102,19 +63,11 @@
   max-width: 100%;
 }
 
-.ds-type-identity .ds-type-strong,
-.ds-type-identity .ds-type-subtle {
-  line-height: var(--ds-leading-identity);
-  letter-spacing: var(--ds-type-strong-tracking);
-}
-
-.ds-type-identity > .portfolio__meta-row {
-  line-height: var(--ds-leading-identity);
-}
-
-.ds-type-identity > .portfolio__meta-row .ds-type-strong {
-  line-height: var(--ds-leading-identity);
-  letter-spacing: var(--ds-type-strong-tracking);
+.ds-type-identity .ds-type-lg,
+.ds-type-identity .ds-type-md {
+  line-height: var(--ds-leading-tight);
+  letter-spacing: var(--ds-type-tracking-tight);
+  max-width: none;
 }
 
 /* Hero blurb zones — paragraphs, credits, links */

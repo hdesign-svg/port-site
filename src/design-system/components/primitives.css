@@ -5,7 +5,7 @@
   gap: var(--ds-space-2);
   font-family: var(--ds-font-family);
   font-weight: 500;
-  line-height: var(--ds-leading-body);
+  line-height: var(--ds-leading-md);
   border-radius: var(--ds-radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
@@ -27,12 +27,12 @@
 }
 
 .ds-button--sm {
-  font-size: var(--ds-text-meta);
+  font-size: var(--ds-text-sm);
   padding: var(--ds-space-1) var(--ds-space-3);
 }
 
 .ds-button--md {
-  font-size: var(--ds-text-body);
+  font-size: var(--ds-text-md);
   padding: var(--ds-space-2) var(--ds-space-4);
 }
 
@@ -78,15 +78,15 @@
 .ds-surface__title {
   margin: 0;
   font-family: var(--ds-font-family);
-  font-size: var(--ds-text-body);
-  font-weight: var(--ds-weight-strong);
-  line-height: var(--ds-leading-strong);
+  font-size: var(--ds-text-md);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-leading-lg);
 }
 
 .ds-surface__body {
   margin: var(--ds-space-2) 0 0;
   font-family: var(--ds-font-family);
-  font-size: var(--ds-text-meta);
-  line-height: var(--ds-leading-meta);
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-leading-sm);
   color: var(--ds-muted);
 }

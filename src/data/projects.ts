@@ -100,13 +100,18 @@ export const projects: Project[] = [
     outcomes: ["Kept associates in-platform", "$mm protected in contract renewals"],
     images: [
       {
-        src: "/images/concierge-screenshot.png",
-        alt: "Concierge Conversations messaging thread",
+        src: "/images/mindvalley-light.png",
+        alt: "Mindvalley Discover programs screen",
         device: "phone",
       },
       {
-        src: "/images/concierge-screenshot.png",
-        alt: "Concierge Conversations product sharing flow",
+        src: "/images/mindvalley-light.png",
+        alt: "Mindvalley trending programs carousel",
+        device: "phone",
+      },
+      {
+        src: "/images/mindvalley-light.png",
+        alt: "Mindvalley popular programs screen",
         device: "phone",
       },
     ],
@@ -128,13 +133,18 @@ export const projects: Project[] = [
     ],
     images: [
       {
-        src: "/images/concierge-screenshot.png",
-        alt: "Concierge AI hydration summary screen",
+        src: "/images/moonly-dark.png",
+        alt: "Moonly lunar calendar screen",
         device: "phone",
       },
       {
-        src: "/images/concierge-screenshot.png",
-        alt: "Concierge AI customer outreach screen",
+        src: "/images/moonly-dark.png",
+        alt: "Moonly moon phase calendar",
+        device: "phone",
+      },
+      {
+        src: "/images/moonly-dark.png",
+        alt: "Moonly lunar activity categories",
         device: "phone",
       },
     ],
@@ -163,6 +173,11 @@ export const projects: Project[] = [
       {
         src: "/images/concierge-screenshot.png",
         alt: "Concierge Platform associate home screen",
+        device: "phone",
+      },
+      {
+        src: "/images/concierge-screenshot.png",
+        alt: "Concierge Platform customer task list",
         device: "phone",
       },
     ],

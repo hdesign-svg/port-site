@@ -1,42 +1,29 @@
-/* Portfolio v2 typography — Geist Sans, 15/13 scale, size + color hierarchy */
+/* Portfolio v2 typography — 3 sizes, muted modifier */
 
 :root,
 [data-theme="light"] {
   --ds-font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Size ramp — compressed editorial */
-  --ds-text-meta: 12px;
-  --ds-text-body: 13px;
-  --ds-text-lead: 15px;
+  /* Size ramp */
+  --ds-text-sm: 12px;
+  --ds-text-md: 13px;
+  --ds-text-lg: 15px;
 
-  --ds-leading-meta: 16px;
-  --ds-leading-body: 20px;
-  --ds-leading-lead: 22px;
-  --ds-leading-ui: 20px;
-  --ds-leading-strong: 22px;
-  --ds-leading-identity: 18px;
-  --ds-identity-line-gap: 4px;
+  --ds-leading-sm: 16px;
+  --ds-leading-md: 20px;
+  --ds-leading-lg: 22px;
+  --ds-leading-tight: 18px;
 
   --ds-weight-regular: 400;
   --ds-weight-medium: 500;
-  --ds-weight-strong: 500;
 
-  --ds-type-strong-tracking: -0.01em;
-  --ds-type-body-tracking: 0;
-  --ds-type-meta-tracking: 0.01em;
+  --ds-type-tracking-tight: -0.01em;
   --ds-type-link-underline-offset: 3px;
-  --ds-type-measure: 42ch;
+  --ds-type-measure: 34ch;
   --ds-type-features: "kern" 1, "liga" 1, "calt" 1;
 
-  /* Vertical rhythm — aligns with 24px layout stack */
-  --ds-type-rhythm: 20px;
+  --ds-identity-line-gap: 4px;
   --ds-type-gap-tight: 12px;
   --ds-type-gap: 24px;
   --ds-type-gap-block: 40px;
-}
-
-[data-theme="dark"] {
-  --ds-weight-regular: 400;
-  --ds-weight-medium: 500;
-  --ds-weight-strong: 500;
 }

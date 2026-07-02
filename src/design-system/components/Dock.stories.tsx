@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import {
   Dock,
   DockAnchor,
-  PlatformFilter,
-  ScrollToTop,
   dockScrollBehavior,
   type DockFilter,
 } from "./Dock";
@@ -136,9 +134,9 @@ function DockDemoPage({ initialScroll = 0 }: { initialScroll?: number }) {
           className="ds-type-stack"
           style={{ marginBottom: "var(--ds-type-gap)", maxWidth: "38ch" }}
         >
-          <p className="ds-type-strong">Harry Howe</p>
-          <p className="ds-type-subtle">Product Designer</p>
-          <p className="ds-type-body">
+          <p className="ds-type-lg">Harry Howe</p>
+          <p className="ds-type-md ds-type--muted">Product Designer</p>
+          <p className="ds-type-md">
             Scroll to fill the progress ring. Filter dims non-matching work and
             scrolls the first match into view.
           </p>
@@ -167,11 +165,11 @@ function DockDemoPage({ initialScroll = 0 }: { initialScroll?: number }) {
                 }}
               >
                 <div className="ds-type-stack--loose ds-type-stack">
-                  <p className="ds-type-meta">
+                  <p className="ds-type-sm">
                     {project.company} · 2025 · {project.platform}
                   </p>
-                  <p className="ds-type-strong">{project.title}</p>
-                  <p className="ds-type-body">
+                  <p className="ds-type-lg">{project.title}</p>
+                  <p className="ds-type-md">
                     Project copy sits in the sticky column beside the mockup rail
                     on the live site.
                   </p>
@@ -200,7 +198,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          "Platform filter and scroll-to-top as separate surfaces, side by side in DockAnchor.",
+          "Unified dock with text platform filters, icon theme tabs, and scroll-to-top.",
       },
     },
   },
@@ -245,8 +243,7 @@ export const Static: Story = {
         className="ds-dock-anchor"
         style={{ position: "static", padding: 0 }}
       >
-        <PlatformFilter filter={filter} onFilterChange={setFilter} />
-        <ScrollToTop />
+        <Dock filter={filter} onFilterChange={setFilter} />
       </div>
     );
   },

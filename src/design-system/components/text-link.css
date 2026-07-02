@@ -1,13 +1,13 @@
 .ds-text-link {
   display: inline;
   font-family: var(--ds-font-family);
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-body);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-leading-md);
   font-weight: var(--ds-weight-regular);
   font-style: normal;
-  letter-spacing: var(--ds-type-body-tracking);
+  letter-spacing: 0;
   font-feature-settings: var(--ds-type-features);
-  color: var(--ds-fg);
+  color: var(--ds-muted);
   text-decoration: underline;
   text-decoration-color: var(--ds-link-underline);
   text-underline-offset: var(--ds-type-link-underline-offset);
