@@ -20,6 +20,8 @@ export type LightboxOrigin = {
 export type LightboxState = {
   image: ProjectImage;
   origin: LightboxOrigin;
+  /** Identifies the source shot so it can hide while the flight is open. */
+  sourceId: string;
 };
 
 type PortfolioLightboxProps = {

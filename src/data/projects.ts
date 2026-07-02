@@ -38,8 +38,9 @@ export const projects: Project[] = [
     year: "2025",
     platform: "web",
     description: [
-      "Designed a self-serve accounting experience for a new DIY accounting offering.",
-      "For home service professionals with simpler accounting needs, simplifying transaction review and reporting.",
+      "At Housecall Pro, I led the design of a new self-serve accounting experience for home service professionals managing their own books.",
+      "Transaction review, categorization, and reporting came together in a streamlined workflow that helped business owners confidently prepare tax-ready books on their own.",
+      "Early testing validated the experience, giving Housecall Pro confidence in a new self-serve accounting offering.",
     ],
     images: [
       {
@@ -62,8 +63,9 @@ export const projects: Project[] = [
     year: "2025",
     platform: "web",
     description: [
-      "Redesigned activation after funnel analysis revealed users were dropping off before seeing the product.",
-      "Built for home service professionals evaluating fintech products before commitment.",
+      "At Housecall Pro, I owned the design of the activation experience for home service professionals unlocking financial tools.",
+      "A new unlock pattern helped business owners understand what they were unlocking before deciding to activate it, replacing a gated flow with a more guided experience.",
+      "The redesign increased activation from 3% to 16% and became the new unlock pattern across the platform.",
     ],
     images: [
       {
@@ -91,8 +93,9 @@ export const projects: Project[] = [
     year: "2024",
     platform: "mobile",
     description: [
-      "Reimagined customer messaging through strategy, workflow design, and delivery as part of the Concierge platform overhaul.",
-      "Helping retail associates manage customer relationships through modern messaging, product sharing, and AI-assisted writing.",
+      "At Mad Mobile, I led 0 → 1 design for a new messaging experience that became the communication hub for Concierge. Retail associates could manage conversations, share products, organize customer segments, and keep everything in one place.",
+      "I helped shape the product strategy by bringing AI directly into messaging, allowing associates to rewrite, personalize, and send messages without leaving their workflow.",
+      "The redesign gave retail associates fewer reasons to leave Concierge, helping brands keep customer communication, sales activity, and relationship data in one place.",
     ],
     images: [
       {
@@ -121,7 +124,7 @@ export const projects: Project[] = [
     platform: "mobile",
     description: [
       "At Mad Mobile, I led 0 → 1 design for an agent experience used by retail associates at brands including Tractor Supply, Estée Lauder, and Talbots.",
-      "I designed the agent around the platform's system model so it could understand customers, recommend products, and handle personalized communication.",
+      "I designed the agent around the platform's object model so it could understand customers, recommend products, and handle personalized communication.",
       "The result reduced task time by 75%, giving retail associates more time to build relationships and drive sales.",
     ],
     images: [
@@ -151,7 +154,7 @@ export const projects: Project[] = [
     platform: "mobile",
     description: [
       "At Mad Mobile, I led 0 → 1 design for the Concierge platform, rebuilding a clienteling product used by retailers including Ralph Lauren, Urban Outfitters, and Pandora.",
-      "I helped shape the product strategy, then led the redesign from system modeling through delivery to create a stronger foundation for the product.",
+      "I helped shape the product strategy, then led the redesign from object modeling through delivery to create a stronger foundation for the product.",
       "The redesign secured contract renewals, increased customer satisfaction by 10%, and helped put the product back on a path to growth.",
     ],
     images: [

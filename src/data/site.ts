@@ -4,8 +4,8 @@ export const site = {
   tagline:
     "Designed for web and mobile for 8 years. Systems under the hood, experiences people can trust.",
   heroBody: [
-    "I'm a product designer who's been at this for 8 years. I've worked across fintech, retail, the trades, and personal projects. No matter the domain, I take complexity and make experiences feel predictable, connected, and valuable.",
-    "I specialize in system modeling and interface craft. I start with a product's underlying structure because it's what gives everything else shape. When the foundation is right, the interface becomes a reflection of the way people naturally think.",
+    "I'm a product designer, 8 years in. I've worked across fintech, retail, the trades, and personal projects. No matter the domain, I take complexity and make experiences feel predictable, connected, and valuable.",
+    "I specialize in modeling systems and refining interfaces. I start with what's under the hood. When the foundation is right, the interface becomes a reflection of the way people naturally think.",
   ],
   heroEmployers: [
     { name: "Housecall Pro", href: "https://www.housecallpro.com" },

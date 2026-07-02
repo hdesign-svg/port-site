@@ -3,7 +3,10 @@
 import { Fragment, useEffect, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
-import { PortfolioLightbox, type LightboxState } from "@/components/portfolio/PortfolioLightbox";
+import {
+  PortfolioLightbox,
+  type LightboxState,
+} from "@/components/portfolio/PortfolioLightbox";
 import { PortfolioProject } from "@/components/portfolio/PortfolioProject";
 import {
   Dock,
@@ -46,7 +49,10 @@ export function PortfolioHome() {
             <PortfolioProject
               project={project}
               dimmed={!projectMatchesFilter(project, filter)}
-              onImageClick={(image, origin) => setLightbox({ image, origin })}
+              activeSourceId={lightbox?.sourceId ?? null}
+              onImageClick={(image, origin, sourceId) =>
+                setLightbox({ image, origin, sourceId })
+              }
             />
           </Fragment>
         ))}
