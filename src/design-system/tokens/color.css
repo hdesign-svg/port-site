@@ -55,20 +55,16 @@
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent),
     0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 3%, transparent);
 
-  /* Material dock — frosted glass shell, solid active pill */
-  --ds-dock-bg: color-mix(in srgb, var(--ds-gray-100) 78%, transparent);
-  --ds-dock-border: color-mix(in srgb, var(--ds-gray-900) 9%, transparent);
-  --ds-dock-fg: var(--ds-gray-900);
-  --ds-dock-muted: color-mix(in srgb, var(--ds-gray-900) 52%, transparent);
-  --ds-dock-backdrop: blur(20px) saturate(1.45);
-  --ds-dock-tab-active-bg: var(--ds-gray-900);
+  /* Inverted dock — solid dark chip on light canvas */
+  --ds-dock-bg: var(--ds-gray-900);
+  --ds-dock-border: var(--ds-gray-800);
+  --ds-dock-fg: var(--ds-gray-100);
+  --ds-dock-muted: var(--ds-gray-500);
+  --ds-dock-tab-active-bg: color-mix(in srgb, var(--ds-gray-100) 14%, transparent);
   --ds-dock-tab-active-fg: var(--ds-gray-100);
-  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-900) 7%, transparent);
-  --ds-dock-tooltip-bg: color-mix(in srgb, var(--ds-gray-100) 88%, transparent);
-  --ds-dock-tooltip-fg: var(--ds-gray-900);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-100) 10%, transparent);
   --ds-dock-shadow:
-    0 8px 28px color-mix(in srgb, var(--ds-gray-900) 10%, transparent),
-    0 1px 0 color-mix(in srgb, var(--ds-gray-100) 65%, transparent) inset;
+    0 4px 20px color-mix(in srgb, var(--ds-gray-900) 20%, transparent);
 }
 
 [data-theme="dark"] {

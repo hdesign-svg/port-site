@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" className="h-full" data-theme="light" suppressHydrationWarning>
       <body className="portfolio min-h-full">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: scrollInitScript }} />

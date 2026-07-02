@@ -1,4 +1,4 @@
-/* Bottom chrome — material glass dock + scroll-to-top */
+/* Bottom chrome — solid inverted dock + scroll-to-top */
 
 .ds-dock-surface {
   background: var(--ds-dock-bg);
@@ -7,31 +7,15 @@
   box-shadow: var(--ds-dock-shadow);
   box-sizing: border-box;
   color: var(--ds-dock-fg);
-  backdrop-filter: var(--ds-dock-backdrop);
-  -webkit-backdrop-filter: var(--ds-dock-backdrop);
 }
 
-/* Unified dock — text filters + icon theme */
+/* Unified dock — text platform filters */
 .ds-dock {
   display: inline-flex;
   align-items: center;
   gap: var(--ds-dock-tab-gap);
   padding: var(--ds-dock-tab-inset);
   max-width: 100%;
-}
-
-.ds-dock__group {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ds-dock-tab-gap);
-}
-
-.ds-dock__divider {
-  flex-shrink: 0;
-  align-self: stretch;
-  width: 1px;
-  margin-block: 2px;
-  background: var(--ds-dock-border);
 }
 
 .ds-dock__option {
@@ -63,13 +47,6 @@
   white-space: nowrap;
 }
 
-.ds-dock__icon-option {
-  display: grid;
-  place-items: center;
-  width: var(--ds-dock-tab-size);
-  padding: 0;
-}
-
 .ds-dock__option:hover:not(.ds-dock__option--active) {
   color: var(--ds-dock-fg);
   background: var(--ds-dock-tab-hover-fill);
@@ -83,59 +60,6 @@
 .ds-dock__option:focus-visible {
   outline: 2px solid var(--ds-dock-fg);
   outline-offset: 1px;
-}
-
-.ds-dock__tooltip {
-  position: absolute;
-  bottom: calc(100% + var(--ds-space-2));
-  z-index: 1;
-  padding: var(--ds-dock-tooltip-pad-block) var(--ds-dock-tooltip-pad-inline);
-  border-radius: var(--ds-dock-tooltip-radius);
-  font-family: var(--ds-font-family);
-  font-size: var(--ds-text-sm);
-  line-height: var(--ds-dock-tooltip-leading);
-  font-weight: var(--ds-weight-regular);
-  white-space: nowrap;
-  pointer-events: none;
-  color: var(--ds-dock-tooltip-fg);
-  background: var(--ds-dock-tooltip-bg);
-  border: 1px solid var(--ds-dock-border);
-  box-shadow: var(--ds-dock-shadow);
-  backdrop-filter: var(--ds-dock-backdrop);
-  -webkit-backdrop-filter: var(--ds-dock-backdrop);
-  opacity: 0;
-  visibility: hidden;
-  translate: 0 0.125rem;
-  transition:
-    opacity var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
-    translate var(--ds-dropdown-close-dur) var(--ds-dropdown-ease),
-    visibility 0s var(--ds-dropdown-close-dur);
-}
-
-.ds-dock__tooltip--start {
-  left: 0;
-}
-
-.ds-dock__tooltip--end {
-  right: 0;
-  left: auto;
-}
-
-.ds-dock__icon-option:hover .ds-dock__tooltip,
-.ds-dock__icon-option:focus-visible .ds-dock__tooltip {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
-    translate var(--ds-dropdown-open-dur) var(--ds-dropdown-ease),
-    visibility 0s;
-}
-
-.ds-dock__icon-option:hover .ds-dock__tooltip--start,
-.ds-dock__icon-option:focus-visible .ds-dock__tooltip--start,
-.ds-dock__icon-option:hover .ds-dock__tooltip--end,
-.ds-dock__icon-option:focus-visible .ds-dock__tooltip--end {
-  translate: 0 0;
 }
 
 /* Scroll-to-top */
@@ -234,32 +158,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ds-dock__option,
-  .ds-dock__tooltip,
   .ds-scroll-to-top,
   .ds-scroll-to-top__progress,
   .ds-dock-story__project {
     transition: none;
-  }
-
-  .ds-dock__tooltip {
-    translate: 0 0;
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .ds-dock-surface,
-  .ds-dock__tooltip {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
-  [data-theme="light"] .ds-dock-surface,
-  [data-theme="light"] .ds-dock__tooltip {
-    background: var(--ds-gray-100);
-  }
-
-  [data-theme="dark"] .ds-dock-surface,
-  [data-theme="dark"] .ds-dock__tooltip {
-    background: var(--ds-gray-850);
   }
 }

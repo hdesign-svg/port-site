@@ -9,19 +9,15 @@ export function PortfolioHero() {
       <div className="portfolio__section-inner">
         <div className="portfolio__copy">
           <header className="portfolio__hero-header">
-            <div className="portfolio__hero-identity">
-              <Image
-                src="/images/profile.jpg"
-                alt=""
-                width={36}
-                height={36}
-                className="portfolio__avatar"
-                priority
-              />
-              <div className="portfolio__hero-names ds-type-identity">
-                <p className="ds-type-lg">{site.name}</p>
-              </div>
-            </div>
+            <Image
+              src="/images/profile.jpg"
+              alt=""
+              width={36}
+              height={36}
+              className="portfolio__avatar"
+              priority
+            />
+            <p className="ds-type-lg">{site.name}</p>
           </header>
 
           <div className="portfolio__hero-blurb ds-type-stack--sectioned">
@@ -31,8 +27,33 @@ export function PortfolioHero() {
                   {paragraph}
                 </p>
               ))}
+              <p className="ds-type-md">
+                I&apos;ve brought that approach to{" "}
+                {site.heroEmployers.map((employer, index) => {
+                  const isLast = index === site.heroEmployers.length - 1;
+                  const isSecondToLast =
+                    index === site.heroEmployers.length - 2;
+                  const separator =
+                    isLast
+                      ? null
+                      : isSecondToLast
+                        ? site.heroEmployers.length === 2
+                          ? " and "
+                          : ", and "
+                        : ", ";
+
+                  return (
+                    <span key={employer.name}>
+                      <TextLink href={employer.href} external>
+                        {employer.name}
+                      </TextLink>
+                      {separator}
+                    </span>
+                  );
+                })}
+                {site.heroExperienceTail}
+              </p>
             </div>
-            <p className="ds-type-md">{site.previousRoles}</p>
             <div className="portfolio__links">
               <TextLink href={site.linkedin} external>
                 LinkedIn

@@ -1,7 +1,7 @@
 export type Theme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "theme";
-export const DEFAULT_THEME: Theme = "dark";
+export const DEFAULT_THEME: Theme = "light";
 
 export function parseTheme(value: string | null | undefined): Theme | null {
   if (value === "light" || value === "dark") return value;
@@ -47,19 +47,6 @@ export function applyThemeWithTransition(
 
 export const themeInitScript = `
 (function () {
-  try {
-    var params = new URLSearchParams(window.location.search);
-    var fromQuery = params.get("theme");
-    var fromStorage = localStorage.getItem("${THEME_STORAGE_KEY}");
-    var theme =
-      fromQuery === "dark" || fromQuery === "light"
-        ? fromQuery
-        : fromStorage === "dark" || fromStorage === "light"
-          ? fromStorage
-          : "${DEFAULT_THEME}";
-    document.documentElement.dataset.theme = theme;
-  } catch (e) {
-    document.documentElement.dataset.theme = "${DEFAULT_THEME}";
-  }
+  document.documentElement.dataset.theme = "light";
 })();
 `;

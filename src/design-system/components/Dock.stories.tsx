@@ -198,7 +198,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          "Unified dock with text platform filters, icon theme tabs, and scroll-to-top.",
+          "Platform filter dock with text tabs and scroll-to-top.",
       },
     },
   },

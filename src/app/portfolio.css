@@ -69,20 +69,15 @@
 /* Hero */
 .portfolio__hero-header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--portfolio-gap-sm);
 }
 
-.portfolio__hero-identity {
-  display: flex;
-  align-items: center;
-  gap: var(--ds-space-3);
-  min-width: 0;
-}
-
-.portfolio__hero-names {
-  min-width: 0;
-  text-align: left;
+.portfolio__hero-header .ds-type-lg {
+  line-height: var(--ds-leading-tight);
+  letter-spacing: var(--ds-type-tracking-tight);
+  max-width: none;
 }
 
 .portfolio__hero-blurb .ds-type-md {
