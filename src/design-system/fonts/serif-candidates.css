@@ -1,0 +1,11 @@
+/* Dev — serif candidates for the type exploration (/dev/bg-compare).
+ * The actual @font-face CSS is loaded via <link> in the dev page
+ * (src/app/dev/bg-compare/page.tsx) because Tailwind v4 / Lightning CSS
+ * strips external @import rules. These are just the family-name tokens. */
+:root {
+  --ds-font-spectral: "Spectral", Georgia, "Times New Roman", serif;
+  --ds-font-newsreader: "Newsreader", Georgia, "Times New Roman", serif;
+  --ds-font-source-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ds-font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --ds-font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
