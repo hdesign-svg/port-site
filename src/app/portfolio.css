@@ -1,12 +1,16 @@
 .portfolio {
-  /* Compressed, image-led. Media + dividers run a generous 42rem (672px) so
-   * screenshots are the hero; copy wraps at a tight 29rem so 14px Geist stays a
-   * comfortable ~74 CPL. The narrow copy against wide media is the editorial,
-   * considered proportion (cf. cogito.md). */
+  /* Speed Dial model — the image rail is sized to exactly three phones abreast.
+   * Reference phones read ~232px each; with a tight column gap that lands the
+   * media rail at ~46rem. Copy wraps narrower than the images (Speed Dial's
+   * editorial balance): a compressed ~34rem measure so the prose reads calm and
+   * premium rather than stretched to the full image width. */
   --portfolio-page-margin: clamp(1.25rem, 4vw, 2.5rem);
   --portfolio-page-inset: var(--portfolio-page-margin);
-  --portfolio-content-max: 42rem;
-  --portfolio-copy-max: 29rem;
+  /* Three phones + two column gaps. Phone col gap is --portfolio-phone-gap. */
+  --portfolio-phone-gap: 1.25rem;
+  --portfolio-content-max: 46rem;
+  /* One unified rail — copy, images, and divider all share this single width. */
+  --portfolio-copy-max: var(--portfolio-content-max);
   --portfolio-media-max: var(--portfolio-content-max);
   /* Vertical cadence — three semantic steps, decoupled so between-project
    * and within-project rhythm tune independently.
@@ -16,15 +20,19 @@
   --portfolio-section-gap: 4.5rem;
   --portfolio-copy-media-gap: 3rem;
   --portfolio-block-gap: 1.5rem;
+  /* Separator spans the media rail (three phones), matching the images. */
+  --portfolio-divider-width: var(--portfolio-media-max);
   /* Air between stacked shots — larger than the block gap so each shot reads as
    * its own object, not a strip. */
   --portfolio-shot-gap: 2.25rem;
-  /* Restrained radii, nudged up a touch. Caps at oklch's 12px so big desktop
-   * shots stay crisp, not bubbly. */
-  --portfolio-shot-radius-sm: 10px;
-  --portfolio-shot-radius-md: 11px;
-  --portfolio-shot-radius-lg: 12px;
+  /* Speed Dial radii — higher, softer corners. Desktop shots step up to 16px;
+   * phones get their own, rounder radius so the mockups read like devices. */
+  --portfolio-shot-radius-sm: 12px;
+  --portfolio-shot-radius-md: 14px;
+  --portfolio-shot-radius-lg: 16px;
   --portfolio-shot-radius: var(--portfolio-shot-radius-sm);
+  /* Phone mockups carry a rounder corner than desktop shots. */
+  --portfolio-phone-radius: 22px;
   /* Experiment: no mat — screenshot sits directly in its frame with just a
    * border + shadow (no outer ring/double-edge). */
   --portfolio-shot-pad: 0px;
@@ -34,16 +42,17 @@
    * reads as the border, then a tight contact + short ambient layer lift the
    * white surface off the near-white page. Low opacities keep it clean, never
    * muddy. shadow-key stays palette-neutral (near-black). */
-  /* Border (inner hairline on the frame) + a whisper of a shadow — just enough
-   * contact + ambient to lift the shot off the page without reading as elevated. */
+  /* Speed Dial elevation — a realistic drop shadow: a tight contact layer, a
+   * soft mid diffusion, and a wide ambient cast so the mockups feel like they
+   * rest on the page and lift off it. Opacities stay low so it reads refined,
+   * never heavy. shadow-key stays palette-neutral (near-black). */
   --portfolio-shot-shadow:
-    0 1px 2px -1px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
-    0 3px 8px -3px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent);
-  /* Inner edge on the frame — more prominent than the outer ring (but still
-   * subtle). This is the crisp line that defines the white content; the
-   * page-colored mat between the two edges is what refines the separation. */
+    0 1px 2px -1px color-mix(in srgb, var(--ds-shadow-key) 8%, transparent),
+    0 6px 14px -6px color-mix(in srgb, var(--ds-shadow-key) 12%, transparent),
+    0 16px 32px -14px color-mix(in srgb, var(--ds-shadow-key) 10%, transparent);
+  /* Subtle hairline edge that defines the white surface against the page. */
   --portfolio-shot-hairline: inset 0 0 0 1px
-    color-mix(in srgb, var(--ds-fg) 11%, transparent);
+    color-mix(in srgb, var(--ds-fg) 8%, transparent);
 
   /* On-load reveal — focus-in blur, fine-grained top-down stagger */
   --portfolio-reveal-dur: 800ms;
@@ -135,7 +144,7 @@
 
 .portfolio__divider {
   flex-shrink: 0;
-  width: 100%;
+  width: var(--portfolio-divider-width);
   height: 0;
   margin-block: var(--portfolio-section-gap);
   margin-inline: auto;
@@ -147,11 +156,9 @@
 @media (min-width: 48rem) {
   .portfolio__copy {
     width: min(100%, var(--portfolio-copy-max));
+    /* Left edge aligns with the image rail; copy simply wraps sooner on the
+     * right for a narrower, premium measure. */
     align-self: flex-start;
-  }
-
-  .portfolio__divider {
-    width: min(100%, var(--portfolio-media-max));
   }
 }
 
@@ -161,6 +168,29 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--portfolio-block-gap);
+}
+
+/* Framing row — avatar marks the left rail edge, signature the right. Spanning
+ * the full copy width, the pair brackets the column and establishes the rails
+ * the moment the page loads. */
+.portfolio__hero-mark {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--portfolio-block-gap);
+}
+
+/* Fake signature placeholder — a hand-drawn vector mark (SVG). Painted via a
+ * mask so it inherits the palette ink (--ds-fg) rather than baking a color. */
+.portfolio__signature {
+  width: 8.5rem;
+  aspect-ratio: 320 / 110;
+  flex-shrink: 0;
+  background-color: var(--ds-fg);
+  -webkit-mask: url("/images/signature.svg") center / contain no-repeat;
+  mask: url("/images/signature.svg") center / contain no-repeat;
+  user-select: none;
 }
 
 .portfolio__hero-header .ds-type-lg {
@@ -241,10 +271,10 @@
 
 .portfolio__phone-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  /* Row gap matches the stacked-shot air; column gap stays tighter so pairs
-   * still read as a set. */
-  gap: var(--portfolio-shot-gap) var(--portfolio-block-gap);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Row gap matches the stacked-shot air; column gap defines the media rail math
+   * (rail = 3 phones + 2 of these gaps). */
+  gap: var(--portfolio-shot-gap) var(--portfolio-phone-gap);
   width: 100%;
 }
 
@@ -308,6 +338,11 @@
   border-radius: inherit;
   box-shadow: var(--portfolio-shot-hairline);
   pointer-events: none;
+}
+
+.portfolio__shot--phone,
+.portfolio__shot-frame--phone {
+  border-radius: var(--portfolio-phone-radius);
 }
 
 .portfolio__shot-frame--phone {
@@ -593,45 +628,42 @@
 
 .portfolio .ds-type-lg {
   font-family: var(--lab-font-heading, var(--ds-font-family));
+  /* Spectral heading — 600 reads elegant and compressed at this size, where a
+   * full 700 would feel heavy against the small Geist body. */
+  font-weight: 600;
+  color: var(--ds-fg);
 }
 
-/* Portfolio type scale — a clean 3 steps for a compressed, scannable page.
- *   lg 22px : Spectral headings (name, project titles) — clear step over body
- *   md 16px : Geist body — comfortable measure, holds under 75 CPL at 34rem
- *   sm 13px : Geist labels, links, captions
- * Serif headings read optically larger, so 22px is enough separation without
- * breaking the compressed rhythm. */
+/* Speed Dial / elite-ui compressed scale — Spectral serif heading over a small
+ * Geist body. Hierarchy from size + family + color, kept tight:
+ *   heading : Spectral, 19px / 25px, 600, near-black (fg)
+ *   body    : Geist, 14px / 23px, regular, gray (--ds-body)
+ * The small body lets copy wrap at a narrow, premium measure while the images
+ * run wider (three-phone rail). */
 .portfolio {
-  --ds-text-sm: 12px;
+  --ds-text-sm: 12.5px;
   --ds-text-md: 14px;
-  --ds-text-lg: 16px;
-  --ds-leading-sm: 17px;
-  --ds-leading-md: 22px;
-  --ds-leading-lg: 22px;
-  --ds-leading-tight: 20px;
+  --ds-text-lg: 19px;
+  --ds-leading-sm: 18px;
+  --ds-leading-md: 23px;
+  --ds-leading-lg: 25px;
+  --ds-leading-tight: 25px;
 }
 
-/* Serif body: same 16px measure as sans (keeps CPL under 75 at the copy rail),
- * just a touch more line-height for the serif's larger x-height + descenders.
+/* Serif body: nudge line-height for the serif's larger x-height + descenders.
  * Selector targets the portfolio element itself — in the lab, .portfolio is the
  * <body> that carries the data-face-body attribute, so a descendant combinator
  * would never match. */
 .portfolio[data-face-body="spectral"],
 .portfolio[data-face-body="newsreader"],
 .portfolio[data-face-body="source-serif"] {
-  --ds-text-sm: 12px;
-  --ds-text-md: 15px;
-  --ds-text-lg: 16px;
-  --ds-leading-sm: 17px;
+  --ds-text-sm: 12.5px;
+  --ds-text-md: 14px;
+  --ds-text-lg: 19px;
+  --ds-leading-sm: 18px;
   --ds-leading-md: 24px;
-  --ds-leading-lg: 22px;
-  --ds-leading-tight: 20px;
-}
-
-/* Newsreader packs more glyphs per em; tighten its measure so it also holds
- * under 75 CPL at the copy rail. */
-.portfolio[data-face-body="newsreader"] {
-  --portfolio-copy-max: 27rem;
+  --ds-leading-lg: 25px;
+  --ds-leading-tight: 25px;
 }
 
 .bg-compare__options {

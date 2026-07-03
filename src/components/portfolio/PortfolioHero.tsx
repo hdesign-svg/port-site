@@ -16,7 +16,7 @@ export function PortfolioHero({ revealOffset = 0 }: PortfolioHeroProps) {
         <div className="portfolio__copy">
           <header className="portfolio__hero-header">
             <div
-              className="portfolio__reveal"
+              className="portfolio__hero-mark portfolio__reveal"
               style={portfolioRevealStyle(revealOffset)}
             >
               <Image
@@ -26,6 +26,11 @@ export function PortfolioHero({ revealOffset = 0 }: PortfolioHeroProps) {
                 height={36}
                 className="portfolio__avatar"
                 priority
+              />
+              <span
+                className="portfolio__signature"
+                role="img"
+                aria-label={`${site.name} signature`}
               />
             </div>
             <p

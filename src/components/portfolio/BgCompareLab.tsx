@@ -181,14 +181,14 @@ const PALETTES: Palette[] = [
   },
   {
     id: "neutral",
-    label: "True neutral",
-    note: "oklch.fyi model — #fcfcfc page, pure-white surfaces that read brighter than the page, crisp neutral ink. White pops via elevation, not color.",
+    label: "True neutral (Speed Dial)",
+    note: "Speed Dial page — #fcfbfc off-white, pure-white surfaces that read brighter than the page, crisp neutral ink. White pops via elevation, not color.",
     tokens: {
-      /* Page sits just below white (#fcfcfc); surfaces are pure white so shots
-       * read brighter than the page and lift via the shadow ring. */
-      "--ds-bg": "oklch(0.986 0 0)",
-      "--ds-fg": "oklch(0.245 0 0)",
-      "--ds-body": "oklch(0.435 0 0)",
+      /* Speed Dial's page is rgb(252,251,252) ≈ #fcfbfc; surfaces are pure white
+       * so shots read brighter than the page and lift via the shadow. */
+      "--ds-bg": "oklch(0.987 0 0)",
+      "--ds-fg": "oklch(0.145 0 0)",
+      "--ds-body": "oklch(0.52 0 0)",
       "--ds-muted": "oklch(0.620 0 0)",
       "--ds-muted-on-subtle": "oklch(0.500 0 0)",
       "--ds-rule": "oklch(0.918 0 0)",
@@ -215,6 +215,25 @@ const PALETTES: Palette[] = [
       "--ds-surface": "oklch(1 0 0)",
       "--ds-surface-raised": "oklch(1 0 0)",
       "--ds-shadow-key": "oklch(0.18 0 0)",
+    },
+  },
+  {
+    id: "blue-grey",
+    label: "Blue-grey (greige's cool twin)",
+    note: "Greige's chroma ladder (0.018–0.026) on the blue axis (~250). A characterful cool blue-grey page; shot surfaces stay pure white so UI screenshots read clean.",
+    tokens: {
+      /* Mirrors the greige palette's lightness + chroma, hue rotated to blue. */
+      "--ds-bg": "oklch(0.963 0.018 250)",
+      "--ds-fg": "oklch(0.270 0.022 255)",
+      "--ds-body": "oklch(0.554 0.026 253)",
+      "--ds-muted": "oklch(0.760 0.020 250)",
+      "--ds-muted-on-subtle": "oklch(0.554 0.026 253)",
+      "--ds-rule": "oklch(0.900 0.020 250)",
+      "--ds-border": "oklch(0.856 0.026 250)",
+      "--ds-bg-subtle": "oklch(0.945 0.018 250)",
+      "--ds-surface": "oklch(1 0 0)",
+      "--ds-surface-raised": "oklch(1 0 0)",
+      "--ds-shadow-key": "oklch(0.30 0.026 255)",
     },
   },
   {
