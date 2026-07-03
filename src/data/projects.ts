@@ -44,12 +44,12 @@ export const projects: Project[] = [
     ],
     images: [
       {
-        src: "/images/plane-desktop.png",
+        src: "/images/grok-web.png",
         alt: "Basic Accounting transaction review workflow",
         device: "desktop",
       },
       {
-        src: "/images/plane-desktop.png",
+        src: "/images/grok-web.png",
         alt: "Basic Accounting reporting dashboard",
         device: "desktop",
       },
@@ -69,17 +69,17 @@ export const projects: Project[] = [
     ],
     images: [
       {
-        src: "/images/plane-desktop.png",
+        src: "/images/grok-web.png",
         alt: "HCP Money activation screen with feature carousel",
         device: "desktop",
       },
       {
-        src: "/images/plane-desktop.png",
+        src: "/images/grok-web.png",
         alt: "Expense module onboarding — business information step",
         device: "desktop",
       },
       {
-        src: "/images/plane-desktop.png",
+        src: "/images/grok-web.png",
         alt: "HCP Money overview after activation",
         device: "desktop",
       },

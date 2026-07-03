@@ -1,12 +1,12 @@
 .portfolio {
-  /* Compressed content column. Media + dividers run the full content width;
-   * copy wraps at a tighter measure so the line never exceeds ~75 CPL at 16px.
-   * Images stay big enough to read the UI; lightbox handles close inspection. */
+  /* Compressed, image-led. Media + dividers run a generous 42rem (672px) so
+   * screenshots are the hero; copy wraps at a tight 29rem so 14px Geist stays a
+   * comfortable ~74 CPL. The narrow copy against wide media is the editorial,
+   * considered proportion (cf. cogito.md). */
   --portfolio-page-margin: clamp(1.25rem, 4vw, 2.5rem);
   --portfolio-page-inset: var(--portfolio-page-margin);
-  --portfolio-content-max: 38rem;
-  /* Copy measure — capped so 16px Geist stays under 75 CPL (~72 at this width) */
-  --portfolio-copy-max: 32rem;
+  --portfolio-content-max: 42rem;
+  --portfolio-copy-max: 29rem;
   --portfolio-media-max: var(--portfolio-content-max);
   /* Vertical cadence — three semantic steps, decoupled so between-project
    * and within-project rhythm tune independently.
@@ -16,22 +16,34 @@
   --portfolio-section-gap: 4.5rem;
   --portfolio-copy-media-gap: 3rem;
   --portfolio-block-gap: 1.5rem;
-  --portfolio-shot-radius-sm: 11px;
-  --portfolio-shot-radius-md: 14px;
-  --portfolio-shot-radius-lg: 18px;
+  /* Air between stacked shots — larger than the block gap so each shot reads as
+   * its own object, not a strip. */
+  --portfolio-shot-gap: 2.25rem;
+  /* Restrained radii, nudged up a touch. Caps at oklch's 12px so big desktop
+   * shots stay crisp, not bubbly. */
+  --portfolio-shot-radius-sm: 10px;
+  --portfolio-shot-radius-md: 11px;
+  --portfolio-shot-radius-lg: 12px;
   --portfolio-shot-radius: var(--portfolio-shot-radius-sm);
+  /* Experiment: no mat — screenshot sits directly in its frame with just a
+   * border + shadow (no outer ring/double-edge). */
+  --portfolio-shot-pad: 0px;
   --portfolio-phone-mobile-max: 18rem;
   --portfolio-phone-mobile-gutter: 1rem;
-  /* Elevation = emphasis. On a near-white neutral, a crisp darker border does
-   * the separating and a subtle layered shadow (contact + short ambient, both
-   * negative-spread so they tuck under the edge) adds just enough lift. */
+  /* Elevation = emphasis, oklch.fyi model: a crisp hairline ring (0 spread)
+   * reads as the border, then a tight contact + short ambient layer lift the
+   * white surface off the near-white page. Low opacities keep it clean, never
+   * muddy. shadow-key stays palette-neutral (near-black). */
+  /* Border (inner hairline on the frame) + a whisper of a shadow — just enough
+   * contact + ambient to lift the shot off the page without reading as elevated. */
   --portfolio-shot-shadow:
-    0 1px 2px -1px color-mix(in srgb, var(--ds-shadow-key) 12%, transparent),
-    0 3px 6px -2px color-mix(in srgb, var(--ds-shadow-key) 9%, transparent),
-    0 8px 16px -6px color-mix(in srgb, var(--ds-shadow-key) 8%, transparent);
-  /* Crisp edge — darker + a touch thicker so white content reads off the page */
-  --portfolio-shot-hairline: inset 0 0 0 1.25px
-    color-mix(in srgb, var(--ds-fg) 13%, transparent);
+    0 1px 2px -1px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
+    0 3px 8px -3px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent);
+  /* Inner edge on the frame — more prominent than the outer ring (but still
+   * subtle). This is the crisp line that defines the white content; the
+   * page-colored mat between the two edges is what refines the separation. */
+  --portfolio-shot-hairline: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-fg) 11%, transparent);
 
   /* On-load reveal — focus-in blur, fine-grained top-down stagger */
   --portfolio-reveal-dur: 800ms;
@@ -221,7 +233,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--portfolio-block-gap);
+  gap: var(--portfolio-shot-gap);
   width: 100%;
   max-width: var(--portfolio-media-max);
   margin-block-start: var(--portfolio-copy-media-gap);
@@ -230,7 +242,9 @@
 .portfolio__phone-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--portfolio-block-gap);
+  /* Row gap matches the stacked-shot air; column gap stays tighter so pairs
+   * still read as a set. */
+  gap: var(--portfolio-shot-gap) var(--portfolio-block-gap);
   width: 100%;
 }
 
@@ -250,10 +264,10 @@
   display: block;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: var(--portfolio-shot-pad);
   border: none;
   border-radius: var(--portfolio-shot-radius);
-  background: transparent;
+  background: var(--ds-bg);
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -276,7 +290,8 @@
   display: block;
   width: 100%;
   overflow: hidden;
-  border-radius: inherit;
+  /* No mat — frame matches the shot radius directly. */
+  border-radius: var(--portfolio-shot-radius);
   background: var(--ds-surface);
 }
 
@@ -443,6 +458,70 @@
   color: var(--ds-fg);
 }
 
+.bg-compare__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+}
+
+.bg-compare__title--flush {
+  margin: 0;
+}
+
+.bg-compare__hide {
+  flex-shrink: 0;
+  padding: 2px var(--ds-space-2);
+  border: 1px solid color-mix(in srgb, var(--ds-fg) 12%, transparent);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--ds-muted);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-leading-sm);
+  cursor: pointer;
+}
+
+.bg-compare__hide:hover {
+  color: var(--ds-fg);
+  border-color: color-mix(in srgb, var(--ds-fg) 24%, transparent);
+}
+
+.bg-compare__hide:focus-visible {
+  outline: 2px solid var(--ds-fg);
+  outline-offset: 2px;
+}
+
+/* Collapsed state — small floating pill to bring the panel back */
+.bg-compare__show {
+  position: fixed;
+  top: var(--ds-space-3);
+  right: var(--ds-space-3);
+  z-index: 300;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border: 1px solid color-mix(in srgb, var(--ds-fg) 12%, transparent);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--ds-bg) 92%, var(--ds-fg) 8%);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: var(--ds-shadow-raised);
+  color: var(--ds-fg);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-leading-sm);
+  cursor: pointer;
+}
+
+.bg-compare__show:hover {
+  border-color: color-mix(in srgb, var(--ds-fg) 24%, transparent);
+}
+
+.bg-compare__show:focus-visible {
+  outline: 2px solid var(--ds-fg);
+  outline-offset: 2px;
+}
+
 .bg-compare__title--sub {
   margin-top: var(--ds-space-3);
   padding-top: var(--ds-space-3);
@@ -516,10 +595,20 @@
   font-family: var(--lab-font-heading, var(--ds-font-family));
 }
 
-/* Body copy sized for a comfortable measure (~75 CPL at the copy rail) */
+/* Portfolio type scale — a clean 3 steps for a compressed, scannable page.
+ *   lg 22px : Spectral headings (name, project titles) — clear step over body
+ *   md 16px : Geist body — comfortable measure, holds under 75 CPL at 34rem
+ *   sm 13px : Geist labels, links, captions
+ * Serif headings read optically larger, so 22px is enough separation without
+ * breaking the compressed rhythm. */
 .portfolio {
-  --ds-text-md: 16px;
-  --ds-leading-md: 26px;
+  --ds-text-sm: 12px;
+  --ds-text-md: 14px;
+  --ds-text-lg: 16px;
+  --ds-leading-sm: 17px;
+  --ds-leading-md: 22px;
+  --ds-leading-lg: 22px;
+  --ds-leading-tight: 20px;
 }
 
 /* Serif body: same 16px measure as sans (keeps CPL under 75 at the copy rail),
@@ -530,19 +619,19 @@
 .portfolio[data-face-body="spectral"],
 .portfolio[data-face-body="newsreader"],
 .portfolio[data-face-body="source-serif"] {
-  --ds-text-sm: 13px;
-  --ds-text-md: 16px;
-  --ds-text-lg: 19px;
-  --ds-leading-sm: 18px;
-  --ds-leading-md: 27px;
-  --ds-leading-lg: 26px;
-  --ds-leading-tight: 22px;
+  --ds-text-sm: 12px;
+  --ds-text-md: 15px;
+  --ds-text-lg: 16px;
+  --ds-leading-sm: 17px;
+  --ds-leading-md: 24px;
+  --ds-leading-lg: 22px;
+  --ds-leading-tight: 20px;
 }
 
-/* Newsreader packs more glyphs per em than the other faces; tighten its measure
- * so it also stays under 75 CPL. */
+/* Newsreader packs more glyphs per em; tighten its measure so it also holds
+ * under 75 CPL at the copy rail. */
 .portfolio[data-face-body="newsreader"] {
-  --portfolio-copy-max: 30rem;
+  --portfolio-copy-max: 27rem;
 }
 
 .bg-compare__options {

@@ -182,19 +182,39 @@ const PALETTES: Palette[] = [
   {
     id: "neutral",
     label: "True neutral",
-    note: "Subtle near-white neutral (oklch.fyi model). White content pops via border + shadow, not color.",
+    note: "oklch.fyi model — #fcfcfc page, pure-white surfaces that read brighter than the page, crisp neutral ink. White pops via elevation, not color.",
     tokens: {
-      "--ds-bg": "oklch(0.985 0 0)",
-      "--ds-fg": "oklch(0.255 0 0)",
-      "--ds-body": "oklch(0.545 0 0)",
-      "--ds-muted": "oklch(0.758 0 0)",
-      "--ds-muted-on-subtle": "oklch(0.545 0 0)",
-      "--ds-rule": "oklch(0.905 0 0)",
-      "--ds-border": "oklch(0.858 0 0)",
-      "--ds-bg-subtle": "oklch(0.958 0 0)",
-      "--ds-surface": "oklch(0.958 0 0)",
-      "--ds-surface-raised": "oklch(0.930 0 0)",
-      "--ds-shadow-key": "oklch(0.20 0 0)",
+      /* Page sits just below white (#fcfcfc); surfaces are pure white so shots
+       * read brighter than the page and lift via the shadow ring. */
+      "--ds-bg": "oklch(0.986 0 0)",
+      "--ds-fg": "oklch(0.245 0 0)",
+      "--ds-body": "oklch(0.435 0 0)",
+      "--ds-muted": "oklch(0.620 0 0)",
+      "--ds-muted-on-subtle": "oklch(0.500 0 0)",
+      "--ds-rule": "oklch(0.918 0 0)",
+      "--ds-border": "oklch(0.860 0 0)",
+      "--ds-bg-subtle": "oklch(0.965 0 0)",
+      "--ds-surface": "oklch(1 0 0)",
+      "--ds-surface-raised": "oklch(1 0 0)",
+      "--ds-shadow-key": "oklch(0.18 0 0)",
+    },
+  },
+  {
+    id: "pure-white",
+    label: "Pure white",
+    note: "Pure white page. Shots share the page white — separation is the border + faint shadow alone, so it reads flat and clean.",
+    tokens: {
+      "--ds-bg": "oklch(1 0 0)",
+      "--ds-fg": "oklch(0.245 0 0)",
+      "--ds-body": "oklch(0.435 0 0)",
+      "--ds-muted": "oklch(0.620 0 0)",
+      "--ds-muted-on-subtle": "oklch(0.500 0 0)",
+      "--ds-rule": "oklch(0.915 0 0)",
+      "--ds-border": "oklch(0.855 0 0)",
+      "--ds-bg-subtle": "oklch(0.975 0 0)",
+      "--ds-surface": "oklch(1 0 0)",
+      "--ds-surface-raised": "oklch(1 0 0)",
+      "--ds-shadow-key": "oklch(0.18 0 0)",
     },
   },
   {
@@ -290,6 +310,7 @@ export function BgCompareLab() {
   const [treatment, setTreatment] = useState<ShotTreatment>("both");
   const [headingFace, setHeadingFace] = useState<Typeface>("spectral");
   const [bodyFace, setBodyFace] = useState<Typeface>("sans");
+  const [controlsHidden, setControlsHidden] = useState(false);
 
   const active = PALETTES.find((p) => p.id === activeId) ?? PALETTES[0];
 
@@ -326,6 +347,11 @@ export function BgCompareLab() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "h" || event.key === "H") {
+        setControlsHidden((hidden) => !hidden);
+        return;
+      }
+
       const index = Number.parseInt(event.key, 10);
       if (index < 1 || index > PALETTES.length) {
         return;
@@ -352,9 +378,30 @@ export function BgCompareLab() {
 
   return (
     <>
-      <div className="bg-compare" role="toolbar" aria-label="Color palette candidates">
-        <div className="bg-compare__inner">
-          <p className="bg-compare__title">Color palette</p>
+      {controlsHidden ? (
+        <button
+          type="button"
+          className="bg-compare__show"
+          onClick={() => setControlsHidden(false)}
+        >
+          Show controls
+        </button>
+      ) : (
+        <div className="bg-compare" role="toolbar" aria-label="Color palette candidates">
+          <div className="bg-compare__inner">
+            <div className="bg-compare__header">
+              <p className="bg-compare__title bg-compare__title--flush">
+                Color palette
+              </p>
+              <button
+                type="button"
+                className="bg-compare__hide"
+                onClick={() => setControlsHidden(true)}
+                aria-label="Hide controls"
+              >
+                Hide
+              </button>
+            </div>
           <div className="bg-compare__options">
             {PALETTES.map((palette, index) => {
               const selected = palette.id === activeId;
@@ -461,9 +508,10 @@ export function BgCompareLab() {
                 </button>
               );
             })}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <PortfolioHome />
     </>
