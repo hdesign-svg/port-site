@@ -13,15 +13,19 @@
   text-underline-offset: var(--ds-type-link-underline-offset);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: text-decoration-color var(--ds-link-decoration-dur) var(--ds-link-ease-out);
+  transition:
+    color var(--ds-link-decoration-dur) var(--ds-link-ease-out),
+    text-decoration-color var(--ds-link-decoration-dur) var(--ds-link-ease-out);
 }
 
 .ds-text-link:hover {
+  color: var(--ds-fg);
   text-decoration-color: var(--ds-fg);
   transition-timing-function: var(--ds-link-ease-in);
 }
 
 .ds-text-link:focus-visible {
+  color: var(--ds-fg);
   text-decoration-color: var(--ds-fg);
   outline: 2px solid var(--ds-fg);
   outline-offset: 2px;

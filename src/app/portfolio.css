@@ -4,21 +4,28 @@
   --portfolio-page-inset: var(--portfolio-page-margin);
   --portfolio-copy-max: 26rem;
   --portfolio-media-max: 58rem;
-  --portfolio-gap-lg: 4.5rem;
-  --portfolio-gap-sm: 1.5rem;
+  /* Vertical cadence — three semantic steps, decoupled so between-project
+   * and within-project rhythm tune independently.
+   *   section : chapter breaks (page top, project dividers)
+   *   copy-media : copy rail → its own media rail
+   *   block : paragraphs, shots, links — related content in a block */
+  --portfolio-section-gap: 4.5rem;
+  --portfolio-copy-media-gap: 3rem;
+  --portfolio-block-gap: 1.5rem;
   --portfolio-shot-radius-sm: 11px;
   --portfolio-shot-radius-md: 14px;
   --portfolio-shot-radius-lg: 18px;
   --portfolio-shot-radius: var(--portfolio-shot-radius-sm);
   --portfolio-phone-mobile-max: 18rem;
   --portfolio-phone-mobile-gutter: 1rem;
+  /* Low, realistic falloff — contact + two short ambient layers */
   --portfolio-shot-shadow:
-    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
-    0 10px 28px color-mix(in srgb, var(--ds-shadow-key) 9%, transparent);
-  --portfolio-shot-shadow-hover:
-    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 6%, transparent),
-    0 12px 32px color-mix(in srgb, var(--ds-shadow-key) 11%, transparent);
-  --portfolio-shot-border: 1px solid color-mix(in srgb, var(--ds-border) 55%, transparent);
+    0 1px 1px color-mix(in srgb, var(--ds-shadow-key) 6%, transparent),
+    0 2px 4px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
+    0 4px 8px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent);
+  /* Refined edge — fg at low opacity; harmonizes with page tonality */
+  --portfolio-shot-hairline: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-fg) 5%, transparent);
 
   /* On-load reveal — focus-in blur, fine-grained top-down stagger */
   --portfolio-reveal-dur: 800ms;
@@ -56,7 +63,7 @@
   width: 100%;
   margin-inline: auto;
   padding-inline: var(--portfolio-page-margin);
-  padding-block-start: var(--portfolio-gap-lg);
+  padding-block-start: var(--portfolio-section-gap);
   padding-block-end: var(--ds-dock-content-clearance);
 }
 
@@ -104,7 +111,7 @@
 .portfolio__copy {
   display: flex;
   flex-direction: column;
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
   width: 100%;
 }
 
@@ -112,7 +119,7 @@
   flex-shrink: 0;
   width: 100%;
   height: 0;
-  margin-block: var(--portfolio-gap-lg);
+  margin-block: var(--portfolio-section-gap);
   margin-inline: auto;
   padding: 0;
   border: none;
@@ -131,7 +138,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
 }
 
 .portfolio__hero-header .ds-type-lg {
@@ -142,6 +149,11 @@
 
 .portfolio__hero-blurb .ds-type-md {
   max-width: none;
+}
+
+/* Unify paragraph rhythm — hero and project prose share block gap */
+.portfolio__hero-blurb.ds-type-stack--sectioned > .ds-type-stack {
+  gap: var(--portfolio-block-gap);
 }
 
 .portfolio__links {
@@ -177,13 +189,13 @@
 
 .portfolio__prose {
   display: grid;
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
   max-width: none;
   text-align: left;
 }
 
 .portfolio__prose .ds-type-stack {
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
 }
 
 .portfolio__prose .ds-type-md {
@@ -194,21 +206,21 @@
   white-space: nowrap;
 }
 
-/* Media — 72px after copy; 24px between shots */
+/* Media — copy-media gap after copy; block gap between shots */
 .portfolio__media {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
   width: 100%;
   max-width: var(--portfolio-media-max);
-  margin-block-start: var(--portfolio-gap-lg);
+  margin-block-start: var(--portfolio-copy-media-gap);
 }
 
 .portfolio__phone-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--portfolio-gap-sm);
+  gap: var(--portfolio-block-gap);
   width: 100%;
 }
 
@@ -243,7 +255,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  border: var(--portfolio-shot-border);
+  border: none;
   border-radius: var(--portfolio-shot-radius);
   background: transparent;
   cursor: pointer;
@@ -256,16 +268,6 @@
 .portfolio__shot:focus-visible {
   outline: 2px solid var(--ds-fg);
   outline-offset: 2px;
-}
-
-@media (hover: hover) {
-  .portfolio__shot {
-    transition: box-shadow var(--ds-dock-dur) var(--ds-dock-ease-out);
-  }
-
-  .portfolio__shot:hover {
-    box-shadow: var(--portfolio-shot-shadow-hover);
-  }
 }
 
 /* Source shot hides while its lightbox flight is open, preserving layout. */
@@ -286,6 +288,17 @@
   border-radius: inherit;
 }
 
+/* Hairline above the image — crisp edge, no layout box */
+.portfolio__shot-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: var(--portfolio-shot-hairline);
+  pointer-events: none;
+}
+
 .portfolio__shot-frame--phone {
   aspect-ratio: 210 / 477;
 }
@@ -299,6 +312,9 @@
   --portfolio-lightbox-open-ms: 380ms;
   --portfolio-lightbox-close-ms: 260ms;
   --portfolio-lightbox-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Paper edge over dark scrim — same inset language, inverted contrast */
+  --portfolio-shot-hairline-scrim: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-bg) 14%, transparent);
 
   position: fixed;
   inset: 0;
@@ -331,12 +347,22 @@
   box-sizing: border-box;
   overflow: hidden;
   background: transparent;
-  border: var(--portfolio-shot-border);
+  border: none;
   border-radius: var(--portfolio-shot-radius);
   box-shadow: var(--portfolio-shot-shadow);
   transform-origin: center center;
   transition: transform var(--portfolio-lightbox-open-ms) var(--portfolio-lightbox-ease);
   will-change: transform;
+}
+
+.portfolio-lightbox__flight-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: var(--portfolio-shot-hairline-scrim);
+  pointer-events: none;
 }
 
 .portfolio-lightbox--closing .portfolio-lightbox__flight-wrap {
@@ -378,3 +404,100 @@
     opacity: 1;
   }
 }
+
+/* Dev — live background compare (/dev/bg-compare) */
+.bg-compare {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 60;
+  pointer-events: none;
+  padding: max(var(--ds-space-3), env(safe-area-inset-top, 0px))
+    var(--ds-space-4) 0;
+}
+
+.bg-compare__inner {
+  pointer-events: auto;
+  margin-inline: auto;
+  width: min(100%, var(--portfolio-media-max));
+  padding: var(--ds-space-3);
+  border: 1px solid color-mix(in srgb, var(--ds-fg) 10%, transparent);
+  border-radius: var(--ds-radius-md);
+  background: color-mix(in srgb, var(--ds-bg) 88%, var(--ds-fg) 12%);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.bg-compare__title {
+  margin: 0 0 var(--ds-space-2);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-leading-sm);
+  color: var(--ds-fg);
+}
+
+.bg-compare__title--sub {
+  margin-top: var(--ds-space-3);
+  padding-top: var(--ds-space-3);
+  border-top: 1px solid color-mix(in srgb, var(--ds-fg) 10%, transparent);
+}
+
+/* Image treatment overrides — driven by the lab toolbar */
+[data-shot-treatment="border"] .portfolio__shot {
+  box-shadow: none;
+}
+
+[data-shot-treatment="shadow"] .portfolio__shot-frame::after {
+  box-shadow: none;
+}
+
+.bg-compare__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+}
+
+.bg-compare__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border: 1px solid color-mix(in srgb, var(--ds-fg) 12%, transparent);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--ds-bg) 70%, transparent);
+  color: var(--ds-body);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-leading-sm);
+  cursor: pointer;
+}
+
+.bg-compare__option--active {
+  color: var(--ds-fg);
+  border-color: color-mix(in srgb, var(--ds-fg) 28%, transparent);
+  background: color-mix(in srgb, var(--ds-fg) 8%, var(--ds-bg));
+}
+
+.bg-compare__option:focus-visible {
+  outline: 2px solid var(--ds-fg);
+  outline-offset: 2px;
+}
+
+.bg-compare__swatch {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ds-fg) 12%, transparent);
+}
+
+.bg-compare__note {
+  margin: var(--ds-space-2) 0 0;
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-leading-sm);
+  color: var(--ds-muted);
+}
+
