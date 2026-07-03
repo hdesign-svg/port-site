@@ -1,4 +1,4 @@
-/* Bottom chrome — solid inverted dock + scroll-to-top */
+/* Bottom chrome — raised dock + scroll-to-top */
 
 .ds-dock-surface {
   background: var(--ds-dock-bg);
@@ -35,16 +35,92 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ds-dock__text-option {
+.ds-dock__icon-option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-inline: var(--ds-space-3);
+  width: var(--ds-dock-tab-size);
+  padding-inline: 0;
+}
+
+/* Icon label — floating tooltip w/ caret on fine pointers (see coarse override below) */
+.ds-dock__label {
+  position: absolute;
+  bottom: calc(100% + var(--ds-space-2) + var(--ds-dock-tooltip-arrow));
+  left: 50%;
+  z-index: 1;
+  padding: var(--ds-dock-tooltip-pad-block) var(--ds-dock-tooltip-pad-inline);
+  border-radius: var(--ds-dock-tooltip-radius);
   font-family: var(--ds-font-family);
   font-size: var(--ds-text-sm);
-  line-height: 1;
+  line-height: var(--ds-dock-tooltip-leading);
   font-weight: var(--ds-weight-regular);
   white-space: nowrap;
+  pointer-events: none;
+  color: var(--ds-dock-tooltip-fg);
+  background: var(--ds-dock-tooltip-bg);
+  box-shadow: var(--ds-shadow-raised);
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% 0.125rem;
+  transition:
+    opacity var(--ds-dock-dur) var(--ds-dock-ease-out),
+    visibility var(--ds-dock-dur) var(--ds-dock-ease-out),
+    translate var(--ds-dock-dur) var(--ds-dock-ease-out);
+}
+
+/* Caret — points down at the tab it labels */
+.ds-dock__label::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+  border: var(--ds-dock-tooltip-arrow) solid transparent;
+  border-bottom-width: 0;
+  border-top-color: var(--ds-dock-tooltip-bg);
+}
+
+.ds-dock__option:hover .ds-dock__label,
+.ds-dock__option:focus-visible .ds-dock__label {
+  opacity: 1;
+  visibility: visible;
+  translate: -50% 0;
+}
+
+/* The selected tab already reads as selected — don't re-announce it on hover */
+.ds-dock__option--active:hover .ds-dock__label,
+.ds-dock__option--active:focus-visible .ds-dock__label {
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% 0.125rem;
+}
+
+/* Touch / coarse pointer: no hover, so pin the label inline beside the icon */
+@media (pointer: coarse) {
+  .ds-dock__icon-option {
+    width: auto;
+    gap: var(--ds-dock-tab-label-gap);
+    padding-inline: var(--ds-dock-tab-label-pad);
+  }
+
+  .ds-dock__label {
+    position: static;
+    z-index: auto;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: inherit;
+    opacity: 1;
+    visibility: visible;
+    translate: none;
+    transition: none;
+  }
+
+  .ds-dock__label::after {
+    display: none;
+  }
 }
 
 .ds-dock__option:hover:not(.ds-dock__option--active) {
@@ -83,7 +159,12 @@
 }
 
 .ds-scroll-to-top--scrolled:hover {
-  background: var(--ds-dock-tab-hover-fill);
+  background:
+    linear-gradient(
+      var(--ds-dock-tab-hover-fill),
+      var(--ds-dock-tab-hover-fill)
+    ),
+    var(--ds-dock-bg);
 }
 
 .ds-scroll-to-top--scrolled {
@@ -106,7 +187,7 @@
 
 .ds-scroll-to-top__progress {
   fill: none;
-  stroke-width: 1.5;
+  stroke-width: 2;
   stroke: var(--ds-dock-fg);
   stroke-linecap: round;
   opacity: 0;
@@ -147,20 +228,16 @@
   max-width: calc(100vw - 2 * var(--ds-dock-anchor-inset));
 }
 
-/* Storybook / page demo — dim non-matching projects */
+/* Storybook / page demo */
 .ds-dock-story__project {
-  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
-}
-
-.ds-dock-story__project--dimmed {
-  opacity: 0.34;
+  scroll-margin-top: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ds-dock__option,
+  .ds-dock__label,
   .ds-scroll-to-top,
-  .ds-scroll-to-top__progress,
-  .ds-dock-story__project {
+  .ds-scroll-to-top__progress {
     transition: none;
   }
 }

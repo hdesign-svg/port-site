@@ -19,12 +19,14 @@
   --ds-dock-tab-size: 2rem;
   --ds-dock-tab-gap: 2px;
   --ds-dock-tab-inset: 5px;
+  --ds-dock-tab-label-gap: 0.375rem;
+  --ds-dock-tab-label-pad: 0.625rem;
   --ds-dock-shell-size: calc(
     var(--ds-dock-tab-size) + 2 * var(--ds-dock-tab-inset)
   );
   --ds-dock-anchor-gap: var(--ds-space-4);
   --ds-dock-anchor-inset: var(--ds-space-4);
-  --ds-dock-anchor-inset-bottom: var(--ds-space-6);
+  --ds-dock-anchor-inset-bottom: 1.25rem;
   --ds-dock-content-clearance: calc(
     var(--ds-dock-shell-size) + var(--ds-space-6) + env(safe-area-inset-bottom, 0px)
   );
@@ -34,6 +36,7 @@
   --ds-dock-tooltip-leading: 14px;
   --ds-dock-tooltip-pad-block: 2px;
   --ds-dock-tooltip-pad-inline: var(--ds-space-2);
+  --ds-dock-tooltip-arrow: 5px;
 }
 
 @media (pointer: coarse) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import {
@@ -24,12 +24,26 @@ export function PortfolioHome() {
   const [filter, setFilter] = useState<DockFilter>("all");
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  useEffect(() => {
+  const visibleProjects = useMemo(
+    () => projects.filter((project) => projectMatchesFilter(project, filter)),
+    [filter],
+  );
+
+  const filterStatus = useMemo(() => {
+    const count = visibleProjects.length;
+    const noun = count === 1 ? "project" : "projects";
     if (filter === "all") {
+      return `Showing all ${count} ${noun}`;
+    }
+    return `Showing ${count} ${filter} ${noun}`;
+  }, [filter, visibleProjects.length]);
+
+  useEffect(() => {
+    if (filter === "all" || visibleProjects.length === 0) {
       return;
     }
 
-    const first = projects.find((project) => projectMatchesFilter(project, filter));
+    const first = visibleProjects[0];
 
     if (!first) {
       return;
@@ -40,15 +54,17 @@ export function PortfolioHome() {
       behavior: dockScrollBehavior(),
       block: "start",
     });
-  }, [filter]);
+  }, [filter, visibleProjects]);
 
   return (
     <>
       <main className="portfolio__main">
         <PortfolioHero />
 
-        {projects.map((project, index) => {
-          const revealBase = PORTFOLIO_HERO_REVEAL_COUNT + index * 2;
+        {visibleProjects.map((project) => {
+          const projectIndex = projects.findIndex((entry) => entry.id === project.id);
+          const revealBase =
+            PORTFOLIO_HERO_REVEAL_COUNT + Math.max(projectIndex, 0) * 2;
 
           return (
             <Fragment key={project.id}>
@@ -62,7 +78,6 @@ export function PortfolioHome() {
               >
                 <PortfolioProject
                   project={project}
-                  dimmed={!projectMatchesFilter(project, filter)}
                   activeSourceId={lightbox?.sourceId ?? null}
                   onImageClick={(image, origin, sourceId) =>
                     setLightbox({ image, origin, sourceId })
@@ -75,6 +90,10 @@ export function PortfolioHome() {
       </main>
 
       <PortfolioLightbox state={lightbox} onClose={() => setLightbox(null)} />
+
+      <p className="portfolio__sr-status" role="status" aria-live="polite">
+        {filterStatus}
+      </p>
 
       <DockAnchor>
         <Dock filter={filter} onFilterChange={setFilter} />

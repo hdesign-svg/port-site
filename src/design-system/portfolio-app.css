@@ -12,6 +12,7 @@
 @theme inline {
   --color-ds-bg: var(--ds-bg);
   --color-ds-fg: var(--ds-fg);
+  --color-ds-body: var(--ds-body);
   --color-ds-muted: var(--ds-muted);
   --color-ds-muted-on-subtle: var(--ds-muted-on-subtle);
   --color-ds-link-underline: var(--ds-link-underline);

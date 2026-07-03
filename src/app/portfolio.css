@@ -15,6 +15,9 @@
   --portfolio-shot-shadow:
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 5%, transparent),
     0 10px 28px color-mix(in srgb, var(--ds-shadow-key) 9%, transparent);
+  --portfolio-shot-shadow-hover:
+    0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 6%, transparent),
+    0 12px 32px color-mix(in srgb, var(--ds-shadow-key) 11%, transparent);
   --portfolio-shot-border: 1px solid color-mix(in srgb, var(--ds-border) 55%, transparent);
 
   /* On-load reveal — focus-in blur, fine-grained top-down stagger */
@@ -31,6 +34,19 @@
   font-feature-settings: var(--ds-type-features);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.portfolio__sr-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .portfolio__main {
@@ -148,15 +164,6 @@
   object-fit: cover;
 }
 
-/* Project copy */
-.portfolio__project {
-  transition: opacity var(--ds-dock-dur) var(--ds-dock-ease-out);
-}
-
-.portfolio__project--dimmed {
-  opacity: 0.34;
-}
-
 .portfolio__copy > .ds-type-lg {
   line-height: var(--ds-leading-tight);
   letter-spacing: var(--ds-type-tracking-tight);
@@ -165,7 +172,7 @@
 
 .portfolio__copy .portfolio__hero-blurb .ds-type-md,
 .portfolio__prose .ds-type-md {
-  color: var(--ds-muted);
+  color: var(--ds-body);
 }
 
 .portfolio__prose {
@@ -249,6 +256,16 @@
 .portfolio__shot:focus-visible {
   outline: 2px solid var(--ds-fg);
   outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .portfolio__shot {
+    transition: box-shadow var(--ds-dock-dur) var(--ds-dock-ease-out);
+  }
+
+  .portfolio__shot:hover {
+    box-shadow: var(--portfolio-shot-shadow-hover);
+  }
 }
 
 /* Source shot hides while its lightbox flight is open, preserving layout. */

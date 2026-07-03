@@ -1,31 +1,34 @@
-/* Portfolio v2 — Bootstrap gray primitives + semantic aliases
+/* Portfolio v2 — cool-neutral gray ramp (OKLCH) + semantic aliases
  *
- * Primitives (100 = lightest):
- *  100 #F8F9FA  Bright Snow
- *  200 #E9ECEF  Platinum
- *  300 #DEE2E6  Alabaster Grey
- *  400 #CED4DA  Pale Slate
- *  500 #ADB5BD  Pale Slate
- *  600 #6C757D  Slate Grey
- *  700 #495057  Iron Grey
- *  800 #343A40  Gunmetal
- *  850 #2A2F34  (derived — 50% 800 + 900)
- *  900 #212529  Carbon Black
+ * Authored in OKLCH so tonality is explicit and future perceptual work
+ * (elevation surfaces, dark-theme ramp) stays honest. Every step shares a
+ * single cool hue axis (248°) — the tonality is deliberately uniform.
+ *
+ * Lightness is intentionally NOT evenly spaced: the light end (100–400) is
+ * packed tight for airy layered surfaces/hairlines, and steps widen toward
+ * ink. This suits a light-first design; even spacing would darken surfaces
+ * and dividers. L values mirror the prior Bootstrap ramp (no visual shift).
+ *
+ *  100  L.982  Bright Snow      600  L.558  Slate Grey
+ *  200  L.942  Platinum         700  L.428  Iron Grey
+ *  300  L.911  Alabaster        800  L.345  Gunmetal
+ *  400  L.867  Pale Slate       850  L.302  (derived)
+ *  500  L.769  Muted Slate      900  L.262  Carbon Black
  */
 
 :root,
 [data-theme="light"],
 [data-theme="dark"] {
-  --ds-gray-100: #f8f9fa;
-  --ds-gray-200: #e9ecef;
-  --ds-gray-300: #dee2e6;
-  --ds-gray-400: #ced4da;
-  --ds-gray-500: #adb5bd;
-  --ds-gray-600: #6c757d;
-  --ds-gray-700: #495057;
-  --ds-gray-800: #343a40;
-  --ds-gray-850: #2a2f34;
-  --ds-gray-900: #212529;
+  --ds-gray-100: oklch(0.982 0.002 248);
+  --ds-gray-200: oklch(0.942 0.005 248);
+  --ds-gray-300: oklch(0.911 0.007 248);
+  --ds-gray-400: oklch(0.867 0.011 248);
+  --ds-gray-500: oklch(0.769 0.015 248);
+  --ds-gray-600: oklch(0.558 0.017 248);
+  --ds-gray-700: oklch(0.428 0.015 248);
+  --ds-gray-800: oklch(0.345 0.013 248);
+  --ds-gray-850: oklch(0.302 0.011 248);
+  --ds-gray-900: oklch(0.262 0.010 248);
 }
 
 :root,
@@ -37,12 +40,14 @@
   --ds-surface: var(--ds-gray-200);
   --ds-surface-raised: var(--ds-gray-300);
 
+  /* Ink hierarchy — three steps: primary / body / tertiary */
   --ds-fg: var(--ds-gray-900);
+  --ds-body: var(--ds-gray-700);
   --ds-muted: var(--ds-gray-600);
   --ds-muted-on-subtle: var(--ds-gray-600);
 
-  --ds-rule: var(--ds-gray-300);
-  --ds-link-underline: var(--ds-gray-500);
+  --ds-rule: var(--ds-gray-200);
+  --ds-link-underline: var(--ds-muted);
   --ds-border: var(--ds-gray-400);
 
   --ds-focus: var(--ds-fg);
@@ -55,16 +60,18 @@
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 4%, transparent),
     0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 3%, transparent);
 
-  /* Inverted dock — solid dark chip on light canvas */
-  --ds-dock-bg: var(--ds-gray-900);
-  --ds-dock-border: var(--ds-gray-800);
-  --ds-dock-fg: var(--ds-gray-100);
-  --ds-dock-muted: var(--ds-gray-500);
-  --ds-dock-tab-active-bg: color-mix(in srgb, var(--ds-gray-100) 14%, transparent);
-  --ds-dock-tab-active-fg: var(--ds-gray-100);
-  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-100) 10%, transparent);
+  /* Inverted dock — flips page ink (fg ↔ bg); can't drift from page tokens */
+  --ds-dock-bg: var(--ds-fg);
+  --ds-dock-fg: var(--ds-bg);
+  --ds-dock-border: color-mix(in srgb, var(--ds-dock-fg) 12%, var(--ds-dock-bg));
+  --ds-dock-muted: color-mix(in srgb, var(--ds-dock-fg) 52%, var(--ds-dock-bg));
+  --ds-dock-tab-active-bg: color-mix(in srgb, var(--ds-dock-fg) 20%, transparent);
+  --ds-dock-tab-active-fg: var(--ds-dock-fg);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-dock-fg) 10%, transparent);
+  --ds-dock-tooltip-bg: var(--ds-fg);
+  --ds-dock-tooltip-fg: var(--ds-bg);
   --ds-dock-shadow:
-    0 4px 20px color-mix(in srgb, var(--ds-gray-900) 20%, transparent);
+    0 4px 20px color-mix(in srgb, var(--ds-dock-bg) 20%, transparent);
 }
 
 [data-theme="dark"] {
@@ -75,12 +82,14 @@
   --ds-surface: var(--ds-gray-850);
   --ds-surface-raised: var(--ds-gray-800);
 
+  /* Ink hierarchy — three steps: primary / body / tertiary */
   --ds-fg: var(--ds-gray-100);
+  --ds-body: var(--ds-gray-300);
   --ds-muted: var(--ds-gray-600);
   --ds-muted-on-subtle: var(--ds-gray-500);
 
   --ds-rule: var(--ds-gray-800);
-  --ds-link-underline: var(--ds-gray-700);
+  --ds-link-underline: var(--ds-muted);
   --ds-border: var(--ds-gray-700);
 
   --ds-focus: var(--ds-fg);
@@ -93,18 +102,18 @@
     0 1px 2px color-mix(in srgb, var(--ds-shadow-key) 28%, transparent),
     0 4px 14px color-mix(in srgb, var(--ds-shadow-key) 18%, transparent);
 
-  /* Material dock — frosted glass on dark canvas */
+  /* Material dock — frosted glass; fg/bg drive label + active-tab inversion */
   --ds-dock-bg: color-mix(in srgb, var(--ds-gray-850) 72%, transparent);
-  --ds-dock-border: color-mix(in srgb, var(--ds-gray-100) 14%, transparent);
-  --ds-dock-fg: var(--ds-gray-100);
-  --ds-dock-muted: color-mix(in srgb, var(--ds-gray-100) 52%, transparent);
+  --ds-dock-border: color-mix(in srgb, var(--ds-fg) 14%, transparent);
+  --ds-dock-fg: var(--ds-fg);
+  --ds-dock-muted: color-mix(in srgb, var(--ds-fg) 52%, transparent);
   --ds-dock-backdrop: blur(20px) saturate(1.35);
-  --ds-dock-tab-active-bg: var(--ds-gray-100);
-  --ds-dock-tab-active-fg: var(--ds-gray-900);
-  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-gray-100) 8%, transparent);
+  --ds-dock-tab-active-bg: var(--ds-fg);
+  --ds-dock-tab-active-fg: var(--ds-bg);
+  --ds-dock-tab-hover-fill: color-mix(in srgb, var(--ds-fg) 8%, transparent);
   --ds-dock-tooltip-bg: color-mix(in srgb, var(--ds-gray-850) 88%, transparent);
-  --ds-dock-tooltip-fg: var(--ds-gray-100);
+  --ds-dock-tooltip-fg: var(--ds-fg);
   --ds-dock-shadow:
     0 8px 28px color-mix(in srgb, #000000 32%, transparent),
-    0 1px 0 color-mix(in srgb, var(--ds-gray-100) 8%, transparent) inset;
+    0 1px 0 color-mix(in srgb, var(--ds-fg) 8%, transparent) inset;
 }

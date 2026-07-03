@@ -7,7 +7,7 @@
   font-style: normal;
   letter-spacing: 0;
   font-feature-settings: var(--ds-type-features);
-  color: var(--ds-muted);
+  color: var(--ds-body);
   text-decoration: underline;
   text-decoration-color: var(--ds-link-underline);
   text-underline-offset: var(--ds-type-link-underline-offset);

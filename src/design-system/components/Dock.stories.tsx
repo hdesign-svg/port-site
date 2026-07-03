@@ -137,7 +137,7 @@ function DockDemoPage({ initialScroll = 0 }: { initialScroll?: number }) {
           <p className="ds-type-lg">Harry Howe</p>
           <p className="ds-type-md ds-type--muted">Product Designer</p>
           <p className="ds-type-md">
-            Scroll to fill the progress ring. Filter dims non-matching work and
+            Scroll to fill the progress ring. Filter hides non-matching work and
             scrolls the first match into view.
           </p>
         </header>
@@ -148,14 +148,13 @@ function DockDemoPage({ initialScroll = 0 }: { initialScroll?: number }) {
             gap: "var(--ds-type-gap)",
           }}
         >
-          {DEMO_PROJECTS.map((project) => {
-            const matches = projectMatchesFilter(project.platform, filter);
-
-            return (
+          {DEMO_PROJECTS.filter((project) =>
+            projectMatchesFilter(project.platform, filter),
+          ).map((project) => (
               <section
                 key={project.id}
                 id={project.id}
-                className={`ds-dock-story__project${matches ? "" : " ds-dock-story__project--dimmed"}`}
+                className="ds-dock-story__project"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "minmax(0, 22rem) minmax(0, 1fr)",
@@ -176,8 +175,7 @@ function DockDemoPage({ initialScroll = 0 }: { initialScroll?: number }) {
                 </div>
                 <MockupBlock />
               </section>
-            );
-          })}
+          ))}
         </div>
       </div>
 
@@ -198,7 +196,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          "Platform filter dock with text tabs and scroll-to-top.",
+          "Platform filter dock with icon tabs, hover tooltips, and scroll-to-top.",
       },
     },
   },

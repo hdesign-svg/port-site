@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUp } from "@phosphor-icons/react";
+import { ArrowUp, Desktop, DeviceMobile, Stack } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 import {
   useCallback,
   useEffect,
@@ -13,10 +14,17 @@ import {
 
 export type DockFilter = "all" | "mobile" | "web";
 
-export const DOCK_FILTERS: { id: DockFilter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "mobile", label: "Mobile" },
-  { id: "web", label: "Web" },
+// Per-icon optical sizing: the filled grid reads heavy, the phone reads narrow,
+// the wide monitor reads large — nudge each so the row shares one visual rhythm.
+export const DOCK_FILTERS: {
+  id: DockFilter;
+  label: string;
+  icon: Icon;
+  iconSize: number;
+}[] = [
+  { id: "all", label: "All", icon: Stack, iconSize: 18 },
+  { id: "mobile", label: "Mobile", icon: DeviceMobile, iconSize: 20 },
+  { id: "web", label: "Web", icon: Desktop, iconSize: 17 },
 ];
 
 const SCROLL_ICON_SIZE = 18;
@@ -216,7 +224,7 @@ export function Dock({
         role="radiogroup"
         aria-label="Filter projects by platform"
       >
-        {DOCK_FILTERS.map(({ id, label }, index) => {
+        {DOCK_FILTERS.map(({ id, label, icon: FilterIcon, iconSize }, index) => {
           const active = filter === id;
 
           return (
@@ -229,8 +237,9 @@ export function Dock({
               role="radio"
               id={`${filterGroupId}-${id}`}
               aria-checked={active}
+              aria-label={label}
               tabIndex={active ? 0 : -1}
-              className={`ds-dock__option ds-dock__text-option${active ? " ds-dock__option--active" : ""}`}
+              className={`ds-dock__option ds-dock__icon-option${active ? " ds-dock__option--active" : ""}`}
               onClick={() => onFilterChange(id)}
               onKeyDown={(event) =>
                 handleRadioKeyDown(
@@ -241,7 +250,14 @@ export function Dock({
                 )
               }
             >
-              {label}
+              <FilterIcon
+                size={iconSize}
+                weight={active ? "fill" : "regular"}
+                aria-hidden
+              />
+              <span className="ds-dock__label" aria-hidden>
+                {label}
+              </span>
             </button>
           );
         })}

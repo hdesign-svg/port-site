@@ -65,7 +65,6 @@ function groupProjectMedia(images: ProjectImage[]): MediaBlock[] {
 
 type PortfolioProjectProps = {
   project: Project;
-  dimmed?: boolean;
   activeSourceId?: string | null;
   onImageClick: (
     image: ProjectImage,
@@ -151,20 +150,14 @@ function PortfolioShot({
 
 export function PortfolioProject({
   project,
-  dimmed = false,
   activeSourceId = null,
   onImageClick,
 }: PortfolioProjectProps) {
   const lightboxEnabled = useLightboxEnabled();
   const mediaBlocks = groupProjectMedia(project.images);
-  const classes = ["portfolio__section", "portfolio__project"];
-
-  if (dimmed) {
-    classes.push("portfolio__project--dimmed");
-  }
 
   return (
-    <section id={project.id} className={classes.join(" ")}>
+    <section id={project.id} className="portfolio__section portfolio__project">
       <div className="portfolio__section-inner">
         <div className="portfolio__copy">
           <h2 className="ds-type-lg">{project.title}</h2>
