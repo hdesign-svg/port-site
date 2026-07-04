@@ -9,22 +9,33 @@
   /* Three phones + two column gaps. Phone col gap is --portfolio-phone-gap. */
   --portfolio-phone-gap: 1.25rem;
   --portfolio-content-max: 46rem;
-  /* One unified rail — copy, images, and divider all share this single width. */
-  --portfolio-copy-max: var(--portfolio-content-max);
-  --portfolio-media-max: var(--portfolio-content-max);
+  /* One unified 75ch measure — copy, gray media containers, testimonials, and
+   * the divider all share this single width. */
+  --portfolio-copy-max: 75ch;
+  --portfolio-media-max: var(--portfolio-copy-max);
   /* Vertical cadence — three semantic steps, decoupled so between-project
    * and within-project rhythm tune independently.
    *   section : chapter breaks (page top, project dividers)
    *   copy-media : copy rail → its own media rail
    *   block : paragraphs, shots, links — related content in a block */
   --portfolio-section-gap: 4.5rem;
+  /* Chapter break between consecutive case studies (no divider between them),
+   * so it must carry the separation on its own — a touch larger than the space
+   * a divider reserves on one side. */
+  --portfolio-project-gap: clamp(5rem, 8vw, 6.5rem);
   --portfolio-copy-media-gap: 3rem;
   --portfolio-block-gap: 1.5rem;
-  /* Separator spans the media rail (three phones), matching the images. */
-  --portfolio-divider-width: var(--portfolio-media-max);
+  /* Separator spans the full width of the case study containers (which bleed
+   * past the copy rail by their padding on each side). */
+  --portfolio-divider-width: calc(var(--portfolio-copy-max) + 2 * var(--portfolio-media-pad));
   /* Air between stacked shots — larger than the block gap so each shot reads as
    * its own object, not a strip. */
   --portfolio-shot-gap: 2.25rem;
+  /* Gray container that holds each case study's shots. Its padding doubles as
+   * the outward bleed past the copy rail — larger padding = wider container,
+   * while the shots inside stay aligned to the 75ch copy. */
+  --portfolio-media-pad: clamp(2rem, 4.5vw, 3.25rem);
+  --portfolio-media-radius: 20px;
   /* Speed Dial radii — higher, softer corners. Desktop shots step up to 16px;
    * phones get their own, rounder radius so the mockups read like devices. */
   --portfolio-shot-radius-sm: 12px;
@@ -126,6 +137,11 @@
   scroll-margin-top: var(--portfolio-page-margin);
 }
 
+/* Consecutive case studies carry their own chapter break (no divider between). */
+.portfolio__project-block + .portfolio__project-block {
+  margin-top: var(--portfolio-project-gap);
+}
+
 .portfolio__section-inner {
   box-sizing: border-box;
   display: flex;
@@ -145,6 +161,7 @@
 .portfolio__divider {
   flex-shrink: 0;
   width: var(--portfolio-divider-width);
+  max-width: 100%;
   height: 0;
   margin-block: var(--portfolio-section-gap);
   margin-inline: auto;
@@ -170,27 +187,12 @@
   gap: var(--portfolio-block-gap);
 }
 
-/* Framing row — avatar marks the left rail edge, signature the right. Spanning
- * the full copy width, the pair brackets the column and establishes the rails
- * the moment the page loads. */
+/* Avatar marks the top of the hero column. */
 .portfolio__hero-mark {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   gap: var(--portfolio-block-gap);
-}
-
-/* Fake signature placeholder — a hand-drawn vector mark (SVG). Painted via a
- * mask so it inherits the palette ink (--ds-fg) rather than baking a color. */
-.portfolio__signature {
-  width: 8.5rem;
-  aspect-ratio: 320 / 110;
-  flex-shrink: 0;
-  background-color: var(--ds-fg);
-  -webkit-mask: url("/images/signature.svg") center / contain no-repeat;
-  mask: url("/images/signature.svg") center / contain no-repeat;
-  user-select: none;
 }
 
 .portfolio__hero-header .ds-type-lg {
@@ -265,8 +267,21 @@
   align-items: stretch;
   gap: var(--portfolio-shot-gap);
   width: 100%;
-  max-width: var(--portfolio-media-max);
   margin-block-start: var(--portfolio-copy-media-gap);
+  padding: var(--portfolio-media-pad);
+  background: var(--ds-surface);
+  border-radius: var(--portfolio-media-radius);
+}
+
+@media (min-width: 48rem) {
+  .portfolio__media {
+    align-self: flex-start;
+    /* The gray container breaks out WIDER than the copy rail for visual
+     * interest; its padding doubles as the outward bleed, so the shots inside
+     * land back on the 75ch copy measure (copy width === image width). */
+    width: calc(var(--portfolio-copy-max) + 2 * var(--portfolio-media-pad));
+    margin-inline: calc(-1 * var(--portfolio-media-pad));
+  }
 }
 
 .portfolio__phone-grid {
@@ -298,7 +313,7 @@
   border: none;
   border-radius: var(--portfolio-shot-radius);
   background: var(--ds-bg);
-  cursor: pointer;
+  cursor: zoom-in;
   font: inherit;
   color: inherit;
   overflow: hidden;
@@ -353,14 +368,101 @@
   aspect-ratio: 1024 / 704;
 }
 
+/* Testimonials — expandable endorsements wall, matched to the section rail */
+.portfolio__testimonials {
+  scroll-margin-top: clamp(2rem, 6vh, 4rem);
+}
+
+.portfolio__testimonials-heading {
+  align-self: flex-start;
+  width: min(100%, var(--portfolio-copy-max));
+  margin-bottom: var(--portfolio-copy-media-gap);
+}
+
+.portfolio__quotes {
+  width: 100%;
+  columns: 2;
+  column-gap: var(--portfolio-phone-gap);
+}
+
+@media (min-width: 48rem) {
+  /* Match the case study containers: the endorsements wall breaks out to the
+   * same width, so the heading stays on the 75ch copy rail while the cards span
+   * the wider container measure. */
+  .portfolio__quotes {
+    align-self: flex-start;
+    width: calc(var(--portfolio-copy-max) + 2 * var(--portfolio-media-pad));
+    margin-inline: calc(-1 * var(--portfolio-media-pad));
+  }
+}
+
+@media (max-width: 40rem) {
+  .portfolio__quotes {
+    columns: 1;
+  }
+}
+
+.portfolio__quote {
+  break-inside: avoid;
+  margin: 0 0 var(--portfolio-phone-gap);
+  padding: var(--portfolio-media-pad);
+  background: var(--ds-surface);
+  border-radius: var(--portfolio-media-radius);
+}
+
+.portfolio__quote[role="button"] {
+  cursor: pointer;
+}
+
+.portfolio__quote[role="button"]:focus-visible {
+  outline: 2px solid var(--ds-fg);
+  outline-offset: 2px;
+}
+
+.portfolio__quote-text {
+  color: var(--ds-body);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.portfolio__quote[data-expanded="true"] .portfolio__quote-text {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
+.portfolio__quote-attr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ds-space-2, 0.75rem);
+  margin-top: var(--portfolio-block-gap);
+}
+
+.portfolio__quote-name {
+  color: var(--ds-fg);
+}
+
+.portfolio__quote-role {
+  color: var(--ds-muted);
+  text-align: right;
+}
+
+.portfolio__quote-more {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--ds-muted);
+}
+
 /* Lightbox — panel-tier timing for large shared-element flight */
 .portfolio-lightbox {
   --portfolio-lightbox-open-ms: 380ms;
   --portfolio-lightbox-close-ms: 260ms;
   --portfolio-lightbox-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* Paper edge over dark scrim — same inset language, inverted contrast */
-  --portfolio-shot-hairline-scrim: inset 0 0 0 1px
-    color-mix(in srgb, var(--ds-bg) 14%, transparent);
+  /* Light overlay — the shot keeps its normal dark hairline against the frosted
+   * near-white scrim. */
+  --portfolio-shot-hairline-scrim: var(--portfolio-shot-hairline);
 
   position: fixed;
   inset: 0;
@@ -371,9 +473,10 @@
 .portfolio-lightbox__backdrop {
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--ds-gray-900) 72%, transparent);
-  backdrop-filter: blur(6px) saturate(1.1);
-  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  /* Light overlay — frosted near-white wash over the page. */
+  background: color-mix(in srgb, var(--ds-bg) 82%, transparent);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
   opacity: 0;
   transition: opacity var(--portfolio-lightbox-open-ms) var(--portfolio-lightbox-ease);
 }
@@ -446,7 +549,7 @@
   .portfolio-lightbox__backdrop {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: color-mix(in srgb, var(--ds-gray-900) 80%, transparent);
+    background: color-mix(in srgb, var(--ds-bg) 92%, transparent);
     opacity: 1;
   }
 }
@@ -627,9 +730,10 @@
 }
 
 .portfolio .ds-type-lg {
-  font-family: var(--lab-font-heading, var(--ds-font-family));
-  /* Spectral heading — 600 reads elegant and compressed at this size, where a
-   * full 700 would feel heavy against the small Geist body. */
+  /* Spectral serif heading by default; the lab can still override via
+   * --lab-font-heading (data-face-heading). 600 reads elegant and compressed
+   * at this size, where a full 700 would feel heavy against the Geist body. */
+  font-family: var(--lab-font-heading, var(--ds-font-spectral));
   font-weight: 600;
   color: var(--ds-fg);
 }
@@ -648,6 +752,26 @@
   --ds-leading-md: 23px;
   --ds-leading-lg: 25px;
   --ds-leading-tight: 25px;
+}
+
+/* Apple Newsroom palette — white page, #f5f5f7 grey surfaces, Apple ink ramp.
+ * Overrides the cool-neutral OKLCH tokens for the portfolio subtree only. */
+.portfolio {
+  --ds-bg: #ffffff;
+  --ds-bg-subtle: #f5f5f7;
+  --ds-surface: #f5f5f7;
+  --ds-surface-raised: #ffffff;
+
+  --ds-fg: #1d1d1f;       /* primary ink */
+  --ds-body: #6e6e73;     /* secondary — long-form body */
+  --ds-muted: #86868b;    /* tertiary — meta, underlines */
+  --ds-muted-on-subtle: #6e6e73;
+
+  --ds-rule: #d2d2d7;
+  --ds-border: #d2d2d7;
+  --ds-link-underline: #86868b;
+
+  --ds-shadow-key: #000000;
 }
 
 /* Serif body: nudge line-height for the serif's larger x-height + descenders.

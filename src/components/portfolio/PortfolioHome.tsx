@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import {
@@ -12,6 +12,7 @@ import {
   type LightboxState,
 } from "@/components/portfolio/PortfolioLightbox";
 import { PortfolioProject } from "@/components/portfolio/PortfolioProject";
+import { PortfolioTestimonials } from "@/components/portfolio/PortfolioTestimonials";
 import {
   Dock,
   DockAnchor,
@@ -61,32 +62,45 @@ export function PortfolioHome() {
       <main className="portfolio__main">
         <PortfolioHero />
 
+        {/* Hero → case studies */}
+        <hr
+          className="portfolio__divider portfolio__reveal"
+          style={portfolioRevealStyle(PORTFOLIO_HERO_REVEAL_COUNT)}
+        />
+
         {visibleProjects.map((project) => {
           const projectIndex = projects.findIndex((entry) => entry.id === project.id);
           const revealBase =
-            PORTFOLIO_HERO_REVEAL_COUNT + Math.max(projectIndex, 0) * 2;
+            PORTFOLIO_HERO_REVEAL_COUNT + 1 + Math.max(projectIndex, 0);
 
           return (
-            <Fragment key={project.id}>
-              <hr
-                className="portfolio__divider portfolio__reveal"
-                style={portfolioRevealStyle(revealBase)}
+            <div
+              key={project.id}
+              className="portfolio__project-block portfolio__reveal"
+              style={portfolioRevealStyle(revealBase)}
+            >
+              <PortfolioProject
+                project={project}
+                activeSourceId={lightbox?.sourceId ?? null}
+                onImageClick={(image, origin, sourceId) =>
+                  setLightbox({ image, origin, sourceId })
+                }
               />
-              <div
-                className="portfolio__reveal"
-                style={portfolioRevealStyle(revealBase + 1)}
-              >
-                <PortfolioProject
-                  project={project}
-                  activeSourceId={lightbox?.sourceId ?? null}
-                  onImageClick={(image, origin, sourceId) =>
-                    setLightbox({ image, origin, sourceId })
-                  }
-                />
-              </div>
-            </Fragment>
+            </div>
           );
         })}
+
+        {/* Case studies → testimonials */}
+        <hr
+          className="portfolio__divider portfolio__reveal"
+          style={portfolioRevealStyle(
+            PORTFOLIO_HERO_REVEAL_COUNT + 1 + visibleProjects.length,
+          )}
+        />
+
+        <PortfolioTestimonials
+          revealOffset={PORTFOLIO_HERO_REVEAL_COUNT + 2 + visibleProjects.length}
+        />
       </main>
 
       <PortfolioLightbox state={lightbox} onClose={() => setLightbox(null)} />
@@ -96,7 +110,11 @@ export function PortfolioHome() {
       </p>
 
       <DockAnchor>
-        <Dock filter={filter} onFilterChange={setFilter} />
+        <Dock
+          filter={filter}
+          onFilterChange={setFilter}
+          endorsementsTargetId="testimonials"
+        />
       </DockAnchor>
     </>
   );

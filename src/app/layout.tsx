@@ -19,6 +19,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full" data-theme="light" suppressHydrationWarning>
       <body className="portfolio min-h-full">
+        {/* Spectral (serif headings). Loaded via <link> because Tailwind v4 /
+         * Lightning CSS strips external @import rules. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&display=swap"
+        />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: scrollInitScript }} />
         {children}

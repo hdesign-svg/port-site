@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, Desktop, DeviceMobile, Stack } from "@phosphor-icons/react";
+import { ArrowUp, Desktop, DeviceMobile, Quotes, Stack } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import {
   useCallback,
@@ -70,6 +70,12 @@ function scrollProgress(root: HTMLElement | Window) {
 
 function scrollToTop(root: HTMLElement | Window) {
   root.scrollTo({ top: 0, behavior: dockScrollBehavior() });
+}
+
+function scrollToSection(id: string) {
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: dockScrollBehavior(), block: "start" });
 }
 
 function handleRadioKeyDown(
@@ -189,6 +195,8 @@ type DockProps = {
   filter: DockFilter;
   onFilterChange: (filter: DockFilter) => void;
   scrollRoot?: HTMLElement | null;
+  /** When set, renders a quote button that scrolls to this element id. */
+  endorsementsTargetId?: string;
   className?: string;
 };
 
@@ -197,6 +205,7 @@ export function Dock({
   filter,
   onFilterChange,
   scrollRoot,
+  endorsementsTargetId,
   className,
 }: DockProps) {
   const filterGroupId = useId();
@@ -219,11 +228,12 @@ export function Dock({
 
   return (
     <>
-      <div
-        className={dockClasses.join(" ")}
-        role="radiogroup"
-        aria-label="Filter projects by platform"
-      >
+      <div className={dockClasses.join(" ")}>
+        <div
+          className="ds-dock__group"
+          role="radiogroup"
+          aria-label="Filter projects by platform"
+        >
         {DOCK_FILTERS.map(({ id, label, icon: FilterIcon, iconSize }, index) => {
           const active = filter === id;
 
@@ -261,6 +271,24 @@ export function Dock({
             </button>
           );
         })}
+        </div>
+
+        {endorsementsTargetId ? (
+          <>
+            <span className="ds-dock__divider" aria-hidden />
+            <button
+              type="button"
+              className="ds-dock__option ds-dock__icon-option"
+              aria-label="Jump to endorsements"
+              onClick={() => scrollToSection(endorsementsTargetId)}
+            >
+              <Quotes size={18} weight="regular" aria-hidden />
+              <span className="ds-dock__label" aria-hidden>
+                Endorsements
+              </span>
+            </button>
+          </>
+        ) : null}
       </div>
 
       <ScrollToTop scrollRoot={scrollRoot} className={className} />

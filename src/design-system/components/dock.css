@@ -18,6 +18,22 @@
   max-width: 100%;
 }
 
+/* Filter radios group so a trailing action (e.g. endorsements) can sit
+ * outside the radiogroup while sharing the dock's rhythm. */
+.ds-dock__group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-dock-tab-gap);
+}
+
+/* Hairline between the filter group and the jump action */
+.ds-dock__divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: calc(var(--ds-dock-tab-size) - var(--ds-space-3, 0.75rem));
+  background: var(--ds-dock-border);
+}
+
 .ds-dock__option {
   position: relative;
   appearance: none;

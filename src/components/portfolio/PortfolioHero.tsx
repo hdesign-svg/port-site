@@ -27,11 +27,6 @@ export function PortfolioHero({ revealOffset = 0 }: PortfolioHeroProps) {
                 className="portfolio__avatar"
                 priority
               />
-              <span
-                className="portfolio__signature"
-                role="img"
-                aria-label={`${site.name} signature`}
-              />
             </div>
             <p
               className="ds-type-lg portfolio__reveal"
